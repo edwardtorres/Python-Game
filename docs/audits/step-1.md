@@ -1,144 +1,214 @@
-# Step 1 audit: engine spike run (partial)
+# Step 1 audit: engine, curriculum, grader, samples, UI, CI
 
 Date: 2026-10-30
-Branch: `claude/busy-wright-rooppm`, pushed at `170ce25`
-Status: **Stopped at the WebKit gate.** Step 1 is not complete. This run finished the Phase 0 engine spike in Chromium and mostly in WebKit. One WebKit interrupt context hung, and you asked to be told about core WebKit failures, so nothing else was built. Sections for work that was not started keep their headings and say why.
+Branch: `claude/busy-wright-rooppm`, head `b6cd456` at the time of writing
+Status: **Build complete locally. CI for `b6cd456` still running at the time of writing (queued, then in progress). `main` not yet created.** This audit will be updated when CI finishes.
 
-## Engine spike: numbers and decisions
+The earlier partial audit (commit `de86faf`) is preserved in git history. This file replaces it.
 
-### Setup
+## Interrupt decision (hybrid)
 
-- Engine: Pyodide 314.0.7 (CPython 3.14.2), self-hosted from the GitHub release tarball. SHA-256 `192b5864…86645`, checked in CI.
-- Seaborn 0.13.2 is not in the 314.0.7 release. Its pure-Python wheel was vendored from PyPI (SHA-256 `636f8336…61987`, checked in CI).
-- Browsers: Chromium 153.0.8010.12 (local run); WebKit 26.6 (CI). Playwright pinned to 1.63.0, the version installed here.
-- Every sample runs in a fresh browser context, so caches start empty.
-- Headers on the page and all assets: `Cross-Origin-Opener-Policy: same-origin`, `Cross-Origin-Embedder-Policy: require-corp`, `Cross-Origin-Resource-Policy: same-origin`.
-- CSP in production: `script-src 'self' 'wasm-unsafe-eval'; worker-src 'self'`.
-- Byte counts are raw wire sizes; the harness does not compress.
+**Decision:** stop a run by raising the interrupt buffer (a `SharedArrayBuffer`). If the worker does not confirm `KeyboardInterrupt` within 2 seconds, terminate the worker and start a new one.
 
-### Cold start and loading
-
-| Measure | Chromium (local) | WebKit (CI) |
-|---|---|---|
-| Worker created to first Python result, median (range) | 2,302 ms (2,101–2,462) | 1,617 ms (1,568–1,654) |
-| Core wire bytes, 4 resources | 13,513,276 B | not read from the WebKit job log |
-
-Core files: `pyodide.asm.wasm` 9.60 MB, `python_stdlib.zip` 2.55 MB, `pyodide.asm.mjs` 1.25 MB, `pyodide.mjs` 18 KB. Brotli (quality 9) estimate for those four: about 5.8 MB.
-
-### Packages, each alone with its dependency closure
-
-| Package | Chromium median | WebKit median | Wire bytes (both browsers) | Files |
-|---|---|---|---|---|
-| numpy 2.4.6 | 434 ms | 298 ms | 2,960,568 | 1 |
-| pandas 3.0.2 | 999 ms | 649 ms | 7,889,748 | 5 |
-| matplotlib 3.10.8 | 1,072 ms | 772 ms | 13,266,929 | 12 |
-| scipy 1.18.0 | 1,968 ms | 1,318 ms | 16,990,318 | 2 |
-| scikit-learn 1.8.0 | 2,818 ms | 1,654 ms | 21,638,477 | 5 |
-| seaborn 0.13.2 (vendored, with pandas and matplotlib) | 1,442 ms | 1,043 ms | 17,739,592 | 14 |
-
-Closures overlap, so they are not additive. Brotli saves about 1% on wheels, which are already zip-compressed.
-
-### Full stack (numpy, pandas, matplotlib, scipy, scikit-learn)
-
-- Load: 3,908 ms Chromium, 2,352 ms WebKit. Wire bytes: 36,122,587 in 17 files.
-- wasm linear memory after load: 94,240,768 B (94.2 MB). After the functional checks: 195,624,960 B (195.6 MB). Memory roughly doubles under real work, so the product needs a worker recycling policy.
-- JS heap (page): 10.0 MB in Chromium, which reports a rounded value. WebKit does not expose it.
-- UA-specific memory: `SecurityError` in Chromium, and not available in WebKit. Not measured.
-- The wasm figure reads `pyodide._module.HEAPU8`, an internal API.
-
-### Functional checks: 7 of 7 pass in both browsers
-
-Pure Python; pandas groupby; matplotlib Agg PNG (signature and size checked); scikit-learn linear fit; mock-API pagination (three pages, 25 items); a 429 with `Retry-After: 2` followed by a 200; and the mock's call log, which contains exactly the five expected calls.
-
-### Isolation: 9 of 9 checks behave as designed in both browsers
-
-- A new globals dict per run hides earlier names.
-- The mock API is injected into each run's namespace, not the shared builtins.
-- Before reset: a file written in run A is visible in run B, a user module stays in `sys.modules`, and one matplotlib figure is open.
-- Reset closes all figures, removes modules whose `__file__` is under `/home/pyodide/`, removes `/home/pyodide/work`, and cleans `sys.path`.
-- NumPy's global RNG state persists across runs. This is a confirmed leak, so each run must seed its own `np.random.default_rng(seed)`.
-
-### Interrupting runaway code
+**Evidence** (`spike/engine/RESULTS.md`):
 
 | Method | Chromium (local) | WebKit (CI) |
 |---|---|---|
-| (a) Interrupt buffer on a SharedArrayBuffer, signal to `KeyboardInterrupt` reply | 6 samples, median 3 ms (2–9 ms) | 3 samples, median 1.9 ms (1.7–3.6 ms); **1 context hung for the full 5-minute sample timeout, with no samples returned** |
-| (a) Recovery: next run after the interrupt | median 3 ms (2–5 ms) | 1.7–3.7 ms (3 samples) |
-| (a) One native call: 2000×2000 `np.linalg.svd`, signalled after 300 ms | 19 ms (one sample) | not run |
-| (b) Terminate and recreate the worker, core only | median 1,868 ms (1,787–1,951) | median 1,889 ms (1,848–1,963) |
-| (b) Terminate and recreate, with the full stack | median 6,240 ms (6,024–6,298) | median 4,622 ms (4,583–4,653) |
+| (a) Buffer, signal to reply | median 3 ms (2–9) | median 1.9 ms (1.7–3.6), one context of two hung |
+| (b) Terminate and recreate, core only | median 1,868 ms | median 1,889 ms |
+| (b) Terminate and recreate, with the full stack | median 6,240 ms | median 4,622 ms |
 
-The interrupt buffer's `bufferAfter` is 0 in every sample, and the next run after each interrupt returns 2.
+The buffer is about 600× faster than a restart. The restart is kept as the fallback, for the case where the buffer is unavailable or the worker does not confirm in time.
 
-**Decision: not final.** The earlier recommendation was (a) with (b) as the fallback. The WebKit hang means (a) is not confirmed in WebKit. The cause is not diagnosed: the signal may not reach the worker, or the loop may not start. The stop-and-report rule applies here, and you have not yet decided between diagnosing with a spike-only CI run and switching to (b) as the primary stop.
+**Tests:**
+- Unit (`src/engine/client.test.ts`, fake worker and fake timers): buffer stop confirmed inside the 2 s grace, forced ignore → restart after 2 s, confirmation at 1.5 s stays a buffer stop, confirmation at 2.6 s restarts, stop during start-up is honoured.
+- End-to-end (`e2e/engine.spec.ts`): a runaway loop stops in under 4 seconds with no restart; with `?forceInterruptFailure=1` the buffer is ignored, the engine restarts after the grace period, and the next run works.
 
-Deployment still needs the three headers above on the page and every asset, for (a) to work at all.
+**Deployment requirement (cross-origin isolation).** `SharedArrayBuffer` needs these headers on the page and on every asset:
 
-### CSP
+- `Cross-Origin-Opener-Policy: same-origin`
+- `Cross-Origin-Embedder-Policy: require-corp`
+- `Cross-Origin-Resource-Policy: same-origin`
 
-- With `'wasm-unsafe-eval'`, the cold start succeeds in both browsers.
-- Without it, both browsers refuse to compile WebAssembly, and the worker never settles: the probe timed out at 60 s, and no console error reached the page. Chromium's message names `'unsafe-eval'`. WebKit's says `'unsafe-eval' or 'wasm-unsafe-eval'`.
-- Product consequence: keep `'wasm-unsafe-eval'`, and add a short load timeout that shows the user an error.
+These are recorded in CLAUDE.md, and `vite.config.ts` sets them for the dev and preview servers. The deployed host must set them too. Without them, every stop costs a worker restart.
+
+## WebKit hang diagnosis
+
+**What was observed.**
+
+- **Run 41104865483** (commit `170ce25`, the original spike, which had no stage instrumentation): one of the two WebKit interrupt contexts never returned a sample and hit the 5-minute sample timeout. The other context's three interrupts all worked. No stage was recorded.
+- **Run 41114548275** (commit `7a918df`, instrumented): both WebKit interrupt contexts returned all three interrupts. The job failed only because of a harness bug: the CSP probe's expected timeout was counted as a failure. That bug is fixed.
+- **Run 41114548397** (`webkit-interrupt-diagnosis`, commit `7a918df`): 50 fresh WebKit contexts, two interrupts each, 100 attempts. All 100 returned `KeyboardInterrupt` within a few milliseconds, and the buffer was reset to 0 in every attempt. No attempt was classified as a failure, so no stage was observed.
+
+**Stage classifier.** The diagnosis records each attempt's stage: loop not started, signal not consumed, reply lost, or unexpected reply. No attempt reached any failure stage, so the classifier never fired.
+
+**Rate.** One hang in 54 WebKit contexts across the three runs. Zero in 100 instrumented attempts. With 0 failures in 100 attempts, the 95% upper bound on the per-attempt hang rate is about 3.7%.
+
+**Cause.** Not diagnosed. The one hang was not captured with the stage instrumentation, and it has not recurred in 100 instrumented attempts. The hybrid fallback exists for exactly this case: a stuck buffer costs two seconds and a worker restart, not a frozen page.
+
+**Not run:** the diagnosis itself is the spike's evidence. The product's WebKit end-to-end suite runs in CI (see push status).
+
+## Engine spike: numbers and decisions
+
+Full numbers: `spike/engine/RESULTS.md`. Summary:
+
+- **Engine:** Pyodide 314.0.7 (CPython 3.14.2), self-hosted under `public/pyodide`. The release tarball is fetched from GitHub, and its SHA-256 is checked in both the fetch script and CI.
+- **Cold start:** 2.3 s median in Chromium, 1.6 s in WebKit (worker creation to first Python result).
+- **Core:** 13.5 MB on the wire (4 resources). Brotli q9 estimate about 5.8 MB.
+- **Packages (wire bytes, dependency closure):** numpy 2.96 MB, pandas 7.89 MB, matplotlib 13.27 MB, scipy 16.99 MB, scikit-learn 21.64 MB, seaborn 17.74 MB (with pandas and matplotlib).
+- **Full stack:** load 3.9 s Chromium, 2.4 s WebKit. Wasm memory 94.2 MB after load, 195.6 MB after functional checks.
+- **Functional checks:** 7 of 7 pass in both browsers.
+- **Isolation:** 9 of 9 checks as designed in both browsers. NumPy's RNG state persists across runs (confirmed). The product therefore reseeds every graded run.
+- **CSP:** `script-src 'self' 'wasm-unsafe-eval'` with `worker-src 'self'` is required. Without `'wasm-unsafe-eval'`, Python cannot start and the worker hangs silently. The product checks WebAssembly on the page first and shows a clear error.
+- **Seaborn:** not in the 314.0.7 release. The spike vendored its pure-Python wheel (SHA-256 checked) and loads it by URL, which does not resolve dependencies.
 
 ## Curriculum tree and competency coverage
 
-Not built. The spike does not touch the curriculum. The curriculum waits for your approval of the full Step 1 plan, which depends on the interrupt decision above.
+Eleven chapters with prerequisites, 79 competencies, and one planned lesson per competency (79 lessons). Source: `src/curriculum/data.ts`.
+
+```
+c01 Foundations refresh (13)
+ └─ c02 Informatics fundamentals (11)
+     ├─ c03 Testing (4)
+     │   └─ c05 APIs and automation (7) ← c04 Files and formats (5)
+     ├─ c06 NumPy (4)
+     │   └─ c07 pandas (12) ← c04
+     │       ├─ c08 Visualization and reporting (5)
+     │       └─ c09 Statistics (5) ← c06
+     │           └─ c10 Machine learning basics (10) ← c07, c09
+c11 Capstones and interviews (3) ← c05, c07, c08, c10
+```
+
+Validator tests (`src/curriculum/curriculum.test.ts`): the graph is acyclic, every chapter is reachable, every competency is taught by a lesson, and unknown references fail. Lesson content is not written yet; it arrives in later steps.
 
 ## Datasets and generators
 
-Not built. The spike's mock API is a test double for the API grader, not a dataset generator.
+Four seeded generators in `src/data/`: shipments, sensor telemetry, customer churn, and pricing experiments. Each returns CSV text from a seeded sfc32 PRNG.
+
+- **Same seed → identical bytes** (tested for every generator).
+- Different seeds differ, headers match declared columns, and rows keep a consistent width.
+- Shipments: `late` equals `actual_days > promised_days`; about 3% of weights are missing.
+- Churn: about 6% of regions are missing, and about 5% of rows are repeated customers.
+- Pricing: revenue equals price times units.
+
+Datasets used by the samples: churn seeds 101 (visible), 202 and 303 (hidden); shipments seeds 7 (visible), 8 and 9 (hidden). A Run generates only visible datasets, so hidden data is generated only on Submit.
 
 ## Grader design and test results, by challenge type
 
-Not built. The spike's functional checks are not a grader and have no challenge metadata, hidden tests, or wrong variants. No grader unit tests exist.
+The grader core is Python (`src/engine/python/grader.py`), run in Pyodide with the same code in the browser and in Node tests.
+
+| Kind | How it grades | Test coverage |
+|---|---|---|
+| function | Runs the function on each case; compares to the reference with a stated tolerance; matches exceptions by type | samples test; python test |
+| pandas | `pandas.testing.assert_frame_equal` with stated rules (dtype, tolerance) | samples test (churn) |
+| chart | Inspects the matplotlib figure: type, orientation, series, title, labels, categories, bar heights | samples test (chart) |
+| ml | Trains on training data only; scores a hidden holdout against a threshold | python test (pass and fail cases) |
+| api | Simulated API with pages, 429 with Retry-After, and 5xx; virtual clock; checks paging, attempts, and backoff | python test (correct, naive, ignores Retry-After) |
+| testing | Learner tests must pass on the correct version and fail on each buggy version (mutation) | python test (strong and weak tests) |
+| structure | Python `ast` checks: defines, no loops, comprehension, calls | python test |
+
+Cross-cutting behaviour, all tested:
+
+- **Determinism:** identical runs give identical results, including after other runs use the RNG.
+- **Isolation:** a file or module written by one run is absent from the next (tested).
+- **Redaction:** hidden-case messages never include inputs or expected values (tested for every sample variant).
+- **Run versus Submit scope:** a Run grades visible cases with visible data only (tested).
+- **Wrong-variant matching:** a learner's output that matches a variant names that mistake (tested for every sample variant).
+- **Notebook submissions:** graded as definitions and imports only, so top-level exploration cannot break a graded run.
+
+Unit totals: 135 tests across 7 files, all passing locally.
 
 ## The three sample challenges, with hidden tests, wrong variants, and blind-solve results
 
-Not built. Blind-solve results: none.
+### 1. Clean the dock scale readings (function, Foundations)
+
+- **Rules (6):** return a new list of floats in order; drop None and blank text; drop non-finite values and booleans; drop negatives and keep zero; keep duplicates; round to 2 decimals with halves up.
+- **Cases:** 9 total. Visible: a mixed export, an empty export, and numbers stored as text. Hidden (6): only missing markers, non-finite text, zero and sign boundaries, halves rounding up, duplicates keeping order, and a very large reading.
+- **Wrong variants (7), each breaking one rule:** `round-builtin` (rounding), `keeps-negatives` and `drops-zero` (sign and boundary), `sorts-output` (order), `drops-duplicates` (duplicates), `bools-as-numbers` (types), `none-as-zero` (missing data). Every variant is caught by at least two cases.
+- **Blind solve:** solver's solution passed **9 of 9** cases.
+
+### 2. Churn rate by region (pandas, notebook, Data)
+
+- **Rules (7):** drop repeated customer rows, keeping the first; missing region becomes `unknown`; column order; churn rate rounded to 4 decimals; sort order; index reset; counts are 64-bit integers.
+- **Cases:** 3 total. Visible export (seed 101, 150 base rows plus duplicates). Hidden: seed 202 (150 rows) and seed 303 (80 rows).
+- **Wrong variants (8):** `duplicates-kept`, `missing-dropped`, `groupby-dropna-trap` (groupby silently drops NaN keys), `rate-not-rounded`, `sorted-ascending`, `index-not-reset`, `columns-reordered`, and `int32-counts` (bare `int` gives 32-bit counts under Pyodide).
+- **Blind solve, v1:** **0 of 3** cases. The solver's `churned` column came back int32, while the reference is int64. The brief never stated an integer width, so the spec had a gap. Pyodide is 32-bit, so a bare `int` is int32 in the browser but int64 on most laptops.
+- **Fix:** added rule 7 (counts are int64) and the matching `int32-counts` variant (tests pass with the variant caught by all cases).
+- **Blind solve, v2 (fresh solver, updated brief):** **3 of 3** cases.
+
+### 3. Late deliveries by transport mode (chart, Visualization)
+
+- **Rules (6):** one vertical bar series; categories alphabetical; bar height is the late rate; a title; the x-label mentions "mode"; the y-label mentions "rate".
+- **Cases:** 3 total. Visible shipments (seed 7, 240 rows). Hidden: seed 8 (300 rows) and seed 9 (120 rows).
+- **Wrong variants (8):** `horizontal-bars`, `line-chart`, `two-series` (rule 1); `counts-not-rates` (rule 3); `unsorted-categories` (rule 2); `no-title` (rule 4); `vague-x-label` (rule 5); `vague-y-label` (rule 6). Every variant is caught by at least two cases.
+- **Blind solve:** solver's solution passed **3 of 3** cases. Note: matplotlib was not installed in the solver's sandbox, so the solver could not run it there. The grader ran it through the real figure check.
+
+### Blind-solve process notes
+
+- Each solver received a brief with only the ticket, rules, entry point, skeleton, and visible data. The brief contained no reference, no variants, and no hidden data. Solvers were told not to open any other file.
+- One solver's report mentioned a stray call to create a session. The permission check denied it, and the solver did not retry. No session was created.
 
 ## e2e and axe results (Chromium here; Chromium and WebKit in CI)
 
-Not built. There is no UI yet, so there are no Playwright e2e specs and no axe runs. The spike's Playwright runs drive the harness and are not e2e specs.
+**Chromium, local (this container):** 14 of 14 passing across the dev server (13 tests) and the production preview (2 CSP tests).
 
-- Chromium here: n/a.
-- Chromium and WebKit in CI: the spike workflow ran in both. Its jobs concluded `success`. The harness records failures instead of failing the job, so the WebKit hang does not appear in the job status.
+| Spec | Tests | Result |
+|---|---|---|
+| `engine.spec.ts` | buffer stop without restart; forced restart when the buffer is ignored; memory recycling on a threshold; load timeout message | 4 of 4 pass |
+| `memory.spec.ts` | 45-run pandas soak | pass (see below) |
+| `ticket.spec.ts` | axe and 390 px layout; Run and Submit with reference; wrong variant names its mistake; hints and solution unlock; pandas notebook table; notebook inline chart; chart task names a wrong type | 7 of 7 pass |
+| `csp.spec.ts` (production preview) | production CSP grades a function; policy without `wasm-unsafe-eval` fails at once with a clear message | 2 of 2 pass |
+
+**axe:** WCAG 2.0 and 2.1 A and AA tags on the first ticket. The test fails on serious and critical violations. It passes after fixes to the CodeMirror scroller (made keyboard-focusable) and to output scroll regions (made focusable with labels).
+
+**Layout:** at 390 px the page has no sideways scroll (checked by document width).
+
+**Memory soak (45 heavy pandas runs, Chromium):**
+
+- Peak WebAssembly memory 74.9 MiB.
+- The worker restarted once, at the 40-run heavy-run limit, and the session stayed bounded.
+- The 256 MiB memory threshold was not reached by this workload. Its path is covered by the threshold test.
+
+**CI, WebKit and Chromium:** the `ci` workflow runs the same end-to-end suites in both browsers. **Pending at the time of writing.** Result will be recorded here when it finishes.
 
 ## Anything you were unsure of, and deviations
 
 **Unsure**
 
-- The WebKit interrupt hang. Its cause is not known, and one run is not enough to say whether it is intermittent or systematic.
-- The interrupt has been tested on one native call (SVD) and one tight Python loop. Other long native calls are not covered.
-- Memory: UA-specific memory is unavailable in both browsers here, the wasm measure uses an internal API, and the rounded JS heap figure is only indicative.
-- Worker memory roughly doubles under real checks. The recycling threshold is not yet set.
-- The core's four files add up to 13.41 MB on disk, while the measured wire bytes are 13.51 MB. The 0.10 MB gap is not attributed.
-- Brotli figures are estimates at quality 9.
-- seaborn is vendored, not an official Pyodide package.
-- I did not parse the Chromium CI JSON. Its job passed, but the Chromium numbers above come from my local run of the same code.
+- **WebKit for the full app** has not run yet. The spike ran in WebKit, but the UI has not.
+- **WebKit hang:** cause not diagnosed (see the diagnosis section).
+- **Blind solves:** three solvers, one challenge each. Blind-solve agreement is a sample, not a proof. Hidden data was generated by the same generators that define the datasets, so a reader of the bundle could see the generator code.
+- **Integer width:** bare `int` differs between Pyodide and native Python. The grader now checks int64 explicitly, and the wrong variant teaches the difference.
+- **Hidden data is not secret:** it is generated in the browser on Submit, so a determined learner with developer tools can see it. It is withheld from Run, not encrypted.
+- **Memory numbers:** wasm memory is read through `pyodide._module.HEAPU8`, an internal field. The 256 MiB threshold was chosen from the spike's 196 MB post-check measurement, not from observed recycling in the app.
+- **Stop during start-up** returns `Stopped.` without restarting, because the loop never started. This is intended; the restart path only applies to a running loop.
 
 **Deviations**
 
-- jsDelivr is blocked from this container, so Pyodide is self-hosted from the GitHub release tarball. The CDN was not used at any point.
-- seaborn is not in the 314.0.7 release, so it was vendored from PyPI with a SHA-256 check.
-- Playwright is pinned to 1.63.0, not the latest 1.64.1, to match the preinstalled browser.
-- Artifact downloads are blocked here, so the WebKit JSON was read from the job log.
-- Commit trailers omit the session link and the model name, following your rule on session links and the model-identifier rule. Both commits carry `Co-Authored-By: Claude <noreply@anthropic.com>`.
-- You approved running the spike while plan mode was active, so I exited plan mode once for that purpose.
-- The Step 1 plan was not shown in full before the spike ran. The full plan was not delivered because the WebKit gate stopped the run.
-- The WebKit numbers are not yet in `spike/engine/RESULTS.md`. They are in this audit and in the CI log.
+- **jsDelivr is blocked** from this container, so Pyodide comes from the GitHub release. The CDN is not used at any point.
+- **seaborn is not in the 314.0.7 release**, so the spike vendored its wheel. The product does not load seaborn yet.
+- **Playwright pinned to 1.63.0** to match the preinstalled Chromium. `playwright-core` is overridden to 1.63.0 so axe and the test runner share one copy.
+- **Churn spec changed after its first blind solve.** The rule and variant were added and the brief regenerated, then a fresh solver passed. The first solve is kept as a record.
+- **Bundle size:** the main JavaScript is 639 kB (209 kB gzipped), mostly React and CodeMirror. Python packages load per challenge at runtime, not in the bundle. Splitting the editor into its own chunk is a later performance step.
+- **Three grader kinds have no shipped challenge** (ml, api, testing). They are tested with fixtures in the unit suite, and the UI's sample set does not include them. Shipping challenges of those kinds is a later step.
+- **Lesson content is not written.** Lessons are planned placeholders.
+- **Quote checker not built.** The verbatim docs-quote script is roadmap step 9, outside Step 1's list.
+- **Test hooks** exist only in the dev build and are reached through the dev server. The production build has none, and the scan checks this on every build.
 
 ## Test and check results, and push status
 
-**Checks run**
+**Local (this container, at `b6cd456`):**
 
-- Spike: functional checks 7/7 in both browsers; isolation 9/9 in both; interrupt method (a) 6/6 in Chromium, 3/6 in WebKit (one context hung); CSP probes as expected in both; seaborn check `0.13.2|True|True` in both.
-- Unit tests, lint, typecheck: none. Vitest is not set up yet.
+- `tsc --noEmit`: pass.
+- `eslint .`: pass. The React block-body rule was verified to fire on a bad example.
+- `vitest run`: 135 tests across 7 files, pass.
+- `vite build` and `scripts/check-production-hooks.mjs`: pass. Scan covered 6 files with no hook names.
+- Chromium end-to-end (dev and preview): 14 of 14, pass.
 
-**Push status**
+**Push:**
 
-- `claude/busy-wright-rooppm` pushed with two commits, remote head `170ce25`, matching local HEAD.
-- Commits: `b1ee142` (prompt file) and `170ce25` (spike, workflow, RESULTS.md). Both are authored as Edward Torres.
-- No pull request. No push to any other branch.
-- `main` does not exist yet, so the end-of-step HEAD check against `origin/main` does not apply yet.
-- CI: `engine-spike` run 41104865483, both jobs `success`.
-- This audit file is uncommitted. Say the word and I'll commit it.
+- `claude/busy-wright-rooppm`: `b6cd456` pushed. Commits this round: `d2750d4` (toolchain), `e5c7777` (engine), `410cd0a` (data, curriculum, save), `633ecad` (samples), `1caa6ca` (UI), `b6cd456` (e2e, CI, CLAUDE.md, spike results). Earlier this step: `de86faf`, `7a918df`, `170ce25`, `b1ee142`.
+- All commits authored as Edward Torres. No pull request.
+- **CI for `b6cd456`:** three runs (`ci`, `engine-spike`, `webkit-interrupt-diagnosis`). Queued from 20:08 UTC, in progress from 20:13 UTC. Result pending.
+- **`main`:** not created. It will be created by fast-forward from the working branch after `ci` passes in both browsers, and HEAD will then be checked against `origin/main`.
+- **This audit** is committed as part of the next push, after the CI result is recorded.
