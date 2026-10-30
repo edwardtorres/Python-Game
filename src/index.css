@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+.cm-editor {
+  font-size: 0.95rem;
+  border-radius: 0.5rem;
+}
+
+.cm-editor.cm-focused {
+  outline: 2px solid #4f46e5;
+  outline-offset: 2px;
+}
