@@ -256,3 +256,46 @@ describe('notebook sessions', () => {
     expect(result.status, JSON.stringify(result)).toBe('pass');
   });
 });
+
+describe('pandas comparison: integer and float widths', () => {
+  const CSV = 'g,v\na,1\nb,2\na,3\n';
+  const reference = 'import pandas as pd\n\n\ndef make(df):\n    return df.groupby("g", as_index=False).agg(n=("v", "size"))\n';
+  const payload = (learner: string, rules: Record<string, unknown> = {}): GradePayload => ({
+    kind: 'pandas',
+    entry: 'make',
+    learner,
+    reference,
+    scope: 'all',
+    rules,
+    cases: [{ id: 'c1', label: 'counts per group', visibility: 'visible', dataset: 'd' }],
+    variants: [],
+    requires: ['pandas'],
+  });
+  const datasets = { d: CSV };
+
+  it('accepts 32-bit integer counts where the reference has 64-bit counts', () => {
+    const learner = 'import pandas as pd\n\n\ndef make(df):\n    out = df.groupby("g", as_index=False).agg(n=("v", "size"))\n    return out.astype({"n": "int32"})\n';
+    const result = runtime.grade(JSON.stringify(payload(learner)), JSON.stringify(datasets));
+    expect(result.status, JSON.stringify(result.cases)).toBe('pass');
+  });
+
+  it('accepts 32-bit floats where the reference has 64-bit floats', () => {
+    const meanReference = 'import pandas as pd\n\n\ndef make(df):\n    return df.groupby("g", as_index=False).agg(mean=("v", "mean"))\n';
+    const learner = 'import pandas as pd\n\n\ndef make(df):\n    out = df.groupby("g", as_index=False).agg(mean=("v", "mean"))\n    return out.astype({"mean": "float32"})\n';
+    const result = runtime.grade(JSON.stringify({ ...payload(learner), reference: meanReference }), JSON.stringify(datasets));
+    expect(result.status, JSON.stringify(result.cases)).toBe('pass');
+  });
+
+  it('rejects float counts where the reference has integer counts', () => {
+    const learner = 'import pandas as pd\n\n\ndef make(df):\n    out = df.groupby("g", as_index=False).agg(n=("v", "size"))\n    return out.astype({"n": "float64"})\n';
+    const result = runtime.grade(JSON.stringify(payload(learner)), JSON.stringify(datasets));
+    expect(result.status).toBe('fail');
+    expect(result.cases[0]?.message).toContain('should hold integer values');
+  });
+
+  it('keeps exact dtypes when a task declares dtype: strict', () => {
+    const learner = 'import pandas as pd\n\n\ndef make(df):\n    out = df.groupby("g", as_index=False).agg(n=("v", "size"))\n    return out.astype({"n": "int32"})\n';
+    const result = runtime.grade(JSON.stringify(payload(learner, { dtype: 'strict' })), JSON.stringify(datasets));
+    expect(result.status).toBe('fail');
+  });
+});

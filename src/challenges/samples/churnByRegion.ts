@@ -30,7 +30,6 @@ const STARTER = `def churn_by_region(df):
        them have churned == 1, and churn_rate is churned / customers rounded to 4 decimals.
     5. Sort by churn_rate from highest to lowest, then by region from A to Z.
     6. The index runs 0, 1, 2, and so on.
-    7. customers and churned are 64-bit integers (int64).
     """
     pass
 `;
@@ -61,7 +60,6 @@ export const churnByRegion: ChallengeSpec = {
     'churn_rate is churned / customers, rounded to 4 decimals.',
     'Sort by churn_rate from highest to lowest, then by region from A to Z.',
     'The index runs 0, 1, 2, and so on.',
-    'customers and churned are 64-bit integers (int64).',
   ],
   entry: 'churn_by_region',
   starter: STARTER,
@@ -77,7 +75,7 @@ export const churnByRegion: ChallengeSpec = {
     { id: 'h-second-export', label: 'A second export', visibility: 'hidden', dataset: 'customers_hidden_1' },
     { id: 'h-small-export', label: 'A small export', visibility: 'hidden', dataset: 'customers_hidden_2' },
   ],
-  rulesForGrader: { check_dtype: true, tolerance: 1e-9 },
+  rulesForGrader: { tolerance: 1e-9 },
   reference: REFERENCE,
   variants: [
     {
@@ -111,11 +109,6 @@ export const churnByRegion: ChallengeSpec = {
       mistake: { tag: 'index', title: 'The index was left scrambled', explanation: 'After sort_values(), the index keeps the old row labels. Rule 6 asks for 0, 1, 2, and so on, so call reset_index(drop=True).' },
     },
     {
-      id: 'int32-counts',
-      code: REFERENCE.replace('summary = summary.reset_index(drop=True)\n', 'summary = summary.reset_index(drop=True).astype({"customers": int, "churned": int})\n'),
-      mistake: { tag: 'dtype', title: 'Counts came out as 32-bit integers', explanation: 'Rule 7 asks for 64-bit integers. In this browser the Python engine is 32-bit, so a bare int gives int32 here, while the same code gives int64 on most laptops. Name the width explicitly, as int64.' },
-    },
-    {
       id: 'columns-reordered',
       code: WRONG_COLUMNS,
       mistake: { tag: 'columns', title: 'Columns in the wrong order', explanation: 'Rule 3 fixes the column order. pandas compares columns by position, so swapping two of them fails even when the values are right.' },
@@ -129,7 +122,6 @@ export const churnByRegion: ChallengeSpec = {
     'sorted-ascending': 4,
     'index-not-reset': 5,
     'columns-reordered': 2,
-    'int32-counts': 6,
   },
   hints: [
     'Decide what one row of the answer means: one region. Which customers should count toward that row?',

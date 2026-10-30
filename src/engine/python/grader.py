@@ -165,16 +165,39 @@ def _chart_problems(got, want, rules):
     return problems
 
 
+def _dtype_kind(dtype):
+    """Integers compare by kind, so int32 and int64 match. Floats compare by kind too.
+    Other dtypes must match exactly. Widths depend on the platform: Pyodide is 32-bit."""
+    if dtype.kind in "iu":
+        return "integer"
+    if dtype.kind == "f":
+        return "float"
+    return str(dtype)
+
+
+def _dtype_problem(got, want):
+    for position, name in enumerate(want.columns):
+        wanted = _dtype_kind(want.dtypes.iloc[position])
+        found = _dtype_kind(got.dtypes.iloc[position])
+        if wanted != found:
+            return f'column "{name}" should hold {wanted} values, got {got.dtypes.iloc[position]}'
+    return None
+
+
 def _frame_problem(got, want, rules):
     import pandas as pd
 
     if not isinstance(got, pd.DataFrame):
         return f"return a DataFrame, got {type(got).__name__}"
     tolerance = rules.get("tolerance", 1e-9)
+    # rules.dtype == "strict" compares exact dtypes. By default, values and dtype kinds count.
+    strict = rules.get("dtype") == "strict"
     try:
-        pd.testing.assert_frame_equal(got, want, check_dtype=rules.get("check_dtype", True), rtol=tolerance, atol=tolerance)
+        pd.testing.assert_frame_equal(got, want, check_dtype=strict, rtol=tolerance, atol=tolerance)
     except AssertionError as exc:
         return _clip(exc)
+    if not strict:
+        return _dtype_problem(got, want)
     return None
 
 

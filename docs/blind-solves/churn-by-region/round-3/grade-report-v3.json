@@ -1,0 +1,30 @@
+{
+  "cases": [
+    {
+      "id": "v-export",
+      "label": "The visible export",
+      "message": "",
+      "ok": true,
+      "visibility": "visible"
+    },
+    {
+      "id": "h-second-export",
+      "label": "A second export",
+      "message": "",
+      "ok": true,
+      "visibility": "hidden"
+    },
+    {
+      "id": "h-small-export",
+      "label": "A small export",
+      "message": "",
+      "ok": true,
+      "visibility": "hidden"
+    }
+  ],
+  "error": null,
+  "matched": [],
+  "passed": 3,
+  "status": "pass",
+  "total": 3
+}
