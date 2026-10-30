@@ -32,10 +32,12 @@ export function ChallengeView({ spec, progress, engine, engineStatus, onProgress
 
   // First visit: fill in the starter (or the notebook cells). Later edits are the learner's.
   useEffect(() => {
-    if (spec.notebook && progress.cells.length === 0) {
-      onProgress((current) => ({ ...current, cells: [spec.setupCell ?? '', spec.starter] }));
-    } else if (!spec.notebook && progress.lastCode === '') {
-      onProgress((current) => ({ ...current, lastCode: spec.starter }));
+    // Only an empty cell or editor is filled. The check runs on the latest state, so code
+    // the learner (or the test bridge) set before this effect ran is never overwritten.
+    if (spec.notebook) {
+      onProgress((current) => (current.cells.length === 0 ? { ...current, cells: [spec.setupCell ?? '', spec.starter] } : current));
+    } else {
+      onProgress((current) => (current.lastCode === '' ? { ...current, lastCode: spec.starter } : current));
     }
     // Runs once per challenge; the learner's later edits must not be overwritten.
   }, [spec.id]); // eslint-disable-line react-hooks/exhaustive-deps
