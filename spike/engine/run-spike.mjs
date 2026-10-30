@@ -16,7 +16,7 @@ const engines = { chromium, webkit };
 const appDir = path.join(here, 'app');
 const outDir = path.join(here, 'results');
 const PYODIDE_VERSION = '314.0.7';
-const SAMPLE_TIMEOUT_MS = 5 * 60 * 1000;
+const SAMPLE_TIMEOUT_MS = 2 * 60 * 1000;
 
 const STACK = ['numpy', 'pandas', 'matplotlib', 'scipy', 'scikit-learn'];
 const JOBS = [
@@ -116,6 +116,48 @@ for (const name of STACK) {
 await browser.close();
 await Promise.all([servers.production.close(), servers.noWasmEval.close()]);
 
+// Any failed check, errored sample, or wrong CSP outcome fails the job. The RNG
+// row is recorded but not required: it documents a leak, and is not a pass/fail.
+const failures = [];
+const fail = (message) => failures.push(message);
+for (const [id, job] of Object.entries(results.jobs)) {
+  for (const sample of job.samples) {
+    if (sample.error) fail(`${id}: ${sample.error}`);
+  }
+}
+for (const check of results.jobs.functional.samples[0]?.checks ?? []) {
+  if (!check.pass) fail(`functional ${check.name}: got ${JSON.stringify(check.got)} expected ${JSON.stringify(check.expected)}`);
+}
+for (const check of results.jobs.isolation.samples[0]?.checks ?? []) {
+  if (!check.pass && check.name !== 'numpy_rng_state_persists_across_runs') fail(`isolation ${check.name}`);
+}
+for (const sample of results.jobs.seaborn.samples) {
+  if (sample.check !== sample.expected) fail(`seaborn: got ${sample.check} expected ${sample.expected}`);
+}
+for (const sample of results.jobs.interruptSharedBuffer.samples) {
+  if (sample.error) continue;
+  for (const attempt of sample.samples) {
+    if (!attempt.interrupted || attempt.nextValue !== 2) fail(`interruptSharedBuffer: ${JSON.stringify(attempt)}`);
+  }
+  if (sample.samples.length !== 3) fail(`interruptSharedBuffer: ${sample.samples.length} of 3 attempts returned`);
+}
+for (const key of ['interruptRestart:core', 'interruptRestart:stack']) {
+  for (const sample of results.jobs[key].samples) {
+    if (sample.nextValue !== 2) fail(`${key}: next value ${sample.nextValue}`);
+  }
+}
+if (results.jobs['csp:production'].samples[0]?.ok !== true) fail('csp:production did not load');
+if (results.jobs['csp:noWasmEval'].samples[0]?.ok !== false || !results.jobs['csp:noWasmEval'].samples[0]?.error) {
+  fail('csp:noWasmEval should fail with an error and did not');
+}
+results.failures = failures;
+
 fs.mkdirSync(outDir, { recursive: true });
 fs.writeFileSync(path.join(outDir, 'engine-spike.json'), `${JSON.stringify(results, null, 2)}\n`);
 console.log(JSON.stringify(results, null, 2));
+if (failures.length > 0) {
+  console.error(`engine spike FAILED ${failures.length} check(s):\n${failures.join('\n')}`);
+  process.exitCode = 1;
+} else {
+  console.error('engine spike passed all required checks');
+}

@@ -271,12 +271,14 @@ const handlers = {
   },
 
   setInterrupt({ buffer }) {
-    pyodide.setInterruptBuffer(new Int32Array(buffer));
-    return true;
+    const view = new Int32Array(buffer);
+    pyodide.setInterruptBuffer(view);
+    return { sabValue: Atomics.load(view, 0), isShared: buffer instanceof SharedArrayBuffer };
   },
 
   runLoop() {
     try {
+      self.postMessage({ type: 'event', name: 'loopStarted' });
       pyodide.runPython('while True:\n    pass');
       return { interrupted: false, message: '' };
     } catch (error) {

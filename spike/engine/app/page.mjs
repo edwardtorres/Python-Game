@@ -10,13 +10,17 @@ const withTimeout = (promise, ms) =>
     }),
   ]);
 
-function makeWorker() {
+function makeWorker(onEvent = () => {}) {
   const worker = new Worker('/app/worker.mjs', { type: 'module' });
   const pending = new Map();
   let sequence = 0;
   let fatal = null;
 
   worker.onmessage = (event) => {
+    if (event.data.type === 'event') {
+      onEvent(event.data);
+      return;
+    }
     const waiter = pending.get(event.data.id);
     if (!waiter) return;
     pending.delete(event.data.id);
@@ -217,6 +221,69 @@ async function interruptRestart({ withStack }) {
   return { withStack, restartToFirstResultMs: readyAt - terminatedAt, nextValue: check.value };
 }
 
+// Diagnoses the buffer interrupt stage by stage, so a hang can be classified.
+// Stages: init, loop started (worker), signal consumed (Pyodide resets the buffer
+// to 0 once it raises), and reply received. The first stage that does not
+// happen names the failure. A stuck worker is terminated and not reused.
+async function interruptDiagnosis({ attempts }) {
+  const events = [];
+  const worker = makeWorker((event) => events.push({ name: event.name, at: performance.now() }));
+  const shared = new SharedArrayBuffer(4);
+  const flag = new Int32Array(shared);
+  const records = [];
+  const waitFor = async (predicate, ms) => {
+    const deadline = performance.now() + ms;
+    while (performance.now() < deadline) {
+      if (predicate()) return true;
+      await sleep(25);
+    }
+    return predicate();
+  };
+  try {
+    const initStarted = performance.now();
+    await withTimeout(worker.call('init'), 30000);
+    const initMs = performance.now() - initStarted;
+    const ack = await withTimeout(worker.call('setInterrupt', { buffer: shared }), 10000);
+    for (let attempt = 0; attempt < attempts; attempt += 1) {
+      const eventsBefore = events.length;
+      Atomics.store(flag, 0, 0);
+      const loop = worker.call('runLoop').then(
+        (reply) => ({ replied: true, reply }),
+        (error) => ({ replied: false, error: error.message }),
+      );
+      const started = await waitFor(() => events.slice(eventsBefore).some((e) => e.name === 'loopStarted'), 3000);
+      await sleep(300);
+      const sabValueBeforeSignal = Atomics.load(flag, 0);
+      const signalAt = performance.now();
+      Atomics.store(flag, 0, 2);
+      const consumed = await waitFor(() => Atomics.load(flag, 0) === 0, 3000);
+      const consumedMs = consumed ? performance.now() - signalAt : null;
+      const outcome = await Promise.race([loop, sleep(4000).then(() => null)]);
+      let classification = 'ok';
+      if (!started) classification = 'loop-not-started';
+      else if (!consumed) classification = 'signal-not-consumed';
+      else if (!outcome) classification = 'reply-lost';
+      else if (!outcome.replied || !outcome.reply.interrupted) classification = 'unexpected-reply';
+      records.push({
+        attempt,
+        classification,
+        started,
+        consumed,
+        consumedMs,
+        replied: outcome ? outcome.replied : false,
+        message: outcome && outcome.replied ? outcome.reply.message : null,
+        sabValueBeforeSignal,
+      });
+      if (classification !== 'ok') break;
+    }
+    return { initMs, ack, records, ...(await env()) };
+  } catch (error) {
+    return { error: String(error.message ?? error).slice(0, 300), records, ...(await env()) };
+  } finally {
+    worker.terminate();
+  }
+}
+
 window.spike = {
   env,
   coldStart,
@@ -228,5 +295,6 @@ window.spike = {
   cspProbe,
   interruptSharedBuffer,
   interruptRestart,
+  interruptDiagnosis,
 };
 window.spikeReady = true;
