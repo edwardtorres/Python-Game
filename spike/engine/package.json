@@ -1,0 +1,11 @@
+{
+  "name": "engine-spike",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "spike": "node run-spike.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.63.0"
+  }
+}

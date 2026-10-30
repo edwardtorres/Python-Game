@@ -1,0 +1,72 @@
+name: engine-spike
+
+on:
+  push:
+    branches: [claude/busy-wright-rooppm]
+    paths:
+      - 'spike/engine/**'
+      - '.github/workflows/engine-spike.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  spike:
+    name: engine spike (${{ matrix.browser }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, webkit]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Fetch and verify pinned Pyodide 314.0.7 release
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/pyodide-dist"
+          curl -sSL --retry 3 -o "$RUNNER_TEMP/pyodide.tar.bz2" \
+            https://github.com/pyodide/pyodide/releases/download/314.0.7/pyodide-314.0.7.tar.bz2
+          echo "192b5864e6e6d30ab074861af800cb8b4acb0998ef0f9342c3367448aeb86645  $RUNNER_TEMP/pyodide.tar.bz2" | sha256sum -c -
+          tar -xjf "$RUNNER_TEMP/pyodide.tar.bz2" -C "$RUNNER_TEMP/pyodide-dist"
+
+      - name: Vendor and verify seaborn 0.13.2 wheel (not in the Pyodide lock)
+        run: |
+          set -euo pipefail
+          curl -sSL --retry 3 -o "$RUNNER_TEMP/pyodide-dist/pyodide/seaborn-0.13.2-py3-none-any.whl" \
+            https://files.pythonhosted.org/packages/83/11/00d3c3dfc25ad54e731d91449895a79e4bf2384dc3ac01809010ba88f6d5/seaborn-0.13.2-py3-none-any.whl
+          echo "636f8336facf092165e27924f223d3c62ca560b1f2bb5dff7ab7fad265361987  $RUNNER_TEMP/pyodide-dist/pyodide/seaborn-0.13.2-py3-none-any.whl" | sha256sum -c -
+
+      - name: Install harness dependencies
+        working-directory: spike/engine
+        run: npm ci
+
+      - name: Install browser and system dependencies
+        working-directory: spike/engine
+        run: npx playwright install --with-deps ${{ matrix.browser }}
+
+      - name: Run engine spike
+        working-directory: spike/engine
+        env:
+          BROWSER: ${{ matrix.browser }}
+          PYODIDE_DIST: ${{ runner.temp }}/pyodide-dist/pyodide
+        run: node run-spike.mjs > "$RUNNER_TEMP/engine-spike-stdout.json"
+
+      - name: Print results to the log
+        if: always()
+        working-directory: spike/engine
+        run: cat results/engine-spike.json
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: engine-spike-${{ matrix.browser }}
+          path: spike/engine/results/
+          if-no-files-found: warn

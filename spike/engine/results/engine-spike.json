@@ -1,0 +1,939 @@
+{
+  "meta": {
+    "browser": "chromium",
+    "browserVersion": "153.0.8010.12",
+    "playwright": "1.63.0",
+    "pyodide": "314.0.7",
+    "python": "3.14.2",
+    "startedAt": "2026-10-30T18:05:05.724Z"
+  },
+  "jobs": {
+    "coldStart": {
+      "samples": [
+        {
+          "totalMs": 2319.189999999944,
+          "coreInitMs": 2291.8350000001956,
+          "coreBytes": 13513276,
+          "coreFiles": 4,
+          "firstValue": 2,
+          "crossOriginIsolated": true,
+          "sharedArrayBuffer": true,
+          "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36",
+          "consoleErrors": []
+        },
+        {
+          "totalMs": 2101.160000000149,
+          "coreInitMs": 2068.964999999851,
+          "coreBytes": 13513276,
+          "coreFiles": 4,
+          "firstValue": 2,
+          "crossOriginIsolated": true,
+          "sharedArrayBuffer": true,
+          "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36",
+          "consoleErrors": []
+        },
+        {
+          "totalMs": 2302.284999999916,
+          "coreInitMs": 2270.935000000056,
+          "coreBytes": 13513276,
+          "coreFiles": 4,
+          "firstValue": 2,
+          "crossOriginIsolated": true,
+          "sharedArrayBuffer": true,
+          "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36",
+          "consoleErrors": []
+        },
+        {
+          "totalMs": 2245.2600000000093,
+          "coreInitMs": 2218.380000000121,
+          "coreBytes": 13513276,
+          "coreFiles": 4,
+          "firstValue": 2,
+          "crossOriginIsolated": true,
+          "sharedArrayBuffer": true,
+          "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36",
+          "consoleErrors": []
+        },
+        {
+          "totalMs": 2462.439999999944,
+          "coreInitMs": 2436.4499999999534,
+          "coreBytes": 13513276,
+          "coreFiles": 4,
+          "firstValue": 2,
+          "crossOriginIsolated": true,
+          "sharedArrayBuffer": true,
+          "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36",
+          "consoleErrors": []
+        }
+      ],
+      "wallSeconds": 12.137
+    },
+    "package:numpy": {
+      "samples": [
+        {
+          "ms": 383.2399999999907,
+          "bytes": 2960568,
+          "files": 1,
+          "loaded": [
+            "numpy"
+          ],
+          "consoleErrors": []
+        },
+        {
+          "ms": 434.089999999851,
+          "bytes": 2960568,
+          "files": 1,
+          "loaded": [
+            "numpy"
+          ],
+          "consoleErrors": []
+        },
+        {
+          "ms": 457.1300000001211,
+          "bytes": 2960568,
+          "files": 1,
+          "loaded": [
+            "numpy"
+          ],
+          "consoleErrors": []
+        }
+      ],
+      "wallSeconds": 8.515
+    },
+    "package:pandas": {
+      "samples": [
+        {
+          "ms": 835.3950000000186,
+          "bytes": 7889748,
+          "files": 5,
+          "loaded": [
+            "numpy",
+            "pandas",
+            "python-dateutil",
+            "pytz",
+            "six"
+          ],
+          "consoleErrors": []
+        },
+        {
+          "ms": 999.1300000001211,
+          "bytes": 7889748,
+          "files": 5,
+          "loaded": [
+            "numpy",
+            "pandas",
+            "python-dateutil",
+            "pytz",
+            "six"
+          ],
+          "consoleErrors": []
+        },
+        {
+          "ms": 1036.529999999795,
+          "bytes": 7889748,
+          "files": 5,
+          "loaded": [
+            "numpy",
+            "pandas",
+            "python-dateutil",
+            "pytz",
+            "six"
+          ],
+          "consoleErrors": []
+        }
+      ],
+      "wallSeconds": 10.075
+    },
+    "package:matplotlib": {
+      "samples": [
+        {
+          "ms": 1035.9150000000373,
+          "bytes": 13266929,
+          "files": 12,
+          "loaded": [
+            "Pillow",
+            "contourpy",
+            "cycler",
+            "fonttools",
+            "kiwisolver",
+            "matplotlib",
+            "numpy",
+            "packaging",
+            "pyparsing",
+            "python-dateutil",
+            "pytz",
+            "six"
+          ],
+          "consoleErrors": []
+        },
+        {
+          "ms": 1072.3600000001024,
+          "bytes": 13266929,
+          "files": 12,
+          "loaded": [
+            "Pillow",
+            "contourpy",
+            "cycler",
+            "fonttools",
+            "kiwisolver",
+            "matplotlib",
+            "numpy",
+            "packaging",
+            "pyparsing",
+            "python-dateutil",
+            "pytz",
+            "six"
+          ],
+          "consoleErrors": []
+        },
+        {
+          "ms": 1077.2350000001024,
+          "bytes": 13266929,
+          "files": 12,
+          "loaded": [
+            "Pillow",
+            "contourpy",
+            "cycler",
+            "fonttools",
+            "kiwisolver",
+            "matplotlib",
+            "numpy",
+            "packaging",
+            "pyparsing",
+            "python-dateutil",
+            "pytz",
+            "six"
+          ],
+          "consoleErrors": []
+        }
+      ],
+      "wallSeconds": 10.58
+    },
+    "package:scipy": {
+      "samples": [
+        {
+          "ms": 2252.7900000000373,
+          "bytes": 16990318,
+          "files": 2,
+          "loaded": [
+            "numpy",
+            "scipy"
+          ],
+          "consoleErrors": []
+        },
+        {
+          "ms": 1902.4750000000931,
+          "bytes": 16990318,
+          "files": 2,
+          "loaded": [
+            "numpy",
+            "scipy"
+          ],
+          "consoleErrors": []
+        },
+        {
+          "ms": 1968.1400000001304,
+          "bytes": 16990318,
+          "files": 2,
+          "loaded": [
+            "numpy",
+            "scipy"
+          ],
+          "consoleErrors": []
+        }
+      ],
+      "wallSeconds": 13.397
+    },
+    "package:scikit-learn": {
+      "samples": [
+        {
+          "ms": 3070.7399999999907,
+          "bytes": 21638477,
+          "files": 5,
+          "loaded": [
+            "joblib",
+            "numpy",
+            "scikit-learn",
+            "scipy",
+            "threadpoolctl"
+          ],
+          "consoleErrors": []
+        },
+        {
+          "ms": 2770.780000000028,
+          "bytes": 21638477,
+          "files": 5,
+          "loaded": [
+            "joblib",
+            "numpy",
+            "scikit-learn",
+            "scipy",
+            "threadpoolctl"
+          ],
+          "consoleErrors": []
+        },
+        {
+          "ms": 2817.554999999935,
+          "bytes": 21638477,
+          "files": 5,
+          "loaded": [
+            "joblib",
+            "numpy",
+            "scikit-learn",
+            "scipy",
+            "threadpoolctl"
+          ],
+          "consoleErrors": []
+        }
+      ],
+      "wallSeconds": 16.147
+    },
+    "stackLoad": {
+      "samples": [
+        {
+          "coreInitMs": 2324.6999999999534,
+          "coreBytes": 13513276,
+          "stackMs": 3965.9899999999907,
+          "stackBytes": 36122587,
+          "stackFiles": 17,
+          "loaded": [
+            "Pillow",
+            "contourpy",
+            "cycler",
+            "fonttools",
+            "joblib",
+            "kiwisolver",
+            "matplotlib",
+            "numpy",
+            "packaging",
+            "pandas",
+            "pyparsing",
+            "python-dateutil",
+            "pytz",
+            "scikit-learn",
+            "scipy",
+            "six",
+            "threadpoolctl"
+          ],
+          "wasmMemoryBytes": 94240768,
+          "usedJsHeapBytes": 10000000,
+          "uaSpecificBytes": null,
+          "uaSpecificError": "SecurityError",
+          "crossOriginIsolated": true,
+          "sharedArrayBuffer": true,
+          "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36",
+          "consoleErrors": []
+        },
+        {
+          "coreInitMs": 2146.570000000065,
+          "coreBytes": 13513276,
+          "stackMs": 3907.9550000000745,
+          "stackBytes": 36122587,
+          "stackFiles": 17,
+          "loaded": [
+            "Pillow",
+            "contourpy",
+            "cycler",
+            "fonttools",
+            "joblib",
+            "kiwisolver",
+            "matplotlib",
+            "numpy",
+            "packaging",
+            "pandas",
+            "pyparsing",
+            "python-dateutil",
+            "pytz",
+            "scikit-learn",
+            "scipy",
+            "six",
+            "threadpoolctl"
+          ],
+          "wasmMemoryBytes": 94240768,
+          "usedJsHeapBytes": 10000000,
+          "uaSpecificBytes": null,
+          "uaSpecificError": "SecurityError",
+          "crossOriginIsolated": true,
+          "sharedArrayBuffer": true,
+          "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36",
+          "consoleErrors": []
+        },
+        {
+          "coreInitMs": 2284.284999999916,
+          "coreBytes": 13513276,
+          "stackMs": 3828.784999999916,
+          "stackBytes": 36122587,
+          "stackFiles": 17,
+          "loaded": [
+            "Pillow",
+            "contourpy",
+            "cycler",
+            "fonttools",
+            "joblib",
+            "kiwisolver",
+            "matplotlib",
+            "numpy",
+            "packaging",
+            "pandas",
+            "pyparsing",
+            "python-dateutil",
+            "pytz",
+            "scikit-learn",
+            "scipy",
+            "six",
+            "threadpoolctl"
+          ],
+          "wasmMemoryBytes": 94240768,
+          "usedJsHeapBytes": 10000000,
+          "uaSpecificBytes": null,
+          "uaSpecificError": "SecurityError",
+          "crossOriginIsolated": true,
+          "sharedArrayBuffer": true,
+          "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36",
+          "consoleErrors": []
+        }
+      ],
+      "wallSeconds": 18.856
+    },
+    "seaborn": {
+      "samples": [
+        {
+          "ms": 1448.3600000001024,
+          "bytes": 17739592,
+          "files": 14,
+          "loaded": [
+            "Pillow",
+            "contourpy",
+            "cycler",
+            "fonttools",
+            "kiwisolver",
+            "matplotlib",
+            "numpy",
+            "packaging",
+            "pandas",
+            "pyparsing",
+            "python-dateutil",
+            "pytz",
+            "six",
+            "seaborn"
+          ],
+          "check": "0.13.2|True|True",
+          "expected": "0.13.2|True|True",
+          "crossOriginIsolated": true,
+          "sharedArrayBuffer": true,
+          "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36",
+          "consoleErrors": []
+        },
+        {
+          "ms": 1442.1799999999348,
+          "bytes": 17739592,
+          "files": 14,
+          "loaded": [
+            "Pillow",
+            "contourpy",
+            "cycler",
+            "fonttools",
+            "kiwisolver",
+            "matplotlib",
+            "numpy",
+            "packaging",
+            "pandas",
+            "pyparsing",
+            "python-dateutil",
+            "pytz",
+            "six",
+            "seaborn"
+          ],
+          "check": "0.13.2|True|True",
+          "expected": "0.13.2|True|True",
+          "crossOriginIsolated": true,
+          "sharedArrayBuffer": true,
+          "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36",
+          "consoleErrors": []
+        },
+        {
+          "ms": 1433.0699999998324,
+          "bytes": 17739592,
+          "files": 14,
+          "loaded": [
+            "Pillow",
+            "contourpy",
+            "cycler",
+            "fonttools",
+            "kiwisolver",
+            "matplotlib",
+            "numpy",
+            "packaging",
+            "pandas",
+            "pyparsing",
+            "python-dateutil",
+            "pytz",
+            "six",
+            "seaborn"
+          ],
+          "check": "0.13.2|True|True",
+          "expected": "0.13.2|True|True",
+          "crossOriginIsolated": true,
+          "sharedArrayBuffer": true,
+          "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36",
+          "consoleErrors": []
+        }
+      ],
+      "wallSeconds": 29.245
+    },
+    "functional": {
+      "samples": [
+        {
+          "checks": [
+            {
+              "name": "pure_python",
+              "pass": true,
+              "expected": "333328333350000",
+              "got": "333328333350000",
+              "error": null,
+              "ms": 19.100000000093132
+            },
+            {
+              "name": "pandas_groupby",
+              "pass": true,
+              "expected": "a=4,b=2",
+              "got": "a=4,b=2",
+              "error": null,
+              "ms": 3152.189999999944
+            },
+            {
+              "name": "matplotlib_agg_png",
+              "pass": true,
+              "expected": "True|True",
+              "got": "True|True",
+              "error": null,
+              "ms": 2196.715000000084
+            },
+            {
+              "name": "sklearn_linear_fit",
+              "pass": true,
+              "expected": "2.000000|1.000000",
+              "got": "2.000000|1.000000",
+              "error": null,
+              "ms": 4023.7399999999907
+            },
+            {
+              "name": "mock_api_pagination",
+              "pass": true,
+              "expected": "200,200,200|25|1225",
+              "got": "200,200,200|25|1225",
+              "error": null,
+              "ms": 3.744999999878928
+            },
+            {
+              "name": "mock_api_retry_after",
+              "pass": true,
+              "expected": "429|2|200",
+              "got": "429|2|200",
+              "error": null,
+              "ms": 6.120000000111759
+            },
+            {
+              "name": "mock_api_call_log",
+              "pass": true,
+              "expected": [
+                "/api/shipments?page=1&per_page=10",
+                "/api/shipments?page=2&per_page=10",
+                "/api/shipments?page=3&per_page=10",
+                "/api/limited",
+                "/api/limited"
+              ],
+              "got": [
+                "/api/shipments?page=1&per_page=10",
+                "/api/shipments?page=2&per_page=10",
+                "/api/shipments?page=3&per_page=10",
+                "/api/limited",
+                "/api/limited"
+              ],
+              "error": null,
+              "ms": 0
+            }
+          ],
+          "wasmMemoryAfterChecksBytes": 195624960,
+          "crossOriginIsolated": true,
+          "sharedArrayBuffer": true,
+          "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36",
+          "consoleErrors": []
+        }
+      ],
+      "wallSeconds": 16.205
+    },
+    "isolation": {
+      "samples": [
+        {
+          "runA": {
+            "module_value": 7,
+            "draw_a": 0.417022004702574
+          },
+          "runBBeforeReset": {
+            "x_visible": false,
+            "file_exists": true,
+            "module_cached": true,
+            "figures_open": 1,
+            "rng_leaked": true
+          },
+          "reset": {
+            "figures_closed": 1,
+            "modules_removed": [
+              "leaky_mod"
+            ]
+          },
+          "runCAfterReset": {
+            "x_visible": false,
+            "file_exists": false,
+            "module_cached": false,
+            "figures_open": 0,
+            "sys_path_clean": true
+          },
+          "checks": [
+            {
+              "name": "fresh_namespace_hides_variables",
+              "pass": true
+            },
+            {
+              "name": "vfs_file_visible_before_reset",
+              "pass": true
+            },
+            {
+              "name": "vfs_file_removed_by_reset",
+              "pass": true
+            },
+            {
+              "name": "user_module_cached_before_reset",
+              "pass": true
+            },
+            {
+              "name": "user_module_uncached_by_reset",
+              "pass": true
+            },
+            {
+              "name": "figures_open_before_reset",
+              "pass": true
+            },
+            {
+              "name": "figures_closed_by_reset",
+              "pass": true
+            },
+            {
+              "name": "sys_path_cleaned_by_reset",
+              "pass": true
+            },
+            {
+              "name": "numpy_rng_state_persists_across_runs",
+              "pass": true
+            }
+          ],
+          "consoleErrors": []
+        }
+      ],
+      "wallSeconds": 6.214
+    },
+    "interruptSharedBuffer": {
+      "samples": [
+        {
+          "samples": [
+            {
+              "interrupted": true,
+              "message": "KeyboardInterrupt",
+              "interruptLatencyMs": 8.410000000149012,
+              "recoveryMs": 5.004999999888241,
+              "bufferAfter": 0,
+              "nextValue": 2
+            },
+            {
+              "interrupted": true,
+              "message": "KeyboardInterrupt",
+              "interruptLatencyMs": 2.834999999962747,
+              "recoveryMs": 3.0600000000558794,
+              "bufferAfter": 0,
+              "nextValue": 2
+            },
+            {
+              "interrupted": true,
+              "message": "KeyboardInterrupt",
+              "interruptLatencyMs": 1.9550000000745058,
+              "recoveryMs": 1.8200000000651926,
+              "bufferAfter": 0,
+              "nextValue": 2
+            }
+          ],
+          "crossOriginIsolated": true,
+          "sharedArrayBuffer": true,
+          "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36",
+          "consoleErrors": []
+        },
+        {
+          "samples": [
+            {
+              "interrupted": true,
+              "message": "KeyboardInterrupt",
+              "interruptLatencyMs": 9.070000000065193,
+              "recoveryMs": 5.4249999998137355,
+              "bufferAfter": 0,
+              "nextValue": 2
+            },
+            {
+              "interrupted": true,
+              "message": "KeyboardInterrupt",
+              "interruptLatencyMs": 2.9750000000931323,
+              "recoveryMs": 2.534999999916181,
+              "bufferAfter": 0,
+              "nextValue": 2
+            },
+            {
+              "interrupted": true,
+              "message": "KeyboardInterrupt",
+              "interruptLatencyMs": 2.5300000000279397,
+              "recoveryMs": 2.459999999962747,
+              "bufferAfter": 0,
+              "nextValue": 2
+            }
+          ],
+          "crossOriginIsolated": true,
+          "sharedArrayBuffer": true,
+          "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36",
+          "consoleErrors": []
+        }
+      ],
+      "wallSeconds": 6.832
+    },
+    "interruptRestart:core": {
+      "samples": [
+        {
+          "withStack": false,
+          "restartToFirstResultMs": 1867.7949999999255,
+          "nextValue": 2,
+          "consoleErrors": []
+        },
+        {
+          "withStack": false,
+          "restartToFirstResultMs": 1787.3300000000745,
+          "nextValue": 2,
+          "consoleErrors": []
+        },
+        {
+          "withStack": false,
+          "restartToFirstResultMs": 1950.9549999998417,
+          "nextValue": 2,
+          "consoleErrors": []
+        }
+      ],
+      "wallSeconds": 13.908
+    },
+    "interruptRestart:stack": {
+      "samples": [
+        {
+          "withStack": true,
+          "restartToFirstResultMs": 6239.920000000158,
+          "nextValue": 2,
+          "consoleErrors": []
+        },
+        {
+          "withStack": true,
+          "restartToFirstResultMs": 6297.655000000028,
+          "nextValue": 2,
+          "consoleErrors": []
+        },
+        {
+          "withStack": true,
+          "restartToFirstResultMs": 6024.190000000177,
+          "nextValue": 2,
+          "consoleErrors": []
+        }
+      ],
+      "wallSeconds": 40.39
+    },
+    "csp:production": {
+      "samples": [
+        {
+          "ok": true,
+          "value": 2,
+          "coreInitMs": 2164.375,
+          "ms": 2197.185000000056,
+          "pageWasm": "compiled",
+          "crossOriginIsolated": true,
+          "sharedArrayBuffer": true,
+          "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36",
+          "consoleErrors": []
+        }
+      ],
+      "wallSeconds": 2.328
+    },
+    "csp:noWasmEval": {
+      "samples": [
+        {
+          "ok": false,
+          "error": "timed out",
+          "ms": 60002.060000000056,
+          "pageWasm": "CompileError: WebAssembly.compile(): Compiling or instantiating WebAssembly module violates the following Content Security policy directive because 'unsafe-eval' is not an allowed source of script in the following ",
+          "crossOriginIsolated": true,
+          "sharedArrayBuffer": true,
+          "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36",
+          "consoleErrors": []
+        }
+      ],
+      "wallSeconds": 60.12
+    }
+  },
+  "closures": {
+    "numpy": [
+      {
+        "name": "numpy",
+        "file": "numpy-2.4.6-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+        "rawBytes": 2960568,
+        "brotliBytesQ9": 2928515
+      }
+    ],
+    "pandas": [
+      {
+        "name": "numpy",
+        "file": "numpy-2.4.6-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+        "rawBytes": 2960568,
+        "brotliBytesQ9": 2928515
+      },
+      {
+        "name": "pandas",
+        "file": "pandas-3.0.2-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+        "rawBytes": 4177749,
+        "brotliBytesQ9": 4150168
+      },
+      {
+        "name": "python-dateutil",
+        "file": "python_dateutil-2.9.0.post0-py2.py3-none-any.whl",
+        "rawBytes": 229892,
+        "brotliBytesQ9": 227648
+      },
+      {
+        "name": "pytz",
+        "file": "pytz-2026.1.post1-py2.py3-none-any.whl",
+        "rawBytes": 510489,
+        "brotliBytesQ9": 292009
+      },
+      {
+        "name": "six",
+        "file": "six-1.17.0-py2.py3-none-any.whl",
+        "rawBytes": 11050,
+        "brotliBytesQ9": 10590
+      }
+    ],
+    "matplotlib": [
+      {
+        "name": "contourpy",
+        "file": "contourpy-1.3.3-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+        "rawBytes": 118874,
+        "brotliBytesQ9": 116841
+      },
+      {
+        "name": "cycler",
+        "file": "cycler-0.12.1-py3-none-any.whl",
+        "rawBytes": 8321,
+        "brotliBytesQ9": 7741
+      },
+      {
+        "name": "fonttools",
+        "file": "fonttools-4.62.1-py3-none-any.whl",
+        "rawBytes": 1152647,
+        "brotliBytesQ9": 1117045
+      },
+      {
+        "name": "kiwisolver",
+        "file": "kiwisolver-1.5.0-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+        "rawBytes": 36616,
+        "brotliBytesQ9": 35718
+      },
+      {
+        "name": "matplotlib",
+        "file": "matplotlib-3.10.8-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+        "rawBytes": 6982033,
+        "brotliBytesQ9": 6854951
+      },
+      {
+        "name": "numpy",
+        "file": "numpy-2.4.6-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+        "rawBytes": 2960568,
+        "brotliBytesQ9": 2928515
+      },
+      {
+        "name": "packaging",
+        "file": "packaging-26.1-py3-none-any.whl",
+        "rawBytes": 95852,
+        "brotliBytesQ9": 93682
+      },
+      {
+        "name": "pyparsing",
+        "file": "pyparsing-3.3.2-py3-none-any.whl",
+        "rawBytes": 122781,
+        "brotliBytesQ9": 120785
+      },
+      {
+        "name": "python-dateutil",
+        "file": "python_dateutil-2.9.0.post0-py2.py3-none-any.whl",
+        "rawBytes": 229892,
+        "brotliBytesQ9": 227648
+      },
+      {
+        "name": "pytz",
+        "file": "pytz-2026.1.post1-py2.py3-none-any.whl",
+        "rawBytes": 510489,
+        "brotliBytesQ9": 292009
+      },
+      {
+        "name": "six",
+        "file": "six-1.17.0-py2.py3-none-any.whl",
+        "rawBytes": 11050,
+        "brotliBytesQ9": 10590
+      }
+    ],
+    "scipy": [
+      {
+        "name": "numpy",
+        "file": "numpy-2.4.6-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+        "rawBytes": 2960568,
+        "brotliBytesQ9": 2928515
+      },
+      {
+        "name": "scipy",
+        "file": "scipy-1.18.0-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+        "rawBytes": 14029750,
+        "brotliBytesQ9": 13829283
+      }
+    ],
+    "scikit-learn": [
+      {
+        "name": "joblib",
+        "file": "joblib-1.5.3-py3-none-any.whl",
+        "rawBytes": 180317,
+        "brotliBytesQ9": 175419
+      },
+      {
+        "name": "numpy",
+        "file": "numpy-2.4.6-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+        "rawBytes": 2960568,
+        "brotliBytesQ9": 2928515
+      },
+      {
+        "name": "scikit-learn",
+        "file": "scikit_learn-1.8.0-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+        "rawBytes": 4449204,
+        "brotliBytesQ9": 4394339
+      },
+      {
+        "name": "scipy",
+        "file": "scipy-1.18.0-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+        "rawBytes": 14029750,
+        "brotliBytesQ9": 13829283
+      },
+      {
+        "name": "threadpoolctl",
+        "file": "threadpoolctl-3.6.0-py3-none-any.whl",
+        "rawBytes": 18638,
+        "brotliBytesQ9": 18214
+      }
+    ]
+  }
+}
