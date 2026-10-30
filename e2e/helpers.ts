@@ -32,3 +32,30 @@ export async function setCell(page: Page, challengeId: string, index: number, co
     [challengeId, index, code] as const,
   );
 }
+
+// Waits for a feedback line. On failure it prints the page's main text, the engine
+// stats, and any console or page errors, so a CI failure says what the page showed.
+export async function expectFeedback(page: Page, text: string | RegExp, timeout = 120_000): Promise<void> {
+  try {
+    await expect(page.getByText(text)).toBeVisible({ timeout });
+  } catch (error) {
+    const main = await page.locator('main').innerText().catch(() => '<no main element>');
+    const stats = await page
+      .evaluate(() => (window as unknown as { __LARKSPUR_TEST__?: { status(): unknown } }).__LARKSPUR_TEST__?.status() ?? null)
+      .catch((reason: unknown) => `status unavailable: ${String(reason)}`);
+    console.log(`FEEDBACK DUMP waiting for ${String(text)}\nMAIN:\n${main}\nSTATS: ${JSON.stringify(stats)}`);
+    throw error;
+  }
+}
+
+// Records console messages and uncaught errors for the test, for the CI log.
+export function logPageErrors(page: Page): void {
+  page.on('console', (message) => {
+    if (message.type() === 'error' || message.type() === 'warning') console.log(`CONSOLE ${message.type()}: ${message.text()}`);
+  });
+  page.on('pageerror', (error) => console.log(`PAGEERROR: ${error.message}`));
+  page.on('worker', (worker) => {
+    console.log(`WORKER created: ${worker.url()}`);
+    worker.on('console', (message) => console.log(`WORKER console: ${message.text()}`));
+  });
+}

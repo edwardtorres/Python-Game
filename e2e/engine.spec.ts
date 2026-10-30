@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { clean, openTicket, setCode } from './helpers';
+import { clean, expectFeedback, logPageErrors, openTicket, setCode } from './helpers';
 
 const RUNAWAY = 'while True:\n    pass\n';
 
@@ -12,6 +12,10 @@ async function warmEngine(page: import('@playwright/test').Page, title: string):
 }
 
 test.describe('stopping and recovering the engine', () => {
+  test.beforeEach(({ page }) => {
+    logPageErrors(page);
+  });
+
   test('the buffer stops a runaway loop without restarting the engine', async ({ page }) => {
     await warmEngine(page, clean.title);
     await setCode(page, clean.id, RUNAWAY);
@@ -32,7 +36,7 @@ test.describe('stopping and recovering the engine', () => {
     await page.getByRole('button', { name: new RegExp(clean.title) }).click();
     await setCode(page, clean.id, clean.reference);
     await page.getByRole('button', { name: 'Run visible checks' }).click();
-    await expect(page.getByText('The visible checks passed. Submit to run the hidden checks.')).toBeVisible({ timeout: 120_000 });
+    await expectFeedback(page, 'The visible checks passed. Submit to run the hidden checks.');
     await setCode(page, clean.id, RUNAWAY);
     await page.getByRole('button', { name: 'Submit' }).click();
     const stop = page.getByRole('button', { name: 'Stop' });
@@ -43,7 +47,7 @@ test.describe('stopping and recovering the engine', () => {
     await expect(page.getByText(/did not confirm the stop in time/)).toBeVisible({ timeout: 15_000 });
     await setCode(page, clean.id, clean.reference);
     await page.getByRole('button', { name: 'Run visible checks' }).click();
-    await expect(page.getByText('The visible checks passed. Submit to run the hidden checks.')).toBeVisible({ timeout: 120_000 });
+    await expectFeedback(page, 'The visible checks passed. Submit to run the hidden checks.');
     const stats = await page.evaluate(() => (window as unknown as { __LARKSPUR_TEST__: { status(): { restarts: Record<string, number> } } }).__LARKSPUR_TEST__.status());
     expect(stats.restarts.interrupt).toBe(1);
   });
@@ -55,7 +59,7 @@ test.describe('stopping and recovering the engine', () => {
     await page.getByRole('button', { name: 'Run visible checks' }).click();
     await expect(page.getByText('The engine restarted to free memory.')).toBeVisible({ timeout: 120_000 });
     await page.getByRole('button', { name: 'Run visible checks' }).click();
-    await expect(page.getByText('The visible checks passed. Submit to run the hidden checks.')).toBeVisible({ timeout: 120_000 });
+    await expectFeedback(page, 'The visible checks passed. Submit to run the hidden checks.');
   });
 
   test('a Python engine that never starts shows a clear timeout message', async ({ page }) => {
