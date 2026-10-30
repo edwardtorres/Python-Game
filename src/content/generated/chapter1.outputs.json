@@ -1,0 +1,537 @@
+{
+  "examples": {
+    "types-1": {
+      "codeHash": "c1c0f82e5487ea38",
+      "stdout": "43 5.0 7!\n<class 'int'> <class 'float'> <class 'str'>\n",
+      "error": null
+    },
+    "types-2": {
+      "codeHash": "de81bfe1546ec216",
+      "stdout": "3.5 3.0 3 3\n<class 'float'> <class 'int'>\n",
+      "error": null
+    },
+    "strings-1": {
+      "codeHash": "f5aec533bba40a2e",
+      "stdout": "Ada has 3 parcels\n3.14 per kg\n",
+      "error": null
+    },
+    "strings-2": {
+      "codeHash": "d00db47b2ccf0b6d",
+      "stdout": "'  freight  '\n'FREIGHT'\n",
+      "error": null
+    },
+    "lists-1": {
+      "codeHash": "3f89e8243e3a1789",
+      "stdout": "Dock 1 Dock 3 ['Dock 2', 'Dock 3']\n4\n",
+      "error": null
+    },
+    "lists-2": {
+      "codeHash": "97d5f09821dca8af",
+      "stdout": "[1, 2, 3]\n[1, 2, 3] [1, 2, 3, 4]\n",
+      "error": null
+    },
+    "dicts-1": {
+      "codeHash": "75dcd4899d6b05cc",
+      "stdout": "0\n3\nKeyError: 'crates'\n",
+      "error": null
+    },
+    "dicts-2": {
+      "codeHash": "c2bc41cf622456ad",
+      "stdout": "{'road': 2, 'rail': 1, 'sea': 1}\n['road', 'rail', 'sea']\n",
+      "error": null
+    },
+    "sets-1": {
+      "codeHash": "24570421e10d0e73",
+      "stdout": "4 3\n['A', 'B', 'C']\n",
+      "error": null
+    },
+    "tuples-1": {
+      "codeHash": "0344e11bbcb771d4",
+      "stdout": "Dock 4 12\n<class 'int'> <class 'tuple'>\n",
+      "error": null
+    },
+    "control-1": {
+      "codeHash": "9bf6e5fb5cb800ba",
+      "stdout": "3 light\n12 medium\n25 heavy\nTrue False\n",
+      "error": null
+    },
+    "control-2": {
+      "codeHash": "cb1cf60d1774e847",
+      "stdout": "[0, 1, 2]\n[1, 2, 3]\nparcel 1\nparcel 2\nparcel 3\n",
+      "error": null
+    },
+    "functions-1": {
+      "codeHash": "38d53bfe23b28696",
+      "stdout": "A|0|[]\nA|2|['color', 'size']\n",
+      "error": null
+    },
+    "functions-2": {
+      "codeHash": "8ff4f06147d05bfc",
+      "stdout": "1 0\n",
+      "error": null
+    },
+    "functions-3": {
+      "codeHash": "aee3469f7ff27fe8",
+      "stdout": "['A']\n['A', 'B']\n",
+      "error": null
+    },
+    "comprehensions-1": {
+      "codeHash": "f514199740d09ccf",
+      "stdout": "[24, 14, 40]\n{0, 1, 2}\n{4: 0, 12: 2, 7: 1, 20: 4}\n",
+      "error": null
+    },
+    "exceptions-1": {
+      "codeHash": "9610315348e7a3bc",
+      "stdout": "12 None\n",
+      "error": null
+    },
+    "exceptions-2": {
+      "codeHash": "28ba02d5413a655f",
+      "stdout": "6.0 0.0\n",
+      "error": null
+    },
+    "with-1": {
+      "codeHash": "3b855ffba103f21e",
+      "stdout": "'line one\\n'\nTrue\nValueError: I/O operation on closed file\n",
+      "error": null
+    },
+    "modules-1": {
+      "codeHash": "661699f7eddeaea1",
+      "stdout": "2 2\nTrue\n",
+      "error": null
+    },
+    "modules-2": {
+      "codeHash": "c759d1f8adb8a327",
+      "stdout": "{\"parcels\": 2}\n",
+      "error": null
+    },
+    "iterators-1": {
+      "codeHash": "8079161a4b3c3d3f",
+      "stdout": "10 20\n[]\n",
+      "error": null
+    },
+    "generators-1": {
+      "codeHash": "eb299c73d28460e7",
+      "stdout": "[2, 1]\n[]\n[2, 1]\n",
+      "error": null
+    }
+  },
+  "choice": {
+    "c01-predict-division": {
+      "codeHash": "024f0997e97e8b2f",
+      "answer": "true",
+      "options": [
+        {
+          "id": "true",
+          "text": "3.5",
+          "tag": null,
+          "codeHash": "024f0997e97e8b2f",
+          "error": null
+        },
+        {
+          "id": "floor",
+          "text": "3",
+          "tag": "INT_DIVISION",
+          "codeHash": "79a39c75ffc3a703",
+          "error": null
+        },
+        {
+          "id": "remainder",
+          "text": "1",
+          "tag": "OPERATOR_MIXUP",
+          "codeHash": "0fdd5cbcc5f3a754",
+          "error": null
+        }
+      ]
+    },
+    "c01-predict-immutable-string": {
+      "codeHash": "413f8f0c665b1c38",
+      "answer": "true",
+      "options": [
+        {
+          "id": "upper-printed",
+          "text": "FREIGHT",
+          "tag": "STR_IMMUTABLE",
+          "codeHash": "6c40d878dc96038c",
+          "error": null
+        },
+        {
+          "id": "true",
+          "text": "freight",
+          "tag": null,
+          "codeHash": "413f8f0c665b1c38",
+          "error": null
+        }
+      ]
+    },
+    "c01-predict-list-alias": {
+      "codeHash": "b739b2ba750793c5",
+      "answer": "true",
+      "options": [
+        {
+          "id": "copy",
+          "text": "[1, 2]",
+          "tag": "ALIASING_COPY",
+          "codeHash": "54d25537f5a0789a",
+          "error": null
+        },
+        {
+          "id": "true",
+          "text": "[1, 2, 3]",
+          "tag": null,
+          "codeHash": "b739b2ba750793c5",
+          "error": null
+        }
+      ]
+    },
+    "c01-predict-dict-order": {
+      "codeHash": "19a8489e814e3ae8",
+      "answer": "true",
+      "options": [
+        {
+          "id": "sorted",
+          "text": "['air', 'sea']",
+          "tag": "DICT_ORDER_ASSUMPTION",
+          "codeHash": "7dffc1ed5f08ca28",
+          "error": null
+        },
+        {
+          "id": "values",
+          "text": "[1, 2]",
+          "tag": "DICT_ORDER_ASSUMPTION",
+          "codeHash": "54ba731318cb9f5f",
+          "error": null
+        },
+        {
+          "id": "true",
+          "text": "['sea', 'air']",
+          "tag": null,
+          "codeHash": "19a8489e814e3ae8",
+          "error": null
+        }
+      ]
+    },
+    "c01-predict-set-size": {
+      "codeHash": "1b2d0a0e063a8642",
+      "answer": "true",
+      "options": [
+        {
+          "id": "list-size",
+          "text": "4",
+          "tag": "SET_ORDER_ASSUMPTION",
+          "codeHash": "45961d2df4d9d877",
+          "error": null
+        },
+        {
+          "id": "true",
+          "text": "3",
+          "tag": null,
+          "codeHash": "1b2d0a0e063a8642",
+          "error": null
+        }
+      ]
+    },
+    "c01-predict-one-tuple": {
+      "codeHash": "515a26e43e540f80",
+      "answer": "true",
+      "options": [
+        {
+          "id": "true",
+          "text": "int",
+          "tag": null,
+          "codeHash": "515a26e43e540f80",
+          "error": null
+        },
+        {
+          "id": "comma",
+          "text": "tuple",
+          "tag": "SINGLE_ELEMENT_TUPLE",
+          "codeHash": "5e936a48883093f2",
+          "error": null
+        }
+      ]
+    },
+    "c01-predict-range-end": {
+      "codeHash": "2049d0052ea800e2",
+      "answer": "true",
+      "options": [
+        {
+          "id": "true",
+          "text": "[1, 2, 3]",
+          "tag": null,
+          "codeHash": "2049d0052ea800e2",
+          "error": null
+        },
+        {
+          "id": "short",
+          "text": "[1, 2]",
+          "tag": "OFF_BY_ONE_RANGE",
+          "codeHash": "680699efe5d3d2c0",
+          "error": null
+        },
+        {
+          "id": "from-zero",
+          "text": "[0, 1, 2, 3]",
+          "tag": "OFF_BY_ONE_RANGE",
+          "codeHash": "fd26a4020221c35d",
+          "error": null
+        }
+      ]
+    },
+    "c01-predict-default-list": {
+      "codeHash": "1c9d62032367362c",
+      "answer": "true",
+      "options": [
+        {
+          "id": "shared-default",
+          "text": "['a']\n['a', 'b']",
+          "tag": "MUTABLE_DEFAULT",
+          "codeHash": "9afb61ee29d32d48",
+          "error": null
+        },
+        {
+          "id": "true",
+          "text": "['a']\n['b']",
+          "tag": null,
+          "codeHash": "1c9d62032367362c",
+          "error": null
+        }
+      ]
+    },
+    "c01-predict-generator-once": {
+      "codeHash": "a6f2de1321d3ef47",
+      "answer": "true",
+      "options": [
+        {
+          "id": "true",
+          "text": "[2, 4]\n[]",
+          "tag": null,
+          "codeHash": "a6f2de1321d3ef47",
+          "error": null
+        },
+        {
+          "id": "list-again",
+          "text": "[2, 4]\n[2, 4]",
+          "tag": "GENERATOR_EXHAUSTED",
+          "codeHash": "4ee113f3e8d7c0a1",
+          "error": null
+        }
+      ]
+    },
+    "c01-predict-truthiness": {
+      "codeHash": "5cc43339b11d43e2",
+      "answer": "true",
+      "options": [
+        {
+          "id": "true",
+          "text": "False\nFalse\nTrue",
+          "tag": null,
+          "codeHash": "5cc43339b11d43e2",
+          "error": null
+        },
+        {
+          "id": "not-none",
+          "text": "True\nTrue\nTrue",
+          "tag": "TRUTHINESS",
+          "codeHash": "f890991434e2b991",
+          "error": null
+        }
+      ]
+    },
+    "c01-traceback-missing-key": {
+      "codeHash": "538b26e39f8a15ff",
+      "answer": "true",
+      "options": [
+        {
+          "id": "true",
+          "text": "KeyError: 'crates'",
+          "tag": null,
+          "codeHash": "538b26e39f8a15ff",
+          "error": {
+            "type": "KeyError",
+            "message": "'crates'",
+            "line": 2
+          }
+        },
+        {
+          "id": "list-index",
+          "text": "TypeError: list indices must be integers or slices, not str",
+          "tag": "KEYERROR_VS_GET",
+          "codeHash": "cbe5b8596668dba4",
+          "error": {
+            "type": "TypeError",
+            "message": "list indices must be integers or slices, not str",
+            "line": 2
+          }
+        },
+        {
+          "id": "get-plus",
+          "text": "TypeError: unsupported operand type(s) for +: 'NoneType' and 'int'",
+          "tag": "KEYERROR_VS_GET",
+          "codeHash": "c852d8e323f2abb4",
+          "error": {
+            "type": "TypeError",
+            "message": "unsupported operand type(s) for +: 'NoneType' and 'int'",
+            "line": 2
+          }
+        }
+      ]
+    },
+    "c01-traceback-missing-argument": {
+      "codeHash": "2c5d4d44ed5ecb8d",
+      "answer": "true",
+      "options": [
+        {
+          "id": "bad-keyword",
+          "text": "TypeError: ship() got an unexpected keyword argument 'box'",
+          "tag": "MISSING_ARGUMENT",
+          "codeHash": "3862e573c26b79e3",
+          "error": {
+            "type": "TypeError",
+            "message": "ship() got an unexpected keyword argument 'box'",
+            "line": 4
+          }
+        },
+        {
+          "id": "true",
+          "text": "TypeError: ship() missing 1 required positional argument: 'weight'",
+          "tag": null,
+          "codeHash": "2c5d4d44ed5ecb8d",
+          "error": {
+            "type": "TypeError",
+            "message": "ship() missing 1 required positional argument: 'weight'",
+            "line": 4
+          }
+        },
+        {
+          "id": "too-many",
+          "text": "TypeError: ship() takes 2 positional arguments but 3 were given",
+          "tag": "MISSING_ARGUMENT",
+          "codeHash": "41e7e33b8207921b",
+          "error": {
+            "type": "TypeError",
+            "message": "ship() takes 2 positional arguments but 3 were given",
+            "line": 4
+          }
+        }
+      ]
+    },
+    "c01-traceback-broad-except": {
+      "codeHash": "e6a12a5b7304b8af",
+      "answer": "true",
+      "options": [
+        {
+          "id": "none-input",
+          "text": "TypeError: int() argument must be a string, a bytes-like object or a real number, not 'NoneType'",
+          "tag": "EXCEPTION_TOO_BROAD",
+          "codeHash": "9758f4cb5b41f6c0",
+          "error": {
+            "type": "TypeError",
+            "message": "int() argument must be a string, a bytes-like object or a real number, not 'NoneType'",
+            "line": 2
+          }
+        },
+        {
+          "id": "decimal-text",
+          "text": "ValueError: invalid literal for int() with base 10: '12.5'",
+          "tag": "INT_FROM_TEXT",
+          "codeHash": "b40f6a8c4cb99089",
+          "error": {
+            "type": "ValueError",
+            "message": "invalid literal for int() with base 10: '12.5'",
+            "line": 2
+          }
+        },
+        {
+          "id": "true",
+          "text": "ValueError: invalid literal for int() with base 10: 'twelve'",
+          "tag": null,
+          "codeHash": "e6a12a5b7304b8af",
+          "error": {
+            "type": "ValueError",
+            "message": "invalid literal for int() with base 10: 'twelve'",
+            "line": 2
+          }
+        }
+      ]
+    },
+    "c01-traceback-import": {
+      "codeHash": "f71ebf6af68296a8",
+      "answer": "true",
+      "options": [
+        {
+          "id": "misspelled",
+          "text": "ModuleNotFoundError: No module named 'freight_tool'",
+          "tag": "IMPORT_NOT_FOUND",
+          "codeHash": "3b33bedc3782e74d",
+          "error": {
+            "type": "ModuleNotFoundError",
+            "message": "No module named 'freight_tool'",
+            "line": 1
+          }
+        },
+        {
+          "id": "from-missing-name",
+          "text": "ImportError: cannot import name 'loads_freight' from 'json' (/lib/python314.zip/json/__init__.py)",
+          "tag": "IMPORT_NOT_FOUND",
+          "codeHash": "0d7e488987aeb2f2",
+          "error": {
+            "type": "ImportError",
+            "message": "cannot import name 'loads_freight' from 'json' (/lib/python314.zip/json/__init__.py)",
+            "line": 1
+          }
+        },
+        {
+          "id": "true",
+          "text": "ModuleNotFoundError: No module named 'freight_tools'",
+          "tag": null,
+          "codeHash": "f71ebf6af68296a8",
+          "error": {
+            "type": "ModuleNotFoundError",
+            "message": "No module named 'freight_tools'",
+            "line": 1
+          }
+        }
+      ]
+    },
+    "c01-traceback-name-type": {
+      "codeHash": "99361000bd9b7a32",
+      "answer": "true",
+      "options": [
+        {
+          "id": "true",
+          "text": "TypeError: can only concatenate str (not \"int\") to str",
+          "tag": null,
+          "codeHash": "99361000bd9b7a32",
+          "error": {
+            "type": "TypeError",
+            "message": "can only concatenate str (not \"int\") to str",
+            "line": 2
+          }
+        },
+        {
+          "id": "minus-instead",
+          "text": "TypeError: unsupported operand type(s) for -: 'str' and 'int'",
+          "tag": "TEXT_PLUS_NUMBER",
+          "codeHash": "eecad353a7de2ce9",
+          "error": {
+            "type": "TypeError",
+            "message": "unsupported operand type(s) for -: 'str' and 'int'",
+            "line": 2
+          }
+        },
+        {
+          "id": "float-text",
+          "text": "TypeError: unsupported operand type(s) for +: 'float' and 'str'",
+          "tag": "TEXT_PLUS_NUMBER",
+          "codeHash": "e09c893fb9108e84",
+          "error": {
+            "type": "TypeError",
+            "message": "unsupported operand type(s) for +: 'float' and 'str'",
+            "line": 2
+          }
+        }
+      ]
+    }
+  }
+}

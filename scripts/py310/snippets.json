@@ -110,5 +110,561 @@
   {
     "name": "late-rate-chart:variant:vague-x-label",
     "code": "import matplotlib\n\nmatplotlib.use(\"Agg\")\nimport matplotlib.pyplot as plt\n\n\ndef plot_late_rate_by_mode(df):\n    rates = df.groupby(\"mode\")[\"late\"].mean().sort_index()\n    fig, ax = plt.subplots()\n    ax.bar(rates.index.tolist(), rates.values.tolist())\n    ax.set_title(\"Late delivery rate by transport mode\")\n    ax.set_xlabel(\"Category\")\n    ax.set_ylabel(\"Late delivery rate\")\n    return fig\n"
+  },
+  {
+    "name": "c01-guided-format-label:reference",
+    "code": "def format_label(name, count):\n    return f\"{name.strip()}: {count} items\"\n"
+  },
+  {
+    "name": "c01-guided-format-label:starter",
+    "code": "def format_label(name, count):\n    pass\n"
+  },
+  {
+    "name": "c01-guided-format-label:variant:no-items-word",
+    "code": "def format_label(name, count):\n    return f\"{name.strip()}: {count}\"\n"
+  },
+  {
+    "name": "c01-guided-format-label:variant:no-strip",
+    "code": "def format_label(name, count):\n    return f\"{name}: {count} items\"\n"
+  },
+  {
+    "name": "c01-guided-count-by-mode:reference",
+    "code": "def count_by_mode(records):\n    counts = {}\n    for record in records:\n        mode = record[\"mode\"]\n        counts[mode] = counts.get(mode, 0) + 1\n    return counts\n"
+  },
+  {
+    "name": "c01-guided-count-by-mode:starter",
+    "code": "def count_by_mode(records):\n    pass\n"
+  },
+  {
+    "name": "c01-guided-count-by-mode:variant:counts-once",
+    "code": "def count_by_mode(records):\n    counts = {}\n    for record in records:\n        counts[record[\"mode\"]] += 1\n    return counts\n"
+  },
+  {
+    "name": "c01-guided-count-by-mode:variant:none-when-empty",
+    "code": "def count_by_mode(records):\n    if not records:\n        return None\n    counts = {}\n    for record in records:\n        mode = record[\"mode\"]\n        counts[mode] = counts.get(mode, 0) + 1\n    return counts\n"
+  },
+  {
+    "name": "c01-guided-classify-weight:reference",
+    "code": "def classify_weight(kg):\n    if kg < 5:\n        return \"light\"\n    if kg <= 20:\n        return \"medium\"\n    return \"heavy\"\n"
+  },
+  {
+    "name": "c01-guided-classify-weight:starter",
+    "code": "def classify_weight(kg):\n    pass\n"
+  },
+  {
+    "name": "c01-guided-classify-weight:variant:five-light",
+    "code": "def classify_weight(kg):\n    if kg <= 5:\n        return \"light\"\n    if kg <= 20:\n        return \"medium\"\n    return \"heavy\"\n"
+  },
+  {
+    "name": "c01-guided-classify-weight:variant:twenty-heavy",
+    "code": "def classify_weight(kg):\n    if kg < 5:\n        return \"light\"\n    if kg < 20:\n        return \"medium\"\n    return \"heavy\"\n"
+  },
+  {
+    "name": "c01-guided-classify-weight:variant:light-to-four",
+    "code": "def classify_weight(kg):\n    if kg <= 4:\n        return \"light\"\n    if kg <= 20:\n        return \"medium\"\n    return \"heavy\"\n"
+  },
+  {
+    "name": "c01-guided-classify-weight:variant:heavy-from-twenty-six",
+    "code": "def classify_weight(kg):\n    if kg < 5:\n        return \"light\"\n    if kg <= 25:\n        return \"medium\"\n    return \"heavy\"\n"
+  },
+  {
+    "name": "c01-guided-in-batches:reference",
+    "code": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n"
+  },
+  {
+    "name": "c01-guided-in-batches:starter",
+    "code": "def in_batches(items, size):\n    pass\n"
+  },
+  {
+    "name": "c01-guided-in-batches:variant:reversed-inside",
+    "code": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.insert(0, item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n"
+  },
+  {
+    "name": "c01-guided-in-batches:variant:size-plus-one",
+    "code": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size + 1:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n"
+  },
+  {
+    "name": "c01-guided-in-batches:variant:one-empty-batch",
+    "code": "def in_batches(items, size):\n    if len(items) == 0:\n        yield [None]\n        return\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n"
+  },
+  {
+    "name": "c01-ticket-unique-routes:reference",
+    "code": "def unique_routes(stops):\n    return sorted(set(stops))\n"
+  },
+  {
+    "name": "c01-ticket-unique-routes:starter",
+    "code": "def unique_routes(stops):\n    pass\n"
+  },
+  {
+    "name": "c01-ticket-unique-routes:variant:keeps-repeats",
+    "code": "def unique_routes(stops):\n    return sorted(stops)\n"
+  },
+  {
+    "name": "c01-ticket-unique-routes:variant:first-seen-order",
+    "code": "def unique_routes(stops):\n    return list(dict.fromkeys(stops))\n"
+  },
+  {
+    "name": "c01-ticket-route-pairs:reference",
+    "code": "def route_pairs(stops):\n    return [(a, b) for a, b in zip(stops, stops[1:])]\n"
+  },
+  {
+    "name": "c01-ticket-route-pairs:starter",
+    "code": "def route_pairs(stops):\n    pass\n"
+  },
+  {
+    "name": "c01-ticket-route-pairs:variant:swapped",
+    "code": "def route_pairs(stops):\n    return [(b, a) for a, b in zip(stops, stops[1:])]\n"
+  },
+  {
+    "name": "c01-ticket-route-pairs:variant:skips-a-stop",
+    "code": "def route_pairs(stops):\n    return [(a, b) for a, b in zip(stops, stops[2:])]\n"
+  },
+  {
+    "name": "c01-ticket-route-pairs:variant:single-stop-pair",
+    "code": "def route_pairs(stops):\n    if len(stops) == 1:\n        return [(stops[0], stops[0])]\n    return [(a, b) for a, b in zip(stops, stops[1:])]\n"
+  },
+  {
+    "name": "c01-ticket-build-label:reference",
+    "code": "def build_label(name, *tags, **options):\n    label = name\n    if tags:\n        label += \" [\" + \", \".join(tags) + \"]\"\n    for key in sorted(options):\n        label += f\" {key}={options[key]}\"\n    return label\n"
+  },
+  {
+    "name": "c01-ticket-build-label:starter",
+    "code": "def build_label(name, *tags, **options):\n    pass\n"
+  },
+  {
+    "name": "c01-ticket-build-label:variant:sorted-tags",
+    "code": "def build_label(name, *tags, **options):\n    label = name\n    if tags:\n        label += \" [\" + \", \".join(sorted(tags)) + \"]\"\n    for key in sorted(options):\n        label += f\" {key}={options[key]}\"\n    return label\n"
+  },
+  {
+    "name": "c01-ticket-build-label:variant:options-as-given",
+    "code": "def build_label(name, *tags, **options):\n    label = name\n    if tags:\n        label += \" [\" + \", \".join(tags) + \"]\"\n    for key, value in options.items():\n        label += f\" {key}={value}\"\n    return label\n"
+  },
+  {
+    "name": "c01-ticket-build-label:variant:name-lost-without-tags",
+    "code": "def build_label(name, *tags, **options):\n    label = name\n    if not tags:\n        label = \"\"\n    else:\n        label += \" [\" + \", \".join(tags) + \"]\"\n    for key in sorted(options):\n        label += f\" {key}={options[key]}\"\n    return label\n"
+  },
+  {
+    "name": "c01-ticket-parse-weight:reference",
+    "code": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        return float(text.strip())\n    except ValueError:\n        return None\n"
+  },
+  {
+    "name": "c01-ticket-parse-weight:starter",
+    "code": "def parse_weight(text):\n    pass\n"
+  },
+  {
+    "name": "c01-ticket-parse-weight:variant:no-fallback",
+    "code": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    return float(text.strip())\n"
+  },
+  {
+    "name": "c01-ticket-parse-weight:variant:catches-everything",
+    "code": "def parse_weight(text):\n    try:\n        return float(text)\n    except Exception:\n        return None\n"
+  },
+  {
+    "name": "c01-ticket-parse-weight:variant:whole-numbers-only",
+    "code": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        return float(int(text.strip()))\n    except ValueError:\n        return None\n"
+  },
+  {
+    "name": "c01-fix-with-extra:reference",
+    "code": "def with_extra(items, extra):\n    return [*items, extra]\n"
+  },
+  {
+    "name": "c01-fix-with-extra:starter",
+    "code": "def with_extra(items, extra):\n    items[-1] = extra\n    return items\n"
+  },
+  {
+    "name": "c01-fix-with-extra:variant:drops-last",
+    "code": "def with_extra(items, extra):\n    return items[:-1] + [extra]\n"
+  },
+  {
+    "name": "c01-fix-with-extra:variant:adds-at-front",
+    "code": "def with_extra(items, extra):\n    return [extra, *items]\n"
+  },
+  {
+    "name": "c01-fix-with-extra:variant:empty-returned",
+    "code": "def with_extra(items, extra):\n    if not items:\n        return items\n    return [*items, extra]\n"
+  },
+  {
+    "name": "c01-fix-first-total:reference",
+    "code": "def first_total(values, n):\n    total = 0\n    for i in range(n):\n        total += values[i]\n    return total\n"
+  },
+  {
+    "name": "c01-fix-first-total:starter",
+    "code": "def first_total(values, n):\n    total = 0\n    for i in range(1, n):\n        total += values[i]\n    return total\n"
+  },
+  {
+    "name": "c01-fix-first-total:variant:one-past-end",
+    "code": "def first_total(values, n):\n    total = 0\n    for i in range(1, n + 1):\n        total += values[i]\n    return total\n"
+  },
+  {
+    "name": "c01-fix-first-total:variant:none-for-zero",
+    "code": "def first_total(values, n):\n    if n == 0:\n        return None\n    total = 0\n    for i in range(n):\n        total += values[i]\n    return total\n"
+  },
+  {
+    "name": "c01-fix-add-stop:reference",
+    "code": "def add_stop(stop, stops=None):\n    if stops is None:\n        stops = []\n    stops.append(stop)\n    return stops\n"
+  },
+  {
+    "name": "c01-fix-add-stop:starter",
+    "code": "def add_stop(stop, stops=[]):\n    stops.append(stop)\n    return stops\n"
+  },
+  {
+    "name": "c01-fix-add-stop:variant:tuple-default",
+    "code": "def add_stop(stop, stops=()):\n    stops.append(stop)\n    return stops\n"
+  },
+  {
+    "name": "c01-fix-add-stop:variant:inserted-first",
+    "code": "def add_stop(stop, stops=None):\n    if stops is None:\n        stops = []\n    stops.insert(0, stop)\n    return stops\n"
+  },
+  {
+    "name": "c01-structure-squares:reference",
+    "code": "def squares_of_odds(values):\n    return [v * v for v in values if v % 2 == 1]\n"
+  },
+  {
+    "name": "c01-structure-squares:starter",
+    "code": "def squares_of_odds(values):\n    pass\n"
+  },
+  {
+    "name": "c01-structure-squares:variant:loop-with-append",
+    "code": "def squares_of_odds(values):\n    out = []\n    for v in values:\n        if v % 2 == 1:\n            out.append(v * v)\n    return out\n"
+  },
+  {
+    "name": "c01-structure-squares:variant:wrong-name",
+    "code": "def squares(values):\n    return [v * v for v in values if v % 2 == 1]\n"
+  },
+  {
+    "name": "c01-structure-countdown:reference",
+    "code": "def countdown(n):\n    while n > 0:\n        yield n\n        n -= 1\n"
+  },
+  {
+    "name": "c01-structure-countdown:starter",
+    "code": "def countdown(n):\n    pass\n"
+  },
+  {
+    "name": "c01-structure-countdown:variant:returns-a-list",
+    "code": "def countdown(n):\n    return list(range(n, 0, -1))\n"
+  },
+  {
+    "name": "c01-structure-countdown:variant:wrong-name",
+    "code": "def count_down(n):\n    while n > 0:\n        yield n\n        n -= 1\n"
+  },
+  {
+    "name": "c01-boss-clean-lines:reference",
+    "code": "def clean_lines(lines):\n    cleaned = []\n    for line in lines:\n        text = line.strip()\n        if text:\n            cleaned.append(text)\n    return cleaned\n"
+  },
+  {
+    "name": "c01-boss-clean-lines:starter",
+    "code": "def clean_lines(lines):\n    pass\n"
+  },
+  {
+    "name": "c01-boss-clean-lines:variant:keeps-blanks",
+    "code": "def clean_lines(lines):\n    return [line.strip() for line in lines]\n"
+  },
+  {
+    "name": "c01-boss-clean-lines:variant:no-trim",
+    "code": "def clean_lines(lines):\n    return [line for line in lines if line.strip()]\n"
+  },
+  {
+    "name": "c01-boss-clean-lines:variant:sorted-output",
+    "code": "def clean_lines(lines):\n    cleaned = []\n    for line in lines:\n        text = line.strip()\n        if text:\n            cleaned.append(text)\n    return sorted(cleaned)\n"
+  },
+  {
+    "name": "c01-boss-count-words:reference",
+    "code": "def count_words(lines):\n    counts = {}\n    for line in lines:\n        for word in line.lower().split():\n            counts[word] = counts.get(word, 0) + 1\n    return counts\n"
+  },
+  {
+    "name": "c01-boss-count-words:starter",
+    "code": "def count_words(lines):\n    pass\n"
+  },
+  {
+    "name": "c01-boss-count-words:variant:case-sensitive",
+    "code": "def count_words(lines):\n    counts = {}\n    for line in lines:\n        for word in line.split():\n            counts[word] = counts.get(word, 0) + 1\n    return counts\n"
+  },
+  {
+    "name": "c01-boss-count-words:variant:split-on-space",
+    "code": "def count_words(lines):\n    counts = {}\n    for line in lines:\n        for word in line.lower().split(\" \"):\n            counts[word] = counts.get(word, 0) + 1\n    return counts\n"
+  },
+  {
+    "name": "c01-boss-count-words:variant:pairs-not-dict",
+    "code": "def count_words(lines):\n    counts = {}\n    for line in lines:\n        for word in line.lower().split():\n            counts[word] = counts.get(word, 0) + 1\n    return sorted(counts.items())\n"
+  },
+  {
+    "name": "c01-boss-top-words:reference",
+    "code": "def top_words(counts, n):\n    ranked = sorted(counts.items(), key=lambda pair: (-pair[1], pair[0]))\n    return ranked[:n]\n"
+  },
+  {
+    "name": "c01-boss-top-words:starter",
+    "code": "def top_words(counts, n):\n    pass\n"
+  },
+  {
+    "name": "c01-boss-top-words:variant:ties-in-dict-order",
+    "code": "def top_words(counts, n):\n    ranked = sorted(counts.items(), key=lambda pair: -pair[1])\n    return ranked[:n]\n"
+  },
+  {
+    "name": "c01-boss-top-words:variant:ascending",
+    "code": "def top_words(counts, n):\n    ranked = sorted(counts.items(), key=lambda pair: (pair[1], pair[0]))\n    return ranked[:n]\n"
+  },
+  {
+    "name": "c01-boss-top-words:variant:one-short",
+    "code": "def top_words(counts, n):\n    ranked = sorted(counts.items(), key=lambda pair: (-pair[1], pair[0]))\n    return ranked[: n - 1]\n"
+  },
+  {
+    "name": "c01-boss-report-lines:reference",
+    "code": "def report_lines(pairs):\n    return [f\"{word}: {count}\" for word, count in pairs]\n"
+  },
+  {
+    "name": "c01-boss-report-lines:starter",
+    "code": "def report_lines(pairs):\n    pass\n"
+  },
+  {
+    "name": "c01-boss-report-lines:variant:no-colon",
+    "code": "def report_lines(pairs):\n    return [f\"{word} {count}\" for word, count in pairs]\n"
+  },
+  {
+    "name": "c01-boss-report-lines:variant:reversed",
+    "code": "def report_lines(pairs):\n    return [f\"{word}: {count}\" for word, count in pairs][::-1]\n"
+  },
+  {
+    "name": "example:types-1",
+    "code": "print(int(\"42\") + 1, float(\"2.5\") * 2, str(7) + \"!\")\nprint(type(3), type(3.0), type(\"3\"))\n"
+  },
+  {
+    "name": "example:types-2",
+    "code": "print(7 / 2, 6 / 2, 7 // 2, 6 // 2)\nprint(type(6 / 2), type(6 // 2))\n"
+  },
+  {
+    "name": "example:strings-1",
+    "code": "name = \"Ada\"\ncount = 3\nprice = 3.14159\nprint(f\"{name} has {count} parcels\")\nprint(f\"{price:.2f} per kg\")\n"
+  },
+  {
+    "name": "example:strings-2",
+    "code": "s = \"  freight  \"\nt = s.strip().upper()\nprint(repr(s))\nprint(repr(t))\n"
+  },
+  {
+    "name": "example:lists-1",
+    "code": "stops = [\"Dock 1\", \"Dock 2\", \"Dock 3\"]\nprint(stops[0], stops[-1], stops[1:])\nstops.append(\"Dock 4\")\nprint(len(stops))\n"
+  },
+  {
+    "name": "example:lists-2",
+    "code": "a = [1, 2]\nb = a\nb.append(3)\nprint(a)\nc = a.copy()\nc.append(4)\nprint(a, c)\n"
+  },
+  {
+    "name": "example:dicts-1",
+    "code": "stock = {\"pallets\": 3}\nprint(stock.get(\"crates\", 0))\nprint(stock[\"pallets\"])\ntry:\n    print(stock[\"crates\"])\nexcept KeyError as error:\n    print(\"KeyError:\", error)\n"
+  },
+  {
+    "name": "example:dicts-2",
+    "code": "counts = {}\nfor mode in [\"road\", \"rail\", \"road\", \"sea\"]:\n    counts[mode] = counts.get(mode, 0) + 1\nprint(counts)\nprint(list(counts))\n"
+  },
+  {
+    "name": "example:sets-1",
+    "code": "routes = [\"A\", \"B\", \"A\", \"C\"]\nprint(len(routes), len(set(routes)))\nprint(sorted(set(routes)))\n"
+  },
+  {
+    "name": "example:tuples-1",
+    "code": "pair = (\"Dock 4\", 12)\nprint(pair[0], pair[1])\nprint(type((5)), type((5,)))\n"
+  },
+  {
+    "name": "example:control-1",
+    "code": "for kg in [3, 12, 25]:\n    if kg < 5:\n        label = \"light\"\n    elif kg <= 20:\n        label = \"medium\"\n    else:\n        label = \"heavy\"\n    print(kg, label)\n\nnote = None\nprint(note is None, note == \"\")\n"
+  },
+  {
+    "name": "example:control-2",
+    "code": "print(list(range(3)))\nprint(list(range(1, 4)))\nfor i in range(1, 4):\n    print(\"parcel\", i)\n"
+  },
+  {
+    "name": "example:functions-1",
+    "code": "def label(name, *tags, sep=\"|\", **options):\n    return sep.join([name, str(len(tags)), str(sorted(options))])\n\nprint(label(\"A\"))\nprint(label(\"A\", \"x\", \"y\", color=\"red\", size=2))\n"
+  },
+  {
+    "name": "example:functions-2",
+    "code": "count = 0\ndef bump():\n    count = 1\n    return count\n\nprint(bump(), count)\n"
+  },
+  {
+    "name": "example:functions-3",
+    "code": "def add_stop(stop, stops=[]):\n    stops.append(stop)\n    return stops\n\nprint(add_stop(\"A\"))\nprint(add_stop(\"B\"))\n"
+  },
+  {
+    "name": "example:comprehensions-1",
+    "code": "weights = [4, 12, 7, 20]\nprint([w * 2 for w in weights if w > 5])\nprint({w % 3 for w in weights})\nprint({w: w // 5 for w in weights})\n"
+  },
+  {
+    "name": "example:exceptions-1",
+    "code": "def to_int(text):\n    try:\n        return int(text)\n    except ValueError:\n        return None\n\nprint(to_int(\"12\"), to_int(\"x\"))\n"
+  },
+  {
+    "name": "example:exceptions-2",
+    "code": "def weight_or_zero(value):\n    try:\n        return float(value) * 2\n    except Exception:\n        return 0.0\n\nprint(weight_or_zero(\"3\"), weight_or_zero(None))\n"
+  },
+  {
+    "name": "example:with-1",
+    "code": "import io\n\nbuffer = io.StringIO(\"line one\\nline two\")\nwith buffer as handle:\n    first = handle.readline()\n    print(repr(first))\nprint(buffer.closed)\ntry:\n    buffer.read()\nexcept ValueError as error:\n    print(\"ValueError:\", error)\n"
+  },
+  {
+    "name": "example:modules-1",
+    "code": "import math\nfrom statistics import mean\n\nprint(math.floor(2.7), mean([1, 2, 3]))\nprint(math.pi > 3)\n"
+  },
+  {
+    "name": "example:modules-2",
+    "code": "import json\n\nprint(json.dumps({\"parcels\": 2}))\n"
+  },
+  {
+    "name": "example:iterators-1",
+    "code": "it = iter([10, 20])\nprint(next(it), next(it))\nprint(list(it))\n"
+  },
+  {
+    "name": "example:generators-1",
+    "code": "def countdown(n):\n    while n > 0:\n        yield n\n        n -= 1\n\ng = countdown(2)\nprint(list(g))\nprint(list(g))\nprint(list(countdown(2)))\n"
+  },
+  {
+    "name": "choice:c01-predict-division",
+    "code": "print(7 / 2)\n"
+  },
+  {
+    "name": "choice:c01-predict-division:floor",
+    "code": "print(7 // 2)\n"
+  },
+  {
+    "name": "choice:c01-predict-division:remainder",
+    "code": "print(7 % 2)\n"
+  },
+  {
+    "name": "choice:c01-predict-immutable-string",
+    "code": "s = \"freight\"\ns.upper()\nprint(s)\n"
+  },
+  {
+    "name": "choice:c01-predict-immutable-string:upper-printed",
+    "code": "s = \"freight\"\nprint(s.upper())\n"
+  },
+  {
+    "name": "choice:c01-predict-list-alias",
+    "code": "a = [1, 2]\nb = a\nb.append(3)\nprint(a)\n"
+  },
+  {
+    "name": "choice:c01-predict-list-alias:copy",
+    "code": "a = [1, 2]\nb = a.copy()\nb.append(3)\nprint(a)\n"
+  },
+  {
+    "name": "choice:c01-predict-dict-order",
+    "code": "d = {\"sea\": 1, \"air\": 2}\nprint(list(d))\n"
+  },
+  {
+    "name": "choice:c01-predict-dict-order:sorted",
+    "code": "d = {\"sea\": 1, \"air\": 2}\nprint(sorted(d))\n"
+  },
+  {
+    "name": "choice:c01-predict-dict-order:values",
+    "code": "d = {\"sea\": 1, \"air\": 2}\nprint(list(d.values()))\n"
+  },
+  {
+    "name": "choice:c01-predict-set-size",
+    "code": "print(len(set([3, 1, 3, 2])))\n"
+  },
+  {
+    "name": "choice:c01-predict-set-size:list-size",
+    "code": "print(len([3, 1, 3, 2]))\n"
+  },
+  {
+    "name": "choice:c01-predict-one-tuple",
+    "code": "item = (5)\nprint(type(item).__name__)\n"
+  },
+  {
+    "name": "choice:c01-predict-one-tuple:comma",
+    "code": "item = (5,)\nprint(type(item).__name__)\n"
+  },
+  {
+    "name": "choice:c01-predict-range-end",
+    "code": "print(list(range(1, 4)))\n"
+  },
+  {
+    "name": "choice:c01-predict-range-end:short",
+    "code": "print(list(range(1, 3)))\n"
+  },
+  {
+    "name": "choice:c01-predict-range-end:from-zero",
+    "code": "print(list(range(4)))\n"
+  },
+  {
+    "name": "choice:c01-predict-default-list",
+    "code": "def add(item, bag=None):\n    bag = [] if bag is None else bag\n    bag.append(item)\n    return bag\n\nprint(add(\"a\"))\nprint(add(\"b\"))\n"
+  },
+  {
+    "name": "choice:c01-predict-default-list:shared-default",
+    "code": "def add(item, bag=[]):\n    bag.append(item)\n    return bag\n\nprint(add(\"a\"))\nprint(add(\"b\"))\n"
+  },
+  {
+    "name": "choice:c01-predict-generator-once",
+    "code": "g = (x * 2 for x in [1, 2])\nprint(list(g))\nprint(list(g))\n"
+  },
+  {
+    "name": "choice:c01-predict-generator-once:list-again",
+    "code": "g = [x * 2 for x in [1, 2]]\nprint(list(g))\nprint(list(g))\n"
+  },
+  {
+    "name": "choice:c01-predict-truthiness",
+    "code": "for value in [0, \"\", [1]]:\n    print(bool(value))\n"
+  },
+  {
+    "name": "choice:c01-predict-truthiness:not-none",
+    "code": "for value in [0, \"\", [1]]:\n    print(value is not None)\n"
+  },
+  {
+    "name": "choice:c01-traceback-missing-key",
+    "code": "stock = {\"pallets\": 3}\nprint(stock[\"crates\"])\n"
+  },
+  {
+    "name": "choice:c01-traceback-missing-key:list-index",
+    "code": "stock = [\"pallets\"]\nprint(stock[\"crates\"])\n"
+  },
+  {
+    "name": "choice:c01-traceback-missing-key:get-plus",
+    "code": "stock = {\"pallets\": 3}\nprint(stock.get(\"crates\") + 1)\n"
+  },
+  {
+    "name": "choice:c01-traceback-missing-argument",
+    "code": "def ship(parcel, weight):\n    return f\"{parcel}:{weight}\"\n\nprint(ship(\"P1\"))\n"
+  },
+  {
+    "name": "choice:c01-traceback-missing-argument:too-many",
+    "code": "def ship(parcel, weight):\n    return f\"{parcel}:{weight}\"\n\nprint(ship(\"P1\", \"2\", \"3\"))\n"
+  },
+  {
+    "name": "choice:c01-traceback-missing-argument:bad-keyword",
+    "code": "def ship(parcel, weight):\n    return f\"{parcel}:{weight}\"\n\nprint(ship(parcel=\"P1\", weight=2, box=1))\n"
+  },
+  {
+    "name": "choice:c01-traceback-broad-except",
+    "code": "def to_number(text):\n    return int(text)\n\nprint(to_number(\"twelve\"))\n"
+  },
+  {
+    "name": "choice:c01-traceback-broad-except:none-input",
+    "code": "def to_number(text):\n    return int(text)\n\nprint(to_number(None))\n"
+  },
+  {
+    "name": "choice:c01-traceback-broad-except:decimal-text",
+    "code": "def to_number(text):\n    return int(text)\n\nprint(to_number(\"12.5\"))\n"
+  },
+  {
+    "name": "choice:c01-traceback-import",
+    "code": "import freight_tools\nprint(\"ready\")\n"
+  },
+  {
+    "name": "choice:c01-traceback-import:misspelled",
+    "code": "import freight_tool\nprint(\"ready\")\n"
+  },
+  {
+    "name": "choice:c01-traceback-import:from-missing-name",
+    "code": "from json import loads_freight\nprint(\"ready\")\n"
+  },
+  {
+    "name": "choice:c01-traceback-name-type",
+    "code": "parcels = 3\nprint(\"Parcels: \" + parcels)\n"
+  },
+  {
+    "name": "choice:c01-traceback-name-type:minus-instead",
+    "code": "parcels = 3\nprint(\"Parcels: \" - parcels)\n"
+  },
+  {
+    "name": "choice:c01-traceback-name-type:float-text",
+    "code": "parcels = 3.0\nprint(parcels + \"x\")\n"
   }
 ]

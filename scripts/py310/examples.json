@@ -1,0 +1,368 @@
+[
+  {
+    "name": "example:types-1",
+    "code": "print(int(\"42\") + 1, float(\"2.5\") * 2, str(7) + \"!\")\nprint(type(3), type(3.0), type(\"3\"))\n",
+    "check": "stdout",
+    "expected": "43 5.0 7!\n<class 'int'> <class 'float'> <class 'str'>\n"
+  },
+  {
+    "name": "example:types-2",
+    "code": "print(7 / 2, 6 / 2, 7 // 2, 6 // 2)\nprint(type(6 / 2), type(6 // 2))\n",
+    "check": "stdout",
+    "expected": "3.5 3.0 3 3\n<class 'float'> <class 'int'>\n"
+  },
+  {
+    "name": "example:strings-1",
+    "code": "name = \"Ada\"\ncount = 3\nprice = 3.14159\nprint(f\"{name} has {count} parcels\")\nprint(f\"{price:.2f} per kg\")\n",
+    "check": "stdout",
+    "expected": "Ada has 3 parcels\n3.14 per kg\n"
+  },
+  {
+    "name": "example:strings-2",
+    "code": "s = \"  freight  \"\nt = s.strip().upper()\nprint(repr(s))\nprint(repr(t))\n",
+    "check": "stdout",
+    "expected": "'  freight  '\n'FREIGHT'\n"
+  },
+  {
+    "name": "example:lists-1",
+    "code": "stops = [\"Dock 1\", \"Dock 2\", \"Dock 3\"]\nprint(stops[0], stops[-1], stops[1:])\nstops.append(\"Dock 4\")\nprint(len(stops))\n",
+    "check": "stdout",
+    "expected": "Dock 1 Dock 3 ['Dock 2', 'Dock 3']\n4\n"
+  },
+  {
+    "name": "example:lists-2",
+    "code": "a = [1, 2]\nb = a\nb.append(3)\nprint(a)\nc = a.copy()\nc.append(4)\nprint(a, c)\n",
+    "check": "stdout",
+    "expected": "[1, 2, 3]\n[1, 2, 3] [1, 2, 3, 4]\n"
+  },
+  {
+    "name": "example:dicts-1",
+    "code": "stock = {\"pallets\": 3}\nprint(stock.get(\"crates\", 0))\nprint(stock[\"pallets\"])\ntry:\n    print(stock[\"crates\"])\nexcept KeyError as error:\n    print(\"KeyError:\", error)\n",
+    "check": "stdout",
+    "expected": "0\n3\nKeyError: 'crates'\n"
+  },
+  {
+    "name": "example:dicts-2",
+    "code": "counts = {}\nfor mode in [\"road\", \"rail\", \"road\", \"sea\"]:\n    counts[mode] = counts.get(mode, 0) + 1\nprint(counts)\nprint(list(counts))\n",
+    "check": "stdout",
+    "expected": "{'road': 2, 'rail': 1, 'sea': 1}\n['road', 'rail', 'sea']\n"
+  },
+  {
+    "name": "example:sets-1",
+    "code": "routes = [\"A\", \"B\", \"A\", \"C\"]\nprint(len(routes), len(set(routes)))\nprint(sorted(set(routes)))\n",
+    "check": "stdout",
+    "expected": "4 3\n['A', 'B', 'C']\n"
+  },
+  {
+    "name": "example:tuples-1",
+    "code": "pair = (\"Dock 4\", 12)\nprint(pair[0], pair[1])\nprint(type((5)), type((5,)))\n",
+    "check": "stdout",
+    "expected": "Dock 4 12\n<class 'int'> <class 'tuple'>\n"
+  },
+  {
+    "name": "example:control-1",
+    "code": "for kg in [3, 12, 25]:\n    if kg < 5:\n        label = \"light\"\n    elif kg <= 20:\n        label = \"medium\"\n    else:\n        label = \"heavy\"\n    print(kg, label)\n\nnote = None\nprint(note is None, note == \"\")\n",
+    "check": "stdout",
+    "expected": "3 light\n12 medium\n25 heavy\nTrue False\n"
+  },
+  {
+    "name": "example:control-2",
+    "code": "print(list(range(3)))\nprint(list(range(1, 4)))\nfor i in range(1, 4):\n    print(\"parcel\", i)\n",
+    "check": "stdout",
+    "expected": "[0, 1, 2]\n[1, 2, 3]\nparcel 1\nparcel 2\nparcel 3\n"
+  },
+  {
+    "name": "example:functions-1",
+    "code": "def label(name, *tags, sep=\"|\", **options):\n    return sep.join([name, str(len(tags)), str(sorted(options))])\n\nprint(label(\"A\"))\nprint(label(\"A\", \"x\", \"y\", color=\"red\", size=2))\n",
+    "check": "stdout",
+    "expected": "A|0|[]\nA|2|['color', 'size']\n"
+  },
+  {
+    "name": "example:functions-2",
+    "code": "count = 0\ndef bump():\n    count = 1\n    return count\n\nprint(bump(), count)\n",
+    "check": "stdout",
+    "expected": "1 0\n"
+  },
+  {
+    "name": "example:functions-3",
+    "code": "def add_stop(stop, stops=[]):\n    stops.append(stop)\n    return stops\n\nprint(add_stop(\"A\"))\nprint(add_stop(\"B\"))\n",
+    "check": "stdout",
+    "expected": "['A']\n['A', 'B']\n"
+  },
+  {
+    "name": "example:comprehensions-1",
+    "code": "weights = [4, 12, 7, 20]\nprint([w * 2 for w in weights if w > 5])\nprint({w % 3 for w in weights})\nprint({w: w // 5 for w in weights})\n",
+    "check": "stdout",
+    "expected": "[24, 14, 40]\n{0, 1, 2}\n{4: 0, 12: 2, 7: 1, 20: 4}\n"
+  },
+  {
+    "name": "example:exceptions-1",
+    "code": "def to_int(text):\n    try:\n        return int(text)\n    except ValueError:\n        return None\n\nprint(to_int(\"12\"), to_int(\"x\"))\n",
+    "check": "stdout",
+    "expected": "12 None\n"
+  },
+  {
+    "name": "example:exceptions-2",
+    "code": "def weight_or_zero(value):\n    try:\n        return float(value) * 2\n    except Exception:\n        return 0.0\n\nprint(weight_or_zero(\"3\"), weight_or_zero(None))\n",
+    "check": "stdout",
+    "expected": "6.0 0.0\n"
+  },
+  {
+    "name": "example:with-1",
+    "code": "import io\n\nbuffer = io.StringIO(\"line one\\nline two\")\nwith buffer as handle:\n    first = handle.readline()\n    print(repr(first))\nprint(buffer.closed)\ntry:\n    buffer.read()\nexcept ValueError as error:\n    print(\"ValueError:\", error)\n",
+    "check": "stdout",
+    "expected": "'line one\\n'\nTrue\nValueError: I/O operation on closed file\n"
+  },
+  {
+    "name": "example:modules-1",
+    "code": "import math\nfrom statistics import mean\n\nprint(math.floor(2.7), mean([1, 2, 3]))\nprint(math.pi > 3)\n",
+    "check": "stdout",
+    "expected": "2 2\nTrue\n"
+  },
+  {
+    "name": "example:modules-2",
+    "code": "import json\n\nprint(json.dumps({\"parcels\": 2}))\n",
+    "check": "stdout",
+    "expected": "{\"parcels\": 2}\n"
+  },
+  {
+    "name": "example:iterators-1",
+    "code": "it = iter([10, 20])\nprint(next(it), next(it))\nprint(list(it))\n",
+    "check": "stdout",
+    "expected": "10 20\n[]\n"
+  },
+  {
+    "name": "example:generators-1",
+    "code": "def countdown(n):\n    while n > 0:\n        yield n\n        n -= 1\n\ng = countdown(2)\nprint(list(g))\nprint(list(g))\nprint(list(countdown(2)))\n",
+    "check": "stdout",
+    "expected": "[2, 1]\n[]\n[2, 1]\n"
+  },
+  {
+    "name": "choice:c01-predict-division:true",
+    "code": "print(7 / 2)\n",
+    "check": "stdout",
+    "expected": "3.5\n"
+  },
+  {
+    "name": "choice:c01-predict-division:floor",
+    "code": "print(7 // 2)\n",
+    "check": "stdout",
+    "expected": "3\n"
+  },
+  {
+    "name": "choice:c01-predict-division:remainder",
+    "code": "print(7 % 2)\n",
+    "check": "stdout",
+    "expected": "1\n"
+  },
+  {
+    "name": "choice:c01-predict-immutable-string:upper-printed",
+    "code": "s = \"freight\"\nprint(s.upper())\n",
+    "check": "stdout",
+    "expected": "FREIGHT\n"
+  },
+  {
+    "name": "choice:c01-predict-immutable-string:true",
+    "code": "s = \"freight\"\ns.upper()\nprint(s)\n",
+    "check": "stdout",
+    "expected": "freight\n"
+  },
+  {
+    "name": "choice:c01-predict-list-alias:copy",
+    "code": "a = [1, 2]\nb = a.copy()\nb.append(3)\nprint(a)\n",
+    "check": "stdout",
+    "expected": "[1, 2]\n"
+  },
+  {
+    "name": "choice:c01-predict-list-alias:true",
+    "code": "a = [1, 2]\nb = a\nb.append(3)\nprint(a)\n",
+    "check": "stdout",
+    "expected": "[1, 2, 3]\n"
+  },
+  {
+    "name": "choice:c01-predict-dict-order:sorted",
+    "code": "d = {\"sea\": 1, \"air\": 2}\nprint(sorted(d))\n",
+    "check": "stdout",
+    "expected": "['air', 'sea']\n"
+  },
+  {
+    "name": "choice:c01-predict-dict-order:values",
+    "code": "d = {\"sea\": 1, \"air\": 2}\nprint(list(d.values()))\n",
+    "check": "stdout",
+    "expected": "[1, 2]\n"
+  },
+  {
+    "name": "choice:c01-predict-dict-order:true",
+    "code": "d = {\"sea\": 1, \"air\": 2}\nprint(list(d))\n",
+    "check": "stdout",
+    "expected": "['sea', 'air']\n"
+  },
+  {
+    "name": "choice:c01-predict-set-size:list-size",
+    "code": "print(len([3, 1, 3, 2]))\n",
+    "check": "stdout",
+    "expected": "4\n"
+  },
+  {
+    "name": "choice:c01-predict-set-size:true",
+    "code": "print(len(set([3, 1, 3, 2])))\n",
+    "check": "stdout",
+    "expected": "3\n"
+  },
+  {
+    "name": "choice:c01-predict-one-tuple:true",
+    "code": "item = (5)\nprint(type(item).__name__)\n",
+    "check": "stdout",
+    "expected": "int\n"
+  },
+  {
+    "name": "choice:c01-predict-one-tuple:comma",
+    "code": "item = (5,)\nprint(type(item).__name__)\n",
+    "check": "stdout",
+    "expected": "tuple\n"
+  },
+  {
+    "name": "choice:c01-predict-range-end:true",
+    "code": "print(list(range(1, 4)))\n",
+    "check": "stdout",
+    "expected": "[1, 2, 3]\n"
+  },
+  {
+    "name": "choice:c01-predict-range-end:short",
+    "code": "print(list(range(1, 3)))\n",
+    "check": "stdout",
+    "expected": "[1, 2]\n"
+  },
+  {
+    "name": "choice:c01-predict-range-end:from-zero",
+    "code": "print(list(range(4)))\n",
+    "check": "stdout",
+    "expected": "[0, 1, 2, 3]\n"
+  },
+  {
+    "name": "choice:c01-predict-default-list:shared-default",
+    "code": "def add(item, bag=[]):\n    bag.append(item)\n    return bag\n\nprint(add(\"a\"))\nprint(add(\"b\"))\n",
+    "check": "stdout",
+    "expected": "['a']\n['a', 'b']\n"
+  },
+  {
+    "name": "choice:c01-predict-default-list:true",
+    "code": "def add(item, bag=None):\n    bag = [] if bag is None else bag\n    bag.append(item)\n    return bag\n\nprint(add(\"a\"))\nprint(add(\"b\"))\n",
+    "check": "stdout",
+    "expected": "['a']\n['b']\n"
+  },
+  {
+    "name": "choice:c01-predict-generator-once:true",
+    "code": "g = (x * 2 for x in [1, 2])\nprint(list(g))\nprint(list(g))\n",
+    "check": "stdout",
+    "expected": "[2, 4]\n[]\n"
+  },
+  {
+    "name": "choice:c01-predict-generator-once:list-again",
+    "code": "g = [x * 2 for x in [1, 2]]\nprint(list(g))\nprint(list(g))\n",
+    "check": "stdout",
+    "expected": "[2, 4]\n[2, 4]\n"
+  },
+  {
+    "name": "choice:c01-predict-truthiness:true",
+    "code": "for value in [0, \"\", [1]]:\n    print(bool(value))\n",
+    "check": "stdout",
+    "expected": "False\nFalse\nTrue\n"
+  },
+  {
+    "name": "choice:c01-predict-truthiness:not-none",
+    "code": "for value in [0, \"\", [1]]:\n    print(value is not None)\n",
+    "check": "stdout",
+    "expected": "True\nTrue\nTrue\n"
+  },
+  {
+    "name": "choice:c01-traceback-missing-key:true",
+    "code": "stock = {\"pallets\": 3}\nprint(stock[\"crates\"])\n",
+    "check": "error-type",
+    "expected": "KeyError"
+  },
+  {
+    "name": "choice:c01-traceback-missing-key:list-index",
+    "code": "stock = [\"pallets\"]\nprint(stock[\"crates\"])\n",
+    "check": "error-type",
+    "expected": "TypeError"
+  },
+  {
+    "name": "choice:c01-traceback-missing-key:get-plus",
+    "code": "stock = {\"pallets\": 3}\nprint(stock.get(\"crates\") + 1)\n",
+    "check": "error-type",
+    "expected": "TypeError"
+  },
+  {
+    "name": "choice:c01-traceback-missing-argument:bad-keyword",
+    "code": "def ship(parcel, weight):\n    return f\"{parcel}:{weight}\"\n\nprint(ship(parcel=\"P1\", weight=2, box=1))\n",
+    "check": "error-type",
+    "expected": "TypeError"
+  },
+  {
+    "name": "choice:c01-traceback-missing-argument:true",
+    "code": "def ship(parcel, weight):\n    return f\"{parcel}:{weight}\"\n\nprint(ship(\"P1\"))\n",
+    "check": "error-type",
+    "expected": "TypeError"
+  },
+  {
+    "name": "choice:c01-traceback-missing-argument:too-many",
+    "code": "def ship(parcel, weight):\n    return f\"{parcel}:{weight}\"\n\nprint(ship(\"P1\", \"2\", \"3\"))\n",
+    "check": "error-type",
+    "expected": "TypeError"
+  },
+  {
+    "name": "choice:c01-traceback-broad-except:none-input",
+    "code": "def to_number(text):\n    return int(text)\n\nprint(to_number(None))\n",
+    "check": "error-type",
+    "expected": "TypeError"
+  },
+  {
+    "name": "choice:c01-traceback-broad-except:decimal-text",
+    "code": "def to_number(text):\n    return int(text)\n\nprint(to_number(\"12.5\"))\n",
+    "check": "error-type",
+    "expected": "ValueError"
+  },
+  {
+    "name": "choice:c01-traceback-broad-except:true",
+    "code": "def to_number(text):\n    return int(text)\n\nprint(to_number(\"twelve\"))\n",
+    "check": "error-type",
+    "expected": "ValueError"
+  },
+  {
+    "name": "choice:c01-traceback-import:misspelled",
+    "code": "import freight_tool\nprint(\"ready\")\n",
+    "check": "error-type",
+    "expected": "ModuleNotFoundError"
+  },
+  {
+    "name": "choice:c01-traceback-import:from-missing-name",
+    "code": "from json import loads_freight\nprint(\"ready\")\n",
+    "check": "error-type",
+    "expected": "ImportError"
+  },
+  {
+    "name": "choice:c01-traceback-import:true",
+    "code": "import freight_tools\nprint(\"ready\")\n",
+    "check": "error-type",
+    "expected": "ModuleNotFoundError"
+  },
+  {
+    "name": "choice:c01-traceback-name-type:true",
+    "code": "parcels = 3\nprint(\"Parcels: \" + parcels)\n",
+    "check": "error-type",
+    "expected": "TypeError"
+  },
+  {
+    "name": "choice:c01-traceback-name-type:minus-instead",
+    "code": "parcels = 3\nprint(\"Parcels: \" - parcels)\n",
+    "check": "error-type",
+    "expected": "TypeError"
+  },
+  {
+    "name": "choice:c01-traceback-name-type:float-text",
+    "code": "parcels = 3.0\nprint(parcels + \"x\")\n",
+    "check": "error-type",
+    "expected": "TypeError"
+  }
+]

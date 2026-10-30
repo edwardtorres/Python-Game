@@ -1,11 +1,18 @@
-"""Runs every exported grading payload under this Python and compares the verdicts with
-the verdicts the engine (Pyodide, Python 3.14) recorded in cases.json.
+"""Two checks, run under this Python and compared with what the engine (Pyodide, Python 3.14)
+recorded.
 
-Run from the repository root. CI runs it under CPython 3.10. Messages are not compared,
-because pandas and matplotlib messages change between versions. Status, pass counts,
-per-case results, and matched mistakes must all agree.
+1. Every grading payload in cases.json is graded, and the verdict is compared: status,
+   pass counts, per-case results, and matched mistakes. Messages are not compared, because
+   pandas and matplotlib messages change between versions.
+2. Every lesson example and every predict option in examples.json is run, and its printed
+   output must match exactly. A traceback option compares only the exception type, because
+   CPython 3.10 words some messages differently from Pyodide.
+
+Run from the repository root. CI runs it under CPython 3.10.
 """
 
+import contextlib
+import io
 import json
 import os
 import sys
@@ -27,7 +34,7 @@ def verdict(result):
     }
 
 
-def main():
+def check_payloads(version):
     with open(os.path.join(ROOT, "scripts", "py310", "cases.json"), encoding="utf-8") as handle:
         cases = json.load(handle)
     mismatches = 0
@@ -36,8 +43,45 @@ def main():
         actual = verdict(result)
         if actual != case["expected"]:
             mismatches += 1
-            print(f"MISMATCH {case['name']}: engine {case['expected']} vs {sys.version.split()[0]} {actual}")
-    print(f"run-cases: {len(cases)} payloads on Python {sys.version.split()[0]}, {mismatches} mismatches")
+            print(f"MISMATCH {case['name']}: engine {case['expected']} vs {version} {actual}")
+    print(f"run-cases: {len(cases)} payloads on Python {version}, {mismatches} mismatches")
+    return mismatches
+
+
+def run_snippet(code):
+    """Runs one snippet in a fresh namespace. Returns (stdout, exception type name or None)."""
+    namespace = {"__name__": "__snippet__"}
+    buffer = io.StringIO()
+    try:
+        with contextlib.redirect_stdout(buffer):
+            exec(compile(code, "<example>", "exec"), namespace)
+    except Exception as exc:  # noqa: BLE001 - any error is a result to compare
+        return buffer.getvalue(), type(exc).__name__
+    return buffer.getvalue(), None
+
+
+def check_examples(version):
+    with open(os.path.join(ROOT, "scripts", "py310", "examples.json"), encoding="utf-8") as handle:
+        examples = json.load(handle)
+    mismatches = 0
+    for example in examples:
+        stdout, error_type = run_snippet(example["code"])
+        if example["check"] == "stdout":
+            actual = stdout if error_type is None else f"raised {error_type}"
+            ok = actual == example["expected"]
+        else:
+            actual = error_type or "none"
+            ok = actual == example["expected"]
+        if not ok:
+            mismatches += 1
+            print(f"MISMATCH {example['name']}: engine {example['expected']!r} vs {version} {actual!r}")
+    print(f"run-examples: {len(examples)} snippets on Python {version}, {mismatches} mismatches")
+    return mismatches
+
+
+def main():
+    version = sys.version.split()[0]
+    mismatches = check_payloads(version) + check_examples(version)
     return 1 if mismatches else 0
 
 

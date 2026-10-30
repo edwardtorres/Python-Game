@@ -8,9 +8,13 @@ import { PyRuntime } from '../engine/runtime';
 import { CHALLENGES } from '../challenges/registry';
 import { buildGradeRequest } from '../challenges/payload';
 import type { ChallengeSpec } from '../challenges/types';
+import { CHAPTER1_BOSS, CHAPTER1_CHOICE, CHAPTER1_GRADED, CHAPTER1_LESSONS } from './chapter1/index';
+import type { ChapterOutputs } from './chapter1/generate';
 
 const CASES_FILE = path.resolve('scripts/py310/cases.json');
 const SNIPPETS_FILE = path.resolve('scripts/py310/snippets.json');
+const EXAMPLES_FILE = path.resolve('scripts/py310/examples.json');
+const OUTPUTS_FILE = path.resolve('src/content/generated/chapter1.outputs.json');
 let runtime: PyRuntime;
 
 interface LearnerCase {
@@ -27,10 +31,44 @@ function learnerCases(spec: ChallengeSpec): LearnerCase[] {
   ];
 }
 
-function build(): { cases: unknown[]; snippets: unknown[] } {
+interface Example {
+  name: string;
+  code: string;
+  // stdout: the printed text must match exactly. error-type: only the exception type must match.
+  check: 'stdout' | 'error-type';
+  expected: string;
+}
+
+function buildExamples(outputs: ChapterOutputs): Example[] {
+  const examples: Example[] = [];
+  for (const lesson of CHAPTER1_LESSONS) {
+    for (const section of lesson.sections) {
+      for (const example of section.examples) {
+        const recorded = outputs.examples[example.id];
+        examples.push({ name: `example:${example.id}`, code: example.code, check: 'stdout', expected: recorded?.stdout ?? '' });
+      }
+    }
+  }
+  for (const item of CHAPTER1_CHOICE) {
+    const recorded = outputs.choice[item.id];
+    for (const option of recorded?.options ?? []) {
+      const code = option.id === 'true' ? item.code : item.variants.find((variant) => variant.id === option.id)?.code ?? '';
+      if (item.kind === 'predict') {
+        examples.push({ name: `choice:${item.id}:${option.id}`, code, check: 'stdout', expected: `${option.text}\n` });
+      } else {
+        const type = option.error?.type ?? 'none';
+        examples.push({ name: `choice:${item.id}:${option.id}`, code, check: 'error-type', expected: type });
+      }
+    }
+  }
+  return examples;
+}
+
+function build(): { cases: unknown[]; snippets: unknown[]; examples: Example[] } {
   const cases: unknown[] = [];
   const snippets: unknown[] = [];
-  for (const spec of CHALLENGES) {
+  const outputs = JSON.parse(fs.readFileSync(OUTPUTS_FILE, 'utf8')) as ChapterOutputs;
+  for (const spec of [...CHALLENGES, ...CHAPTER1_GRADED, ...CHAPTER1_BOSS]) {
     for (const item of learnerCases(spec)) {
       const { payload, datasets } = buildGradeRequest(spec, item.learner, 'submit');
       const result = runtime.grade(JSON.stringify(payload), JSON.stringify(datasets));
@@ -49,7 +87,16 @@ function build(): { cases: unknown[]; snippets: unknown[] } {
       snippets.push({ name: item.name, code: item.learner });
     }
   }
-  return { cases, snippets };
+  for (const lesson of CHAPTER1_LESSONS) {
+    for (const section of lesson.sections) {
+      for (const example of section.examples) snippets.push({ name: `example:${example.id}`, code: example.code });
+    }
+  }
+  for (const item of CHAPTER1_CHOICE) {
+    snippets.push({ name: `choice:${item.id}`, code: item.code });
+    for (const variant of item.variants) snippets.push({ name: `choice:${item.id}:${variant.id}`, code: variant.code });
+  }
+  return { cases, snippets, examples: buildExamples(outputs) };
 }
 
 beforeAll(async () => {
@@ -62,14 +109,17 @@ beforeAll(async () => {
 }, 300_000);
 
 it('the committed CPython 3.10 cases match the engine (regenerate with UPDATE_PY310_CASES=1)', () => {
-  const { cases, snippets } = build();
+  const { cases, snippets, examples } = build();
   const casesText = `${JSON.stringify(cases, null, 2)}\n`;
   const snippetsText = `${JSON.stringify(snippets, null, 2)}\n`;
+  const examplesText = `${JSON.stringify(examples, null, 2)}\n`;
   if (process.env.UPDATE_PY310_CASES === '1') {
     fs.writeFileSync(CASES_FILE, casesText);
     fs.writeFileSync(SNIPPETS_FILE, snippetsText);
+    fs.writeFileSync(EXAMPLES_FILE, examplesText);
   }
   expect(fs.existsSync(CASES_FILE), 'scripts/py310/cases.json is missing').toBe(true);
   expect(fs.readFileSync(CASES_FILE, 'utf8')).toBe(casesText);
   expect(fs.readFileSync(SNIPPETS_FILE, 'utf8')).toBe(snippetsText);
+  expect(fs.readFileSync(EXAMPLES_FILE, 'utf8')).toBe(examplesText);
 }, 600_000);
