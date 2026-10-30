@@ -7,7 +7,7 @@ An interactive game that teaches Python for data science and informatics, from t
 - Vite 8, React 19.3, TypeScript 5.9 in strict mode (`noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`), Tailwind 4 through `@tailwindcss/vite`.
 - Editor: CodeMirror 6 with Python highlighting and indentation.
 - Python engine: Pyodide 314.0.7 (CPython 3.14.2) in a dedicated Web Worker. It is self-hosted under `public/pyodide` by `scripts/fetch-pyodide.mjs`, which checks the release tarball's SHA-256 and copies only the core files and the wheels for the game's packages. Nothing loads from a CDN at runtime.
-- No backend. Progress lives in localStorage under `larkspur.save`, with a versioned schema (v1) and migrations.
+- No backend. Progress lives in localStorage under `larkspur.save`, with a versioned schema (v2) and migrations.
 - Tests: Vitest 5 for unit tests (the grader runs under Pyodide in Node), Playwright 1.63 for end-to-end tests with axe. `playwright-core` is pinned to 1.63.0 through an npm override.
 - Lint: ESLint 10 with typescript-eslint and react-hooks.
 
@@ -24,7 +24,14 @@ npm run e2e             # Playwright: dev server (Chromium and WebKit) and previ
 npm run test:scripts    # Node tests for the quote checker and the Python 3.10 check
 npm run check:quotes    # verbatim docs-quote check (needs network; see Content rules)
 npm run check:py310     # static Python 3.10 check on the snippets (3.12+ for the nested-quote test)
-npm run check:py310-run # every grading payload under this Python, verdicts against the engine's
+npm run check:py310-run # every grading payload and lesson example under this Python, against the engine's output
+```
+
+Regenerate the Chapter 1 outputs after changing a lesson or a choice item, then the CPython 3.10 export:
+
+```bash
+UPDATE_CONTENT=1 npx vitest run src/content/chapter1.test.ts
+UPDATE_PY310_CASES=1 npx vitest run src/content/py310-cases.test.ts
 ```
 
 ## Git rules
@@ -60,7 +67,7 @@ Evidence: `spike/engine/RESULTS.md`, with the Chromium and WebKit numbers.
 
 **Randomness.** Before each graded run, the grader reseeds Python's `random` and NumPy's global RNG to `20251030`, and it resets files, figures, and learner-imported modules from earlier runs. Each task may add its own seeds. Notebook sessions seed once when they start.
 
-**Notebooks.** A notebook shares one namespace across its cells. Submit runs the imports and definitions from the cells in a fresh namespace. Top-level exploration is ignored, so a `print` in a cell cannot break grading.
+**Notebooks.** A notebook shares one namespace across its cells. Submit runs the imports and definitions from the cells in a fresh namespace. Top-level exploration is ignored, so a `print` in a cell cannot break grading. A cell runs without pandas or matplotlib loaded: the renderer checks `sys.modules` and never imports them, because a cell that never loads them still has to show its value.
 
 ## Content rules (Step 2a)
 
@@ -79,6 +86,14 @@ No Python 3.10 is installed in the development container, so check 2 runs in CI 
 - A missing page (404 or 410) fails the job, because the source has moved or the citation is wrong.
 - A network error is retried three times (2, 4, and 8 seconds). If it still fails, it is a warning, and the job passes.
 - Quotes drafted in a session with no network access are verified only in CI. The audit records which quotes CI has checked.
+
+**Chapter 1 (Step 2a).** Content lives in `src/content/chapter1/` as typed data: 13 lessons, 15 choice items (10 predict, 5 traceback), 13 graded items (4 guided, 4 tickets, 3 fix, 2 structure), and a boss with four graded parts. Every mistake tag is defined once in `mistakes.ts`.
+
+- Every example and every choice option is run in the engine. The results are recorded in `src/content/generated/chapter1.outputs.json`, and the content check fails if a fresh run differs. The app reads that file and never runs a choice option's code from a table.
+- A wrong option is the output or error of a variant that a learner's mistake would produce, so its text is computed, not written by hand. Predict options are printed text. Traceback options are the error type and message.
+- Structure items are graded by `ast` checks. A wrong variant matches a learner when it passes and fails the same checks, so the feedback names its mistake.
+- Chapter 1 has no JavaScript notes yet. Each one needs a verbatim quote from MDN or the Python docs, and the search excerpts available in Step 2a were paraphrases. Add a note only with a quote the docs-quotes job can verify.
+- Blind-solve records are in `docs/blind-solves/`. Each solver saw only a brief, never the reference, the hidden cases, or the answer key.
 
 ## Grading rules
 
@@ -104,13 +119,14 @@ These apply to every graded item. Tests enforce them: `src/challenges/samples.te
 - React effects always use block bodies. The lint rule `no-restricted-syntax` enforces it.
 - Test hooks exist only in dev builds, through `__TEST_HOOKS__`. The production build replaces it with `false`, and `scripts/check-production-hooks.mjs` fails the build if any hook name reaches `dist/`. Do not put hook names in production code, not even as object keys.
 - Self-hosted assets only, with no external origins at runtime. Code-split by feature and load libraries per chapter (partly done: the Python packages load per challenge; splitting the editor is a later step).
-- Save: `larkspur.save`, schema 1. A save from a newer schema is kept as a backup and never overwritten. Every storage access is wrapped in try/catch, and the game still works without storage.
+- Save: `larkspur.save`, schema 2. Version 2 adds chapter progress (lessons read, choice items) and the mistakes each challenge has shown. A version 1 save migrates by copying its challenges unchanged, and the migration is tested on a real version 1 save captured from the app (`e2e/fixtures/save-v1.json`). A save from a newer schema is kept as a backup and never overwritten. Every storage access is wrapped in try/catch, and the game still works without storage.
 - Accessibility: axe runs on each main view in both browsers. The layout works at 390 px with no page-level sideways scroll.
 
 ## Testing
 
 - **Unit (Vitest):** the grader running under Pyodide in Node (`src/engine/python.test.ts`), challenge coverage and reference checks (`src/challenges/samples.test.ts`), the engine controller with a fake worker and fake timers (`src/engine/client.test.ts`), generators with same-seed tests, the curriculum graph, save migrations, and progress rules.
-- **End-to-end (Playwright):** ticket flows, the notebook, the chart task, a buffer stop, a forced restart (`?forceInterruptFailure=1`), memory recycling (`?recycleThresholdBytes=`), the load timeout, and the production CSP on the preview server. Chromium and WebKit run in CI. Chromium also runs locally.
+- **Content (Vitest):** `src/content/chapter1.test.ts` runs every Chapter 1 example, option, and reference in Pyodide. It checks the coverage rule, the mistake tags, the hints, the skeleton starters, and the recorded outputs.
+- **End-to-end (Playwright):** ticket flows, the notebook, the chart task, a buffer stop, a forced restart (`?forceInterruptFailure=1`), memory recycling (`?recycleThresholdBytes=`), the load timeout, the production CSP on the preview server, and Chapter 1 (`e2e/chapter1.spec.ts`: a lesson, both kinds of choice item, a ticket, a fix, and the boss, at 390 px and 1280 px, by tap only, with axe). Chromium and WebKit run in CI. Chromium also runs locally.
 - **Spike (not required):** `engine-spike` (the harness fails its job on any bad check) and `webkit-interrupt-diagnosis` (50 WebKit contexts, classified by stage) under `.github/workflows/`.
 - **CI jobs (`ci.yml`):** `checks` (types, lint, unit tests, script tests, the static 3.10 check, build and hook scan), `docs-quotes` (verbatim quotes), `py310` (every payload under CPython 3.10), and `e2e` (Chromium and WebKit, dev and production preview).
 

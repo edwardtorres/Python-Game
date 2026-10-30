@@ -1,0 +1,264 @@
+{
+  "graded": [
+    {
+      "batch": "G1",
+      "id": "c01-guided-classify-weight",
+      "status": "pass",
+      "passed": 11,
+      "total": 11,
+      "failed": [],
+      "error": null
+    },
+    {
+      "batch": "G1",
+      "id": "c01-guided-count-by-mode",
+      "status": "pass",
+      "passed": 4,
+      "total": 4,
+      "failed": [],
+      "error": null
+    },
+    {
+      "batch": "G1",
+      "id": "c01-guided-format-label",
+      "status": "pass",
+      "passed": 4,
+      "total": 4,
+      "failed": [],
+      "error": null
+    },
+    {
+      "batch": "G1",
+      "id": "c01-guided-in-batches",
+      "status": "pass",
+      "passed": 5,
+      "total": 5,
+      "failed": [],
+      "error": null
+    },
+    {
+      "batch": "G2",
+      "id": "c01-ticket-build-label",
+      "status": "pass",
+      "passed": 5,
+      "total": 5,
+      "failed": [],
+      "error": null
+    },
+    {
+      "batch": "G2",
+      "id": "c01-ticket-parse-weight",
+      "status": "pass",
+      "passed": 7,
+      "total": 7,
+      "failed": [],
+      "error": null
+    },
+    {
+      "batch": "G2",
+      "id": "c01-ticket-route-pairs",
+      "status": "pass",
+      "passed": 6,
+      "total": 6,
+      "failed": [],
+      "error": null
+    },
+    {
+      "batch": "G2",
+      "id": "c01-ticket-unique-routes",
+      "status": "pass",
+      "passed": 4,
+      "total": 4,
+      "failed": [],
+      "error": null
+    },
+    {
+      "batch": "G3",
+      "id": "c01-fix-add-stop",
+      "status": "pass",
+      "passed": 5,
+      "total": 5,
+      "failed": [],
+      "error": null
+    },
+    {
+      "batch": "G3",
+      "id": "c01-fix-first-total",
+      "status": "pass",
+      "passed": 5,
+      "total": 5,
+      "failed": [],
+      "error": null
+    },
+    {
+      "batch": "G3",
+      "id": "c01-fix-with-extra",
+      "status": "pass",
+      "passed": 5,
+      "total": 5,
+      "failed": [],
+      "error": null
+    },
+    {
+      "batch": "G3",
+      "id": "c01-structure-countdown",
+      "status": "pass",
+      "passed": 3,
+      "total": 3,
+      "failed": [],
+      "error": null
+    },
+    {
+      "batch": "G3",
+      "id": "c01-structure-squares",
+      "status": "pass",
+      "passed": 3,
+      "total": 3,
+      "failed": [],
+      "error": null
+    },
+    {
+      "batch": "G4",
+      "id": "c01-boss-clean-lines",
+      "status": "pass",
+      "passed": 4,
+      "total": 4,
+      "failed": [],
+      "error": null
+    },
+    {
+      "batch": "G4",
+      "id": "c01-boss-count-words",
+      "status": "pass",
+      "passed": 4,
+      "total": 4,
+      "failed": [],
+      "error": null
+    },
+    {
+      "batch": "G4",
+      "id": "c01-boss-report-lines",
+      "status": "pass",
+      "passed": 4,
+      "total": 4,
+      "failed": [],
+      "error": null
+    },
+    {
+      "batch": "G4",
+      "id": "c01-boss-top-words",
+      "status": "pass",
+      "passed": 5,
+      "total": 5,
+      "failed": [],
+      "error": null
+    }
+  ],
+  "choice": [
+    {
+      "batch": "C1",
+      "id": "c01-predict-division",
+      "letter": "A",
+      "answer": "A",
+      "agree": true
+    },
+    {
+      "batch": "C1",
+      "id": "c01-predict-immutable-string",
+      "letter": "B",
+      "answer": "B",
+      "agree": true
+    },
+    {
+      "batch": "C1",
+      "id": "c01-predict-list-alias",
+      "letter": "B",
+      "answer": "B",
+      "agree": true
+    },
+    {
+      "batch": "C1",
+      "id": "c01-predict-dict-order",
+      "letter": "C",
+      "answer": "C",
+      "agree": true
+    },
+    {
+      "batch": "C1",
+      "id": "c01-predict-set-size",
+      "letter": "B",
+      "answer": "B",
+      "agree": true
+    },
+    {
+      "batch": "C2",
+      "id": "c01-predict-one-tuple",
+      "letter": "A",
+      "answer": "A",
+      "agree": true
+    },
+    {
+      "batch": "C2",
+      "id": "c01-predict-range-end",
+      "letter": "A",
+      "answer": "A",
+      "agree": true
+    },
+    {
+      "batch": "C2",
+      "id": "c01-predict-default-list",
+      "letter": "B",
+      "answer": "B",
+      "agree": true
+    },
+    {
+      "batch": "C2",
+      "id": "c01-predict-generator-once",
+      "letter": "A",
+      "answer": "A",
+      "agree": true
+    },
+    {
+      "batch": "C2",
+      "id": "c01-predict-truthiness",
+      "letter": "A",
+      "answer": "A",
+      "agree": true
+    },
+    {
+      "batch": "C3",
+      "id": "c01-traceback-missing-key",
+      "letter": "A",
+      "answer": "A",
+      "agree": true
+    },
+    {
+      "batch": "C3",
+      "id": "c01-traceback-missing-argument",
+      "letter": "B",
+      "answer": "B",
+      "agree": true
+    },
+    {
+      "batch": "C3",
+      "id": "c01-traceback-broad-except",
+      "letter": "C",
+      "answer": "C",
+      "agree": true
+    },
+    {
+      "batch": "C3",
+      "id": "c01-traceback-import",
+      "letter": "C",
+      "answer": "C",
+      "agree": true
+    },
+    {
+      "batch": "C3",
+      "id": "c01-traceback-name-type",
+      "letter": "A",
+      "answer": "A",
+      "agree": true
+    }
+  ]
+}

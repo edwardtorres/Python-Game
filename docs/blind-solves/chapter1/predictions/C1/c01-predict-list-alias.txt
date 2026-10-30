@@ -1,0 +1,2 @@
+B
+The name b refers to the same list as a, so appending through b also changes a to [1, 2, 3].

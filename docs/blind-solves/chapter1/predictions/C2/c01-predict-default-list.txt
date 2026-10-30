@@ -1,0 +1,2 @@
+B
+The default bag is None, so each call builds a fresh list, giving ['a'] then ['b'] rather than accumulating.

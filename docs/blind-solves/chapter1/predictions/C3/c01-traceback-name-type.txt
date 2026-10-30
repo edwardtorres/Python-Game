@@ -1,0 +1,2 @@
+A
+Adding a str to an int with + raises TypeError, and the message for str + int is "can only concatenate str (not "int") to str".

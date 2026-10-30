@@ -1,0 +1,2 @@
+B
+The call ship("P1") passes only one argument, so the required parameter weight is missing and Python raises a TypeError naming it.

@@ -1,0 +1,2 @@
+A
+Parentheses around a single value with no trailing comma do not make a tuple, so `(5)` is just the int 5 and its type name is "int".

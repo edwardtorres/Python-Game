@@ -1,0 +1,73 @@
+[
+  {
+    "id": "c01-boss-clean-lines",
+    "title": "Boss part 1: clean the lines",
+    "ticket": {
+      "from": "Edward, Analytics Lead",
+      "subject": "Weekly word report (boss)",
+      "body": "Clean the lines, count the words, rank the top words, and format the report. Each part is graded on its own."
+    },
+    "rules": [
+      "Remove spaces from both ends of each line.",
+      "Drop lines that are blank after trimming.",
+      "Keep the lines in their original order."
+    ],
+    "entry": "clean_lines",
+    "starter": "def clean_lines(lines):\n    pass\n",
+    "kind": "function",
+    "mustFix": false
+  },
+  {
+    "id": "c01-boss-count-words",
+    "title": "Boss part 2: count the words",
+    "ticket": {
+      "from": "Edward, Analytics Lead",
+      "subject": "Weekly word report (boss)",
+      "body": "Clean the lines, count the words, rank the top words, and format the report. Each part is graded on its own."
+    },
+    "rules": [
+      "Words are separated by any whitespace.",
+      "Counting ignores case.",
+      "Return a dict from each word to its count."
+    ],
+    "entry": "count_words",
+    "starter": "def count_words(lines):\n    pass\n",
+    "kind": "function",
+    "mustFix": false
+  },
+  {
+    "id": "c01-boss-top-words",
+    "title": "Boss part 3: rank the top words",
+    "ticket": {
+      "from": "Edward, Analytics Lead",
+      "subject": "Weekly word report (boss)",
+      "body": "Clean the lines, count the words, rank the top words, and format the report. Each part is graded on its own."
+    },
+    "rules": [
+      "The highest count comes first.",
+      "Ties are ordered A to Z.",
+      "Return at most n (word, count) pairs."
+    ],
+    "entry": "top_words",
+    "starter": "def top_words(counts, n):\n    pass\n",
+    "kind": "function",
+    "mustFix": false
+  },
+  {
+    "id": "c01-boss-report-lines",
+    "title": "Boss part 4: format the report",
+    "ticket": {
+      "from": "Edward, Analytics Lead",
+      "subject": "Weekly word report (boss)",
+      "body": "Clean the lines, count the words, rank the top words, and format the report. Each part is graded on its own."
+    },
+    "rules": [
+      "Each line reads \"word: count\".",
+      "Keep the order of the pairs."
+    ],
+    "entry": "report_lines",
+    "starter": "def report_lines(pairs):\n    pass\n",
+    "kind": "function",
+    "mustFix": false
+  }
+]

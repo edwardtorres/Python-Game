@@ -1,0 +1,86 @@
+[
+  {
+    "id": "c01-predict-one-tuple",
+    "kind": "predict",
+    "prompt": "Predict the output before you run it. Choose the output the code prints.",
+    "code": "item = (5)\nprint(type(item).__name__)\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "int"
+      },
+      {
+        "label": "B",
+        "text": "tuple"
+      }
+    ]
+  },
+  {
+    "id": "c01-predict-range-end",
+    "kind": "predict",
+    "prompt": "Predict the output before you run it. Choose the output the code prints.",
+    "code": "print(list(range(1, 4)))\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "[1, 2, 3]"
+      },
+      {
+        "label": "B",
+        "text": "[1, 2]"
+      },
+      {
+        "label": "C",
+        "text": "[0, 1, 2, 3]"
+      }
+    ]
+  },
+  {
+    "id": "c01-predict-default-list",
+    "kind": "predict",
+    "prompt": "Predict the output before you run it. Choose the output the code prints.",
+    "code": "def add(item, bag=None):\n    bag = [] if bag is None else bag\n    bag.append(item)\n    return bag\n\nprint(add(\"a\"))\nprint(add(\"b\"))\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "['a']\n['a', 'b']"
+      },
+      {
+        "label": "B",
+        "text": "['a']\n['b']"
+      }
+    ]
+  },
+  {
+    "id": "c01-predict-generator-once",
+    "kind": "predict",
+    "prompt": "Predict the output before you run it. Choose the output the code prints.",
+    "code": "g = (x * 2 for x in [1, 2])\nprint(list(g))\nprint(list(g))\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "[2, 4]\n[]"
+      },
+      {
+        "label": "B",
+        "text": "[2, 4]\n[2, 4]"
+      }
+    ]
+  },
+  {
+    "id": "c01-predict-truthiness",
+    "kind": "predict",
+    "prompt": "Predict the output before you run it. Choose the output the code prints.",
+    "code": "for value in [0, \"\", [1]]:\n    print(bool(value))\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "False\nFalse\nTrue"
+      },
+      {
+        "label": "B",
+        "text": "True\nTrue\nTrue"
+      }
+    ]
+  }
+]

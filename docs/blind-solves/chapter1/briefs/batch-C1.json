@@ -1,0 +1,90 @@
+[
+  {
+    "id": "c01-predict-division",
+    "kind": "predict",
+    "prompt": "Predict the output before you run it. Choose the output the code prints.",
+    "code": "print(7 / 2)\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "3.5"
+      },
+      {
+        "label": "B",
+        "text": "3"
+      },
+      {
+        "label": "C",
+        "text": "1"
+      }
+    ]
+  },
+  {
+    "id": "c01-predict-immutable-string",
+    "kind": "predict",
+    "prompt": "Predict the output before you run it. Choose the output the code prints.",
+    "code": "s = \"freight\"\ns.upper()\nprint(s)\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "FREIGHT"
+      },
+      {
+        "label": "B",
+        "text": "freight"
+      }
+    ]
+  },
+  {
+    "id": "c01-predict-list-alias",
+    "kind": "predict",
+    "prompt": "Predict the output before you run it. Choose the output the code prints.",
+    "code": "a = [1, 2]\nb = a\nb.append(3)\nprint(a)\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "[1, 2]"
+      },
+      {
+        "label": "B",
+        "text": "[1, 2, 3]"
+      }
+    ]
+  },
+  {
+    "id": "c01-predict-dict-order",
+    "kind": "predict",
+    "prompt": "Predict the output before you run it. Choose the output the code prints.",
+    "code": "d = {\"sea\": 1, \"air\": 2}\nprint(list(d))\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "['air', 'sea']"
+      },
+      {
+        "label": "B",
+        "text": "[1, 2]"
+      },
+      {
+        "label": "C",
+        "text": "['sea', 'air']"
+      }
+    ]
+  },
+  {
+    "id": "c01-predict-set-size",
+    "kind": "predict",
+    "prompt": "Predict the output before you run it. Choose the output the code prints.",
+    "code": "print(len(set([3, 1, 3, 2])))\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "4"
+      },
+      {
+        "label": "B",
+        "text": "3"
+      }
+    ]
+  }
+]

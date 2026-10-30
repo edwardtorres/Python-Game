@@ -1,0 +1,102 @@
+[
+  {
+    "id": "c01-traceback-missing-key",
+    "kind": "traceback",
+    "prompt": "The code below stops with an error. Choose the error it raises.",
+    "code": "stock = {\"pallets\": 3}\nprint(stock[\"crates\"])\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "KeyError: 'crates'"
+      },
+      {
+        "label": "B",
+        "text": "TypeError: list indices must be integers or slices, not str"
+      },
+      {
+        "label": "C",
+        "text": "TypeError: unsupported operand type(s) for +: 'NoneType' and 'int'"
+      }
+    ]
+  },
+  {
+    "id": "c01-traceback-missing-argument",
+    "kind": "traceback",
+    "prompt": "The code below stops with an error. Choose the error it raises.",
+    "code": "def ship(parcel, weight):\n    return f\"{parcel}:{weight}\"\n\nprint(ship(\"P1\"))\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "TypeError: ship() got an unexpected keyword argument 'box'"
+      },
+      {
+        "label": "B",
+        "text": "TypeError: ship() missing 1 required positional argument: 'weight'"
+      },
+      {
+        "label": "C",
+        "text": "TypeError: ship() takes 2 positional arguments but 3 were given"
+      }
+    ]
+  },
+  {
+    "id": "c01-traceback-broad-except",
+    "kind": "traceback",
+    "prompt": "The code below stops with an error. Choose the error it raises.",
+    "code": "def to_number(text):\n    return int(text)\n\nprint(to_number(\"twelve\"))\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "TypeError: int() argument must be a string, a bytes-like object or a real number, not 'NoneType'"
+      },
+      {
+        "label": "B",
+        "text": "ValueError: invalid literal for int() with base 10: '12.5'"
+      },
+      {
+        "label": "C",
+        "text": "ValueError: invalid literal for int() with base 10: 'twelve'"
+      }
+    ]
+  },
+  {
+    "id": "c01-traceback-import",
+    "kind": "traceback",
+    "prompt": "The code below stops with an error. Choose the error it raises.",
+    "code": "import freight_tools\nprint(\"ready\")\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "ModuleNotFoundError: No module named 'freight_tool'"
+      },
+      {
+        "label": "B",
+        "text": "ImportError: cannot import name 'loads_freight' from 'json' (/lib/python314.zip/json/__init__.py)"
+      },
+      {
+        "label": "C",
+        "text": "ModuleNotFoundError: No module named 'freight_tools'"
+      }
+    ]
+  },
+  {
+    "id": "c01-traceback-name-type",
+    "kind": "traceback",
+    "prompt": "The code below stops with an error. Choose the error it raises.",
+    "code": "parcels = 3\nprint(\"Parcels: \" + parcels)\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "TypeError: can only concatenate str (not \"int\") to str"
+      },
+      {
+        "label": "B",
+        "text": "TypeError: unsupported operand type(s) for -: 'str' and 'int'"
+      },
+      {
+        "label": "C",
+        "text": "TypeError: unsupported operand type(s) for +: 'float' and 'str'"
+      }
+    ]
+  }
+]

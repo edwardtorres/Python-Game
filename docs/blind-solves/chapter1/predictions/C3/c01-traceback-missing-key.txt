@@ -1,0 +1,2 @@
+A
+Looking up the key "crates" in a dict that only has "pallets" raises KeyError with that key name.

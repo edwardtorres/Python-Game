@@ -1,0 +1,115 @@
+{
+  "c01-predict-division": {
+    "answer_label": "A",
+    "mapping": {
+      "A": "true",
+      "B": "floor",
+      "C": "remainder"
+    }
+  },
+  "c01-predict-immutable-string": {
+    "answer_label": "B",
+    "mapping": {
+      "A": "upper-printed",
+      "B": "true"
+    }
+  },
+  "c01-predict-list-alias": {
+    "answer_label": "B",
+    "mapping": {
+      "A": "copy",
+      "B": "true"
+    }
+  },
+  "c01-predict-dict-order": {
+    "answer_label": "C",
+    "mapping": {
+      "A": "sorted",
+      "B": "values",
+      "C": "true"
+    }
+  },
+  "c01-predict-set-size": {
+    "answer_label": "B",
+    "mapping": {
+      "A": "list-size",
+      "B": "true"
+    }
+  },
+  "c01-predict-one-tuple": {
+    "answer_label": "A",
+    "mapping": {
+      "A": "true",
+      "B": "comma"
+    }
+  },
+  "c01-predict-range-end": {
+    "answer_label": "A",
+    "mapping": {
+      "A": "true",
+      "B": "short",
+      "C": "from-zero"
+    }
+  },
+  "c01-predict-default-list": {
+    "answer_label": "B",
+    "mapping": {
+      "A": "shared-default",
+      "B": "true"
+    }
+  },
+  "c01-predict-generator-once": {
+    "answer_label": "A",
+    "mapping": {
+      "A": "true",
+      "B": "list-again"
+    }
+  },
+  "c01-predict-truthiness": {
+    "answer_label": "A",
+    "mapping": {
+      "A": "true",
+      "B": "not-none"
+    }
+  },
+  "c01-traceback-missing-key": {
+    "answer_label": "A",
+    "mapping": {
+      "A": "true",
+      "B": "list-index",
+      "C": "get-plus"
+    }
+  },
+  "c01-traceback-missing-argument": {
+    "answer_label": "B",
+    "mapping": {
+      "A": "bad-keyword",
+      "B": "true",
+      "C": "too-many"
+    }
+  },
+  "c01-traceback-broad-except": {
+    "answer_label": "C",
+    "mapping": {
+      "A": "none-input",
+      "B": "decimal-text",
+      "C": "true"
+    }
+  },
+  "c01-traceback-import": {
+    "answer_label": "C",
+    "mapping": {
+      "A": "misspelled",
+      "B": "from-missing-name",
+      "C": "true"
+    }
+  },
+  "c01-traceback-name-type": {
+    "answer_label": "A",
+    "mapping": {
+      "A": "true",
+      "B": "minus-instead",
+      "C": "float-text"
+    }
+  }
+}

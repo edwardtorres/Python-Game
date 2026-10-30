@@ -1,0 +1,122 @@
+[
+  {
+    "id": "c01-fix-with-extra",
+    "title": "Fix: add a parcel to the end",
+    "ticket": {
+      "from": "Hana, Outbound",
+      "subject": "Parcel appears in the wrong place",
+      "body": "with_extra should keep every parcel and add the new one at the end. The current code overwrites the last parcel, and it fails on an empty list."
+    },
+    "rules": [
+      "The result keeps every item and adds extra at the end.",
+      "An empty list gives a list with only extra."
+    ],
+    "entry": "with_extra",
+    "starter": "def with_extra(items, extra):\n    items[-1] = extra\n    return items\n",
+    "kind": "function",
+    "mustFix": true
+  },
+  {
+    "id": "c01-fix-first-total",
+    "title": "Fix: total the first few parcels",
+    "ticket": {
+      "from": "Marcus, Route Planning",
+      "subject": "Totals skip a parcel",
+      "body": "first_total should add the first n weights. The current loop starts at the wrong index, so the first weight is missing."
+    },
+    "rules": [
+      "Add up the first n values.",
+      "When n is 0, the total is 0."
+    ],
+    "entry": "first_total",
+    "starter": "def first_total(values, n):\n    total = 0\n    for i in range(1, n):\n        total += values[i]\n    return total\n",
+    "kind": "function",
+    "mustFix": true
+  },
+  {
+    "id": "c01-fix-add-stop",
+    "title": "Fix: add a stop to a route",
+    "ticket": {
+      "from": "Dev, Network Planning",
+      "subject": "Stops leak between routes",
+      "body": "add_stop should start a new route when none is given. Right now stops from one route appear in the next."
+    },
+    "rules": [
+      "The stop is added to the end of the list it is given.",
+      "A call without a list starts a new list."
+    ],
+    "entry": "add_stop",
+    "starter": "def add_stop(stop, stops=[]):\n    stops.append(stop)\n    return stops\n",
+    "kind": "function",
+    "mustFix": true
+  },
+  {
+    "id": "c01-structure-squares",
+    "title": "Structure: squares of odd values",
+    "ticket": {
+      "from": "Hana, Outbound",
+      "subject": "Odd weights, squared",
+      "body": "Write squares_of_odds(values). Use a comprehension, not a loop."
+    },
+    "rules": [
+      "Define squares_of_odds.",
+      "Build the result with a comprehension, and use no for or while loop in the function."
+    ],
+    "entry": "squares_of_odds",
+    "starter": "def squares_of_odds(values):\n    pass\n",
+    "kind": "structure",
+    "structureChecks": [
+      {
+        "type": "defines",
+        "label": "define squares_of_odds",
+        "name": "squares_of_odds"
+      },
+      {
+        "type": "uses_comprehension_in",
+        "label": "use a comprehension in squares_of_odds",
+        "within": "squares_of_odds"
+      },
+      {
+        "type": "no_loops_in",
+        "label": "use no for or while loop in squares_of_odds",
+        "within": "squares_of_odds"
+      }
+    ],
+    "mustFix": false
+  },
+  {
+    "id": "c01-structure-countdown",
+    "title": "Structure: a countdown generator",
+    "ticket": {
+      "from": "Marcus, Route Planning",
+      "subject": "Countdown for the board",
+      "body": "Write countdown(n). It yields n, n-1, and so on down to 1. Use yield, and do not build a list."
+    },
+    "rules": [
+      "Define countdown.",
+      "Produce the values with yield, and build no list."
+    ],
+    "entry": "countdown",
+    "starter": "def countdown(n):\n    pass\n",
+    "kind": "structure",
+    "structureChecks": [
+      {
+        "type": "defines",
+        "label": "define countdown",
+        "name": "countdown"
+      },
+      {
+        "type": "uses_yield_in",
+        "label": "use yield in countdown",
+        "within": "countdown"
+      },
+      {
+        "type": "forbids_calls",
+        "label": "do not call list in countdown",
+        "name": "list",
+        "within": "countdown"
+      }
+    ],
+    "mustFix": false
+  }
+]

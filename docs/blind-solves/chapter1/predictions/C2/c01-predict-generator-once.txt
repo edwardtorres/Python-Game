@@ -1,0 +1,2 @@
+A
+A generator can be consumed only once, so the first list(g) gives [2, 4] and the second list(g) is empty, [].

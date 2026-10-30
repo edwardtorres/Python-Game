@@ -1,0 +1,73 @@
+[
+  {
+    "id": "c01-ticket-unique-routes",
+    "title": "Ticket: unique routes",
+    "ticket": {
+      "from": "Dev, Network Planning",
+      "subject": "Route list for the board",
+      "body": "The stop list has repeats. Give the board each stop once, in A to Z order."
+    },
+    "rules": [
+      "Each stop appears once.",
+      "The list is in A to Z order."
+    ],
+    "entry": "unique_routes",
+    "starter": "def unique_routes(stops):\n    pass\n",
+    "kind": "function",
+    "mustFix": false
+  },
+  {
+    "id": "c01-ticket-route-pairs",
+    "title": "Ticket: route pairs",
+    "ticket": {
+      "from": "Dev, Network Planning",
+      "subject": "Legs of a trip",
+      "body": "A trip visits stops in order. Give one (from, to) pair for each leg. A trip with one stop has no legs."
+    },
+    "rules": [
+      "Each leg is a (from, to) pair, in trip order.",
+      "There is one pair for each pair of neighbouring stops.",
+      "A trip with one stop gives an empty list."
+    ],
+    "entry": "route_pairs",
+    "starter": "def route_pairs(stops):\n    pass\n",
+    "kind": "function",
+    "mustFix": false
+  },
+  {
+    "id": "c01-ticket-build-label",
+    "title": "Ticket: build a crate label",
+    "ticket": {
+      "from": "Priya, Dock Operations",
+      "subject": "Crate labels",
+      "body": "A label starts with the name. Tags go in brackets, in the order given. Options come last, as key=value, sorted by key."
+    },
+    "rules": [
+      "The name comes first.",
+      "Tags go in square brackets, in the order given, separated by \", \". No tags means no brackets.",
+      "Options are added as key=value, sorted by key."
+    ],
+    "entry": "build_label",
+    "starter": "def build_label(name, *tags, **options):\n    pass\n",
+    "kind": "function",
+    "mustFix": false
+  },
+  {
+    "id": "c01-ticket-parse-weight",
+    "title": "Ticket: read a weight",
+    "ticket": {
+      "from": "Sam, Loading Bay",
+      "subject": "Scanner weights",
+      "body": "The scanner sends weights as text. Return a float. Return None when the text is not a number. Any other input is a bug, so it must still raise TypeError."
+    },
+    "rules": [
+      "Text such as \" 4.5 \" gives the float 4.5.",
+      "Text that is not a number gives None.",
+      "A value that is not text raises TypeError."
+    ],
+    "entry": "parse_weight",
+    "starter": "def parse_weight(text):\n    pass\n",
+    "kind": "function",
+    "mustFix": false
+  }
+]

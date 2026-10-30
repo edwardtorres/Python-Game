@@ -1,0 +1,2 @@
+A
+range(1, 4) starts at 1 and stops before 4, so list() gives [1, 2, 3].

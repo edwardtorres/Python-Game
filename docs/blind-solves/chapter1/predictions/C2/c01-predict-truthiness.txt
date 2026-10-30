@@ -1,0 +1,2 @@
+A
+bool(0) and bool("") are False because they are empty or zero, while bool([1]) is True because it is a non-empty list.

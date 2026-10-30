@@ -1,0 +1,2 @@
+B
+Strings are immutable and s.upper() returns a new string that is discarded, so s still holds "freight".

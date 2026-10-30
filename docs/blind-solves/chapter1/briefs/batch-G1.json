@@ -1,0 +1,72 @@
+[
+  {
+    "id": "c01-guided-format-label",
+    "title": "Guided: format a label",
+    "ticket": {
+      "from": "Priya, Dock Operations",
+      "subject": "Labels for the pallet board",
+      "body": "Each pallet board line reads \"name: count items\". Trim spaces around the name."
+    },
+    "rules": [
+      "Return the name, then a colon, a space, the count, and the word items.",
+      "Remove spaces from both ends of the name."
+    ],
+    "entry": "format_label",
+    "starter": "def format_label(name, count):\n    pass\n",
+    "kind": "function",
+    "mustFix": false
+  },
+  {
+    "id": "c01-guided-count-by-mode",
+    "title": "Guided: count shipments by mode",
+    "ticket": {
+      "from": "Marcus, Route Planning",
+      "subject": "Shipments per mode",
+      "body": "Each record has a \"mode\" key. Count how many records each mode has. An empty export gives an empty count."
+    },
+    "rules": [
+      "Count each record under its mode.",
+      "An empty list gives an empty dict, not None."
+    ],
+    "entry": "count_by_mode",
+    "starter": "def count_by_mode(records):\n    pass\n",
+    "kind": "function",
+    "mustFix": false
+  },
+  {
+    "id": "c01-guided-classify-weight",
+    "title": "Guided: classify a parcel weight",
+    "ticket": {
+      "from": "Sam, Loading Bay",
+      "subject": "Weight bands",
+      "body": "Under 5 kg is light. From 5 to 20 kg, including both ends, is medium. Above 20 kg is heavy."
+    },
+    "rules": [
+      "Under 5 kg is \"light\".",
+      "From 5 to 20 kg, including 5 and 20, is \"medium\".",
+      "Above 20 kg is \"heavy\"."
+    ],
+    "entry": "classify_weight",
+    "starter": "def classify_weight(kg):\n    pass\n",
+    "kind": "function",
+    "mustFix": false
+  },
+  {
+    "id": "c01-guided-in-batches",
+    "title": "Guided: send parcels in batches",
+    "ticket": {
+      "from": "Hana, Outbound",
+      "subject": "Batches of parcels",
+      "body": "Give the parcel list in batches of a given size. Each batch holds 1 to size items, in order. An empty list gives no batches."
+    },
+    "rules": [
+      "Each batch holds between 1 and size items, and the last batch may be shorter.",
+      "The items keep their order, both between batches and inside each batch.",
+      "An empty input gives no batches."
+    ],
+    "entry": "in_batches",
+    "starter": "def in_batches(items, size):\n    pass\n",
+    "kind": "function",
+    "mustFix": false
+  }
+]

@@ -1,0 +1,2 @@
+B
+The set keeps only unique values {1, 2, 3}, so its length is 3.

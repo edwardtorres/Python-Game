@@ -1,0 +1,2 @@
+C
+Iterating a dict yields its keys in insertion order, so list(d) gives ['sea', 'air'].
