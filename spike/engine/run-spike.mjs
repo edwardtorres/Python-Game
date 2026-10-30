@@ -121,6 +121,8 @@ await Promise.all([servers.production.close(), servers.noWasmEval.close()]);
 const failures = [];
 const fail = (message) => failures.push(message);
 for (const [id, job] of Object.entries(results.jobs)) {
+  // CSP probes fail on purpose; their outcome is checked below, not here.
+  if (id.startsWith('csp:')) continue;
   for (const sample of job.samples) {
     if (sample.error) fail(`${id}: ${sample.error}`);
   }
