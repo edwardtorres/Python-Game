@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "player": {
+    "name": "Analyst",
+    "rank": "analytics-intern"
+  },
+  "challenges": {
+    "clean-weights": {
+      "status": "passed",
+      "attempts": 0,
+      "hintTier": 0,
+      "solutionRevealed": false,
+      "lastCode": "from decimal import Decimal, ROUND_HALF_UP, localcontext\n\n\ndef _round2(number):\n    with localcontext() as context:\n        context.prec = 80\n        return float(number.quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_UP))\n\n\ndef clean_weights(values):\n    cleaned = []\n    for raw in values:\n        if raw is None:\n            continue\n        if isinstance(raw, bool):\n            continue\n        if isinstance(raw, str):\n            text = raw.strip()\n            if text == \"\":\n                continue\n            try:\n                number = Decimal(text)\n            except Exception:\n                continue\n        elif isinstance(raw, (int, float)):\n            number = Decimal(str(raw))\n        else:\n            continue\n        if not number.is_finite():\n            continue\n        if number < 0:\n            continue\n        cleaned.append(_round2(number))\n    return cleaned\n",
+      "cells": [],
+      "passedAt": "2026-10-30T22:17:02.575Z"
+    },
+    "churn-by-region": {
+      "status": "attempted",
+      "attempts": 1,
+      "hintTier": 1,
+      "solutionRevealed": false,
+      "lastCode": "import pandas as pd\n\n\ndef churn_by_region(df):\n    unique = df.copy()\n    unique[\"region\"] = unique[\"region\"].fillna(\"unknown\")\n    summary = (\n        unique.groupby(\"region\", dropna=False)\n        .agg(customers=(\"customer_id\", \"size\"), churned=(\"churned\", \"sum\"))\n        .reset_index()\n    )\n    summary[\"churn_rate\"] = (summary[\"churned\"] / summary[\"customers\"]).round(4)\n    summary = summary.sort_values([\"churn_rate\", \"region\"], ascending=[False, True])\n    summary = summary.reset_index(drop=True)\n    return summary[[\"region\", \"customers\", \"churned\", \"churn_rate\"]]\n",
+      "cells": [
+        "customers = load_dataset('customers')\ncustomers.head()\n",
+        "def churn_by_region(df):\n    \"\"\"Summarise churn by region for the Monday retention review.\n\n    Rules:\n    1. Remove repeated customer_id rows, keeping the first one.\n    2. A missing region becomes the text 'unknown', and it is a group of its own.\n    3. Return the columns in this order: region, customers, churned, churn_rate.\n    4. customers is the number of unique customers in the region, churned is how many of\n       them have churned == 1, and churn_rate is churned / customers rounded to 4 decimals.\n    5. Sort by churn_rate from highest to lowest, then by region from A to Z.\n    6. The index runs 0, 1, 2, and so on.\n    \"\"\"\n    pass\n"
+      ],
+      "passedAt": null
+    }
+  },
+  "updatedAt": "2026-10-30T22:17:06.803Z"
+}
