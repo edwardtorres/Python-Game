@@ -46,6 +46,8 @@ Evidence: `spike/engine/RESULTS.md`, with the Chromium and WebKit numbers.
 
 `vite.config.ts` sets them for the dev server and the preview server. The deployed host must set them too. Without them the buffer is unavailable and the client restarts the worker on every stop.
 
+**Cache rule (from the WebKit failure in CI).** A `304 Not Modified` reply to a revalidation does not carry these headers, and WebKit then refuses the worker script on its second load. The dev and preview servers send `Cache-Control: no-store` on every response, so nothing is revalidated. The deployed host must do the same for the worker script and the Pyodide files, or send the three headers on `304` responses too. `e2e/workers.spec.ts` checks that a second and third worker start in the production build.
+
 **Content-Security-Policy.** The production policy includes `script-src 'self' 'wasm-unsafe-eval'` and `worker-src 'self'`. Without `'wasm-unsafe-eval'`, Python cannot start, and a worker waiting for it would hang silently. The page therefore checks WebAssembly itself before starting a worker, and shows a clear error if it is blocked.
 
 **Start-up and package timeouts.** The engine has 30 seconds to start and 60 seconds to load packages. Past either limit, the worker is terminated and the learner sees a specific message.

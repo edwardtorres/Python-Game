@@ -4,10 +4,13 @@ import tailwindcss from '@tailwindcss/vite';
 
 // Cross-origin isolation is required so the interrupt buffer (a SharedArrayBuffer)
 // works. These headers are a deployment requirement too; see CLAUDE.md.
+// no-store stops the browser from revalidating scripts and Pyodide files. A 304 Not
+// Modified reply does not carry these headers, and WebKit then refuses the worker.
 const ISOLATION_HEADERS = {
   'Cross-Origin-Opener-Policy': 'same-origin',
   'Cross-Origin-Embedder-Policy': 'require-corp',
   'Cross-Origin-Resource-Policy': 'same-origin',
+  'Cache-Control': 'no-store',
 };
 
 // The production policy. 'wasm-unsafe-eval' lets Pyodide compile WebAssembly

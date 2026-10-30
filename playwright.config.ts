@@ -18,22 +18,22 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      testIgnore: /csp\.spec\.ts/,
+      testIgnore: /(csp|workers)\.spec\.ts/,
       use: { ...devices['Desktop Chrome'], baseURL: 'http://127.0.0.1:5173' },
     },
     {
       name: 'webkit',
-      testIgnore: /csp\.spec\.ts/,
+      testIgnore: /(csp|workers)\.spec\.ts/,
       use: { ...devices['Desktop Safari'], baseURL: 'http://127.0.0.1:5173' },
     },
     {
       name: 'preview-chromium',
-      testMatch: /csp\.spec\.ts/,
+      testMatch: /(csp|workers)\.spec\.ts/,
       use: { ...devices['Desktop Chrome'], baseURL: 'http://127.0.0.1:4173' },
     },
     {
       name: 'preview-webkit',
-      testMatch: /csp\.spec\.ts/,
+      testMatch: /(csp|workers)\.spec\.ts/,
       use: { ...devices['Desktop Safari'], baseURL: 'http://127.0.0.1:4173' },
     },
   ],
