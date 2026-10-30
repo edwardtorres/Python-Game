@@ -49,7 +49,7 @@ export interface GradePayload {
 }
 
 export interface StructureCheck {
-  type: 'defines' | 'no_loops_in' | 'uses_comprehension_in' | 'calls' | 'forbids_calls';
+  type: 'defines' | 'no_loops_in' | 'uses_comprehension_in' | 'uses_yield_in' | 'calls' | 'forbids_calls';
   label: string;
   name?: string;
   within?: string;
@@ -60,6 +60,7 @@ export interface StructurePayload {
   learner: string;
   checks: StructureCheck[];
   requires: string[];
+  variants?: WrongVariant[];
 }
 
 export interface TestingPayload {

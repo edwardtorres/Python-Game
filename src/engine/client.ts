@@ -5,7 +5,7 @@
 // confirm that within interruptGraceMs, the controller terminates the worker and
 // starts a new one (a cold start). Start-up and package loads have their own timeouts.
 // Only one job runs at a time, and the worker is recycled only while idle.
-import type { CellResult, GradePayload, GradeResult, WorkerRequest, WorkerResponse } from './types';
+import type { CellResult, GradePayload, GradeResult, StructurePayload, WorkerRequest, WorkerResponse } from './types';
 import { EngineError, type EngineErrorKind, InterruptedRestart, PythonRunError, isKeyboardInterrupt } from './errors';
 import { DEFAULT_RECYCLE_POLICY, type RecyclePolicy, recycleReason } from './recycle';
 
@@ -92,7 +92,7 @@ export class PythonEngine {
     return { ...this.stats, restarts: { ...this.stats.restarts } };
   }
 
-  grade(payload: GradePayload, datasets: Record<string, string>): Promise<GradeOutcome> {
+  grade(payload: GradePayload | StructurePayload, datasets: Record<string, string>): Promise<GradeOutcome> {
     const requires = payload.requires;
     return this.runJob(requires, async (job) => {
       if (job.interruptRequested) return { kind: 'interrupted', method: 'buffer' };

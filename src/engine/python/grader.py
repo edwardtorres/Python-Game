@@ -14,6 +14,7 @@ import io
 import json
 import math
 import traceback
+import types
 
 import runtime
 from mock_api import MockAPI
@@ -64,7 +65,11 @@ def _load(code, filename, extra=None, definitions_only=False):
 def _call(fn, args, kwargs, filename):
     runtime.seed_everything()
     try:
-        return {"ok": True, "value": fn(*copy.deepcopy(args), **copy.deepcopy(kwargs))}
+        value = fn(*copy.deepcopy(args), **copy.deepcopy(kwargs))
+        # A generator compares by its items. A generator that was already used gives [].
+        if isinstance(value, types.GeneratorType):
+            value = list(value)
+        return {"ok": True, "value": value}
     except Exception as exc:
         return {"ok": False, "error": _error_info(exc, filename)}
 
@@ -423,6 +428,9 @@ def _structure_check(tree, check):
     if kind == "uses_comprehension_in":
         ok = any(isinstance(node, (ast.ListComp, ast.SetComp, ast.DictComp, ast.GeneratorExp)) for node in ast.walk(scope))
         return ok, "use a comprehension here"
+    if kind == "uses_yield_in":
+        ok = any(isinstance(node, (ast.Yield, ast.YieldFrom)) for node in ast.walk(scope))
+        return ok, "use yield here, so the function produces its values one at a time"
     if kind == "calls":
         ok = any(isinstance(node, ast.Call) and _dotted(node.func) == check["name"] for node in ast.walk(scope))
         return ok, f"call {check['name']}"
@@ -442,7 +450,18 @@ def _grade_structure(payload):
         ok, message = _structure_check(tree, check)
         cases.append({"id": f"check-{index}", "label": check["label"], "visibility": "visible", "ok": ok, "message": "" if ok else _clip(message)})
     passed = all(case["ok"] for case in cases)
-    return {"status": "pass" if passed else "fail", "error": None, "cases": cases, "passed": sum(1 for c in cases if c["ok"]), "total": len(cases), "matched": []}
+    matched = []
+    if not passed:
+        # A wrong variant matches when it passes and fails the same checks as the learner.
+        signature = [case["ok"] for case in cases]
+        for variant in payload.get("variants", []):
+            try:
+                variant_tree = ast.parse(variant["code"], filename=VARIANT)
+            except SyntaxError:
+                continue
+            if [_structure_check(variant_tree, check)[0] for check in payload["checks"]] == signature:
+                matched.append({"variantId": variant["id"], **variant["mistake"]})
+    return {"status": "pass" if passed else "fail", "error": None, "cases": cases, "passed": sum(1 for c in cases if c["ok"]), "total": len(cases), "matched": matched}
 
 
 def _grade_api(payload):

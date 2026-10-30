@@ -10,6 +10,7 @@ import base64
 import contextlib
 import io
 import json
+import sys
 import traceback
 
 import runtime
@@ -32,9 +33,10 @@ def load_dataset(name):
 
 
 def _render(value):
-    import pandas as pd
-
-    if isinstance(value, (pd.DataFrame, pd.Series)):
+    # A DataFrame can exist only if pandas was imported, so check sys.modules instead of
+    # importing it. A cell that never loads pandas must still run and show its value.
+    pd = sys.modules.get("pandas")
+    if pd is not None and isinstance(value, (pd.DataFrame, pd.Series)):
         frame = value.to_frame() if isinstance(value, pd.Series) else value
         return {"kind": "html", "data": frame.head(60).to_html(classes="table", border=0, escape=True)}
     if value is None:
@@ -43,8 +45,10 @@ def _render(value):
 
 
 def _figure_images():
-    import matplotlib.pyplot as plt
-
+    # No figure can exist unless matplotlib.pyplot was imported, so there is nothing to draw.
+    plt = sys.modules.get("matplotlib.pyplot")
+    if plt is None:
+        return []
     images = []
     for number in plt.get_fignums():
         figure = plt.figure(number)
