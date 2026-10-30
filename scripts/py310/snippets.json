@@ -1,0 +1,114 @@
+[
+  {
+    "name": "clean-weights:reference",
+    "code": "from decimal import Decimal, ROUND_HALF_UP, localcontext\n\n\ndef _round2(number):\n    with localcontext() as context:\n        context.prec = 80\n        return float(number.quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_UP))\n\n\ndef clean_weights(values):\n    cleaned = []\n    for raw in values:\n        if raw is None:\n            continue\n        if isinstance(raw, bool):\n            continue\n        if isinstance(raw, str):\n            text = raw.strip()\n            if text == \"\":\n                continue\n            try:\n                number = Decimal(text)\n            except Exception:\n                continue\n        elif isinstance(raw, (int, float)):\n            number = Decimal(str(raw))\n        else:\n            continue\n        if not number.is_finite():\n            continue\n        if number < 0:\n            continue\n        cleaned.append(_round2(number))\n    return cleaned\n"
+  },
+  {
+    "name": "clean-weights:starter",
+    "code": "def clean_weights(values):\n    \"\"\"Return the usable weights from a list of raw scale readings.\n\n    Rules:\n    1. Return a new list of floats in the original order.\n    2. Drop None and blank text.\n    3. Drop anything that is not a finite number: text such as 'abc', 'nan', or 'inf',\n       and the booleans True and False.\n    4. Drop negative weights. Keep zero.\n    5. Keep duplicates.\n    6. Round each weight to 2 decimals, and round halves up: '2.345' becomes 2.35.\n    \"\"\"\n    pass\n"
+  },
+  {
+    "name": "clean-weights:variant:round-builtin",
+    "code": "from decimal import Decimal, ROUND_HALF_UP, localcontext\n\n\ndef _round2(number):\n    with localcontext() as context:\n        context.prec = 80\n        return round(float(number), 2)\n\n\ndef clean_weights(values):\n    cleaned = []\n    for raw in values:\n        if raw is None:\n            continue\n        if isinstance(raw, bool):\n            continue\n        if isinstance(raw, str):\n            text = raw.strip()\n            if text == \"\":\n                continue\n            try:\n                number = Decimal(text)\n            except Exception:\n                continue\n        elif isinstance(raw, (int, float)):\n            number = Decimal(str(raw))\n        else:\n            continue\n        if not number.is_finite():\n            continue\n        if number < 0:\n            continue\n        cleaned.append(_round2(number))\n    return cleaned\n"
+  },
+  {
+    "name": "clean-weights:variant:keeps-negatives",
+    "code": "from decimal import Decimal, ROUND_HALF_UP, localcontext\n\n\ndef _round2(number):\n    with localcontext() as context:\n        context.prec = 80\n        return float(number.quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_UP))\n\n\ndef clean_weights(values):\n    cleaned = []\n    for raw in values:\n        if raw is None:\n            continue\n        if isinstance(raw, bool):\n            continue\n        if isinstance(raw, str):\n            text = raw.strip()\n            if text == \"\":\n                continue\n            try:\n                number = Decimal(text)\n            except Exception:\n                continue\n        elif isinstance(raw, (int, float)):\n            number = Decimal(str(raw))\n        else:\n            continue\n        if not number.is_finite():\n            continue\n        cleaned.append(_round2(number))\n    return cleaned\n"
+  },
+  {
+    "name": "clean-weights:variant:drops-zero",
+    "code": "from decimal import Decimal, ROUND_HALF_UP, localcontext\n\n\ndef _round2(number):\n    with localcontext() as context:\n        context.prec = 80\n        return float(number.quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_UP))\n\n\ndef clean_weights(values):\n    cleaned = []\n    for raw in values:\n        if raw is None:\n            continue\n        if isinstance(raw, bool):\n            continue\n        if isinstance(raw, str):\n            text = raw.strip()\n            if text == \"\":\n                continue\n            try:\n                number = Decimal(text)\n            except Exception:\n                continue\n        elif isinstance(raw, (int, float)):\n            number = Decimal(str(raw))\n        else:\n            continue\n        if not number.is_finite():\n            continue\n        if number <= 0:\n            continue\n        cleaned.append(_round2(number))\n    return cleaned\n"
+  },
+  {
+    "name": "clean-weights:variant:sorts-output",
+    "code": "from decimal import Decimal, ROUND_HALF_UP, localcontext\n\n\ndef _round2(number):\n    with localcontext() as context:\n        context.prec = 80\n        return float(number.quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_UP))\n\n\ndef clean_weights(values):\n    cleaned = []\n    for raw in values:\n        if raw is None:\n            continue\n        if isinstance(raw, bool):\n            continue\n        if isinstance(raw, str):\n            text = raw.strip()\n            if text == \"\":\n                continue\n            try:\n                number = Decimal(text)\n            except Exception:\n                continue\n        elif isinstance(raw, (int, float)):\n            number = Decimal(str(raw))\n        else:\n            continue\n        if not number.is_finite():\n            continue\n        if number < 0:\n            continue\n        cleaned.append(_round2(number))\n    return cleaned\n\n\nclean_weights_unsorted = clean_weights\n\n\ndef clean_weights(values):\n    return sorted(clean_weights_unsorted(values))\n"
+  },
+  {
+    "name": "clean-weights:variant:drops-duplicates",
+    "code": "from decimal import Decimal, ROUND_HALF_UP, localcontext\n\n\ndef _round2(number):\n    with localcontext() as context:\n        context.prec = 80\n        return float(number.quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_UP))\n\n\ndef clean_weights(values):\n    cleaned = []\n    for raw in values:\n        if raw is None:\n            continue\n        if isinstance(raw, bool):\n            continue\n        if isinstance(raw, str):\n            text = raw.strip()\n            if text == \"\":\n                continue\n            try:\n                number = Decimal(text)\n            except Exception:\n                continue\n        elif isinstance(raw, (int, float)):\n            number = Decimal(str(raw))\n        else:\n            continue\n        if not number.is_finite():\n            continue\n        if number < 0:\n            continue\n        cleaned.append(_round2(number))\n    return cleaned\n\n\nclean_weights_all = clean_weights\n\n\ndef clean_weights(values):\n    return list(dict.fromkeys(clean_weights_all(values)))\n"
+  },
+  {
+    "name": "clean-weights:variant:bools-as-numbers",
+    "code": "from decimal import Decimal, ROUND_HALF_UP, localcontext\n\n\ndef _round2(number):\n    with localcontext() as context:\n        context.prec = 80\n        return float(number.quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_UP))\n\n\ndef clean_weights(values):\n    cleaned = []\n    for raw in values:\n        if raw is None:\n            continue\n        if isinstance(raw, bool):\n            cleaned.append(1.0 if raw else 0.0)\n            continue\n        if isinstance(raw, str):\n            text = raw.strip()\n            if text == \"\":\n                continue\n            try:\n                number = Decimal(text)\n            except Exception:\n                continue\n        elif isinstance(raw, (int, float)):\n            number = Decimal(str(raw))\n        else:\n            continue\n        if not number.is_finite():\n            continue\n        if number < 0:\n            continue\n        cleaned.append(_round2(number))\n    return cleaned\n"
+  },
+  {
+    "name": "clean-weights:variant:none-as-zero",
+    "code": "from decimal import Decimal, ROUND_HALF_UP, localcontext\n\n\ndef _round2(number):\n    with localcontext() as context:\n        context.prec = 80\n        return float(number.quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_UP))\n\n\ndef clean_weights(values):\n    cleaned = []\n    for raw in values:\n        if raw is None:\n            cleaned.append(0.0)\n            continue\n        if isinstance(raw, bool):\n            continue\n        if isinstance(raw, str):\n            text = raw.strip()\n            if text == \"\":\n                continue\n            try:\n                number = Decimal(text)\n            except Exception:\n                continue\n        elif isinstance(raw, (int, float)):\n            number = Decimal(str(raw))\n        else:\n            continue\n        if not number.is_finite():\n            continue\n        if number < 0:\n            continue\n        cleaned.append(_round2(number))\n    return cleaned\n"
+  },
+  {
+    "name": "churn-by-region:reference",
+    "code": "import pandas as pd\n\n\ndef churn_by_region(df):\n    unique = df.drop_duplicates(subset=\"customer_id\", keep=\"first\").copy()\n    unique[\"region\"] = unique[\"region\"].fillna(\"unknown\")\n    summary = (\n        unique.groupby(\"region\", dropna=False)\n        .agg(customers=(\"customer_id\", \"size\"), churned=(\"churned\", \"sum\"))\n        .reset_index()\n    )\n    summary[\"churn_rate\"] = (summary[\"churned\"] / summary[\"customers\"]).round(4)\n    summary = summary.sort_values([\"churn_rate\", \"region\"], ascending=[False, True])\n    summary = summary.reset_index(drop=True)\n    return summary[[\"region\", \"customers\", \"churned\", \"churn_rate\"]]\n"
+  },
+  {
+    "name": "churn-by-region:starter",
+    "code": "def churn_by_region(df):\n    \"\"\"Summarise churn by region for the Monday retention review.\n\n    Rules:\n    1. Remove repeated customer_id rows, keeping the first one.\n    2. A missing region becomes the text 'unknown', and it is a group of its own.\n    3. Return the columns in this order: region, customers, churned, churn_rate.\n    4. customers is the number of unique customers in the region, churned is how many of\n       them have churned == 1, and churn_rate is churned / customers rounded to 4 decimals.\n    5. Sort by churn_rate from highest to lowest, then by region from A to Z.\n    6. The index runs 0, 1, 2, and so on.\n    \"\"\"\n    pass\n"
+  },
+  {
+    "name": "churn-by-region:variant:duplicates-kept",
+    "code": "import pandas as pd\n\n\ndef churn_by_region(df):\n    unique = df.copy()\n    unique[\"region\"] = unique[\"region\"].fillna(\"unknown\")\n    summary = (\n        unique.groupby(\"region\", dropna=False)\n        .agg(customers=(\"customer_id\", \"size\"), churned=(\"churned\", \"sum\"))\n        .reset_index()\n    )\n    summary[\"churn_rate\"] = (summary[\"churned\"] / summary[\"customers\"]).round(4)\n    summary = summary.sort_values([\"churn_rate\", \"region\"], ascending=[False, True])\n    summary = summary.reset_index(drop=True)\n    return summary[[\"region\", \"customers\", \"churned\", \"churn_rate\"]]\n"
+  },
+  {
+    "name": "churn-by-region:variant:missing-dropped",
+    "code": "import pandas as pd\n\n\ndef churn_by_region(df):\n    unique = df.drop_duplicates(subset=\"customer_id\", keep=\"first\").copy()\n    unique = unique.dropna(subset=[\"region\"])\n    summary = (\n        unique.groupby(\"region\", dropna=False)\n        .agg(customers=(\"customer_id\", \"size\"), churned=(\"churned\", \"sum\"))\n        .reset_index()\n    )\n    summary[\"churn_rate\"] = (summary[\"churned\"] / summary[\"customers\"]).round(4)\n    summary = summary.sort_values([\"churn_rate\", \"region\"], ascending=[False, True])\n    summary = summary.reset_index(drop=True)\n    return summary[[\"region\", \"customers\", \"churned\", \"churn_rate\"]]\n"
+  },
+  {
+    "name": "churn-by-region:variant:groupby-dropna-trap",
+    "code": "import pandas as pd\n\n\ndef churn_by_region(df):\n    unique = df.drop_duplicates(subset=\"customer_id\", keep=\"first\").copy()\n    summary = (\n        unique.groupby(\"region\", dropna=True)\n        .agg(customers=(\"customer_id\", \"size\"), churned=(\"churned\", \"sum\"))\n        .reset_index()\n    )\n    summary[\"churn_rate\"] = (summary[\"churned\"] / summary[\"customers\"]).round(4)\n    summary = summary.sort_values([\"churn_rate\", \"region\"], ascending=[False, True])\n    summary = summary.reset_index(drop=True)\n    return summary[[\"region\", \"customers\", \"churned\", \"churn_rate\"]]\n"
+  },
+  {
+    "name": "churn-by-region:variant:rate-not-rounded",
+    "code": "import pandas as pd\n\n\ndef churn_by_region(df):\n    unique = df.drop_duplicates(subset=\"customer_id\", keep=\"first\").copy()\n    unique[\"region\"] = unique[\"region\"].fillna(\"unknown\")\n    summary = (\n        unique.groupby(\"region\", dropna=False)\n        .agg(customers=(\"customer_id\", \"size\"), churned=(\"churned\", \"sum\"))\n        .reset_index()\n    )\n    summary[\"churn_rate\"] = (summary[\"churned\"] / summary[\"customers\"])\n    summary = summary.sort_values([\"churn_rate\", \"region\"], ascending=[False, True])\n    summary = summary.reset_index(drop=True)\n    return summary[[\"region\", \"customers\", \"churned\", \"churn_rate\"]]\n"
+  },
+  {
+    "name": "churn-by-region:variant:sorted-ascending",
+    "code": "import pandas as pd\n\n\ndef churn_by_region(df):\n    unique = df.drop_duplicates(subset=\"customer_id\", keep=\"first\").copy()\n    unique[\"region\"] = unique[\"region\"].fillna(\"unknown\")\n    summary = (\n        unique.groupby(\"region\", dropna=False)\n        .agg(customers=(\"customer_id\", \"size\"), churned=(\"churned\", \"sum\"))\n        .reset_index()\n    )\n    summary[\"churn_rate\"] = (summary[\"churned\"] / summary[\"customers\"]).round(4)\n    summary = summary.sort_values([\"churn_rate\", \"region\"], ascending=[True, True])\n    summary = summary.reset_index(drop=True)\n    return summary[[\"region\", \"customers\", \"churned\", \"churn_rate\"]]\n"
+  },
+  {
+    "name": "churn-by-region:variant:index-not-reset",
+    "code": "import pandas as pd\n\n\ndef churn_by_region(df):\n    unique = df.drop_duplicates(subset=\"customer_id\", keep=\"first\").copy()\n    unique[\"region\"] = unique[\"region\"].fillna(\"unknown\")\n    summary = (\n        unique.groupby(\"region\", dropna=False)\n        .agg(customers=(\"customer_id\", \"size\"), churned=(\"churned\", \"sum\"))\n        .reset_index()\n    )\n    summary[\"churn_rate\"] = (summary[\"churned\"] / summary[\"customers\"]).round(4)\n    summary = summary.sort_values([\"churn_rate\", \"region\"], ascending=[False, True])\n    return summary[[\"region\", \"customers\", \"churned\", \"churn_rate\"]]\n"
+  },
+  {
+    "name": "churn-by-region:variant:columns-reordered",
+    "code": "import pandas as pd\n\n\ndef churn_by_region(df):\n    unique = df.drop_duplicates(subset=\"customer_id\", keep=\"first\").copy()\n    unique[\"region\"] = unique[\"region\"].fillna(\"unknown\")\n    summary = (\n        unique.groupby(\"region\", dropna=False)\n        .agg(customers=(\"customer_id\", \"size\"), churned=(\"churned\", \"sum\"))\n        .reset_index()\n    )\n    summary[\"churn_rate\"] = (summary[\"churned\"] / summary[\"customers\"]).round(4)\n    summary = summary.sort_values([\"churn_rate\", \"region\"], ascending=[False, True])\n    summary = summary.reset_index(drop=True)\n    return summary[[\"region\", \"churned\", \"customers\", \"churn_rate\"]]\n"
+  },
+  {
+    "name": "late-rate-chart:reference",
+    "code": "import matplotlib\n\nmatplotlib.use(\"Agg\")\nimport matplotlib.pyplot as plt\n\n\ndef plot_late_rate_by_mode(df):\n    rates = df.groupby(\"mode\")[\"late\"].mean().sort_index()\n    fig, ax = plt.subplots()\n    ax.bar(rates.index.tolist(), rates.values.tolist())\n    ax.set_title(\"Late delivery rate by transport mode\")\n    ax.set_xlabel(\"Transport mode\")\n    ax.set_ylabel(\"Late delivery rate\")\n    return fig\n"
+  },
+  {
+    "name": "late-rate-chart:starter",
+    "code": "import matplotlib\n\nmatplotlib.use(\"Agg\")\nimport matplotlib.pyplot as plt\n\n\ndef plot_late_rate_by_mode(df):\n    \"\"\"Return one matplotlib Figure: late delivery rate by transport mode.\n\n    Rules:\n    1. One vertical bar chart with one series.\n    2. The categories are the modes, in alphabetical order.\n    3. Each bar's height is the late rate: the share of shipments with late == 1.\n    4. The chart has a title.\n    5. The x-axis label mentions \"mode\".\n    6. The y-axis label mentions \"rate\".\n    \"\"\"\n    pass\n"
+  },
+  {
+    "name": "late-rate-chart:variant:horizontal-bars",
+    "code": "import matplotlib\n\nmatplotlib.use(\"Agg\")\nimport matplotlib.pyplot as plt\n\n\ndef plot_late_rate_by_mode(df):\n    rates = df.groupby(\"mode\")[\"late\"].mean().sort_index()\n    fig, ax = plt.subplots()\n    ax.barh(rates.index.tolist(), rates.values.tolist())\n    ax.set_title(\"Late delivery rate by transport mode\")\n    ax.set_xlabel(\"Transport mode\")\n    ax.set_ylabel(\"Late delivery rate\")\n    return fig\n"
+  },
+  {
+    "name": "late-rate-chart:variant:line-chart",
+    "code": "import matplotlib\n\nmatplotlib.use(\"Agg\")\nimport matplotlib.pyplot as plt\n\n\ndef plot_late_rate_by_mode(df):\n    rates = df.groupby(\"mode\")[\"late\"].mean().sort_index()\n    fig, ax = plt.subplots()\n    ax.plot(rates.index.tolist(), rates.values.tolist())\n    ax.set_title(\"Late delivery rate by transport mode\")\n    ax.set_xlabel(\"Transport mode\")\n    ax.set_ylabel(\"Late delivery rate\")\n    return fig\n"
+  },
+  {
+    "name": "late-rate-chart:variant:counts-not-rates",
+    "code": "import matplotlib\n\nmatplotlib.use(\"Agg\")\nimport matplotlib.pyplot as plt\n\n\ndef plot_late_rate_by_mode(df):\n    rates = df.groupby(\"mode\")[\"late\"].sum().sort_index()\n    fig, ax = plt.subplots()\n    ax.bar(rates.index.tolist(), rates.values.tolist())\n    ax.set_title(\"Late delivery rate by transport mode\")\n    ax.set_xlabel(\"Transport mode\")\n    ax.set_ylabel(\"Late delivery rate\")\n    return fig\n"
+  },
+  {
+    "name": "late-rate-chart:variant:unsorted-categories",
+    "code": "import matplotlib\n\nmatplotlib.use(\"Agg\")\nimport matplotlib.pyplot as plt\n\n\ndef plot_late_rate_by_mode(df):\n    rates = df.groupby(\"mode\", sort=False)[\"late\"].mean()\n    fig, ax = plt.subplots()\n    ax.bar(rates.index.tolist(), rates.values.tolist())\n    ax.set_title(\"Late delivery rate by transport mode\")\n    ax.set_xlabel(\"Transport mode\")\n    ax.set_ylabel(\"Late delivery rate\")\n    return fig\n"
+  },
+  {
+    "name": "late-rate-chart:variant:two-series",
+    "code": "import matplotlib\n\nmatplotlib.use(\"Agg\")\nimport matplotlib.pyplot as plt\n\n\ndef plot_late_rate_by_mode(df):\n    rates = df.groupby(\"mode\")[\"late\"].mean().sort_index()\n    fig, ax = plt.subplots()\n    ax.bar(rates.index.tolist(), rates.values.tolist())\n    ax.bar(rates.index.tolist(), [1 - value for value in rates.values.tolist()], bottom=rates.values.tolist())\n    ax.set_title(\"Late delivery rate by transport mode\")\n    ax.set_xlabel(\"Transport mode\")\n    ax.set_ylabel(\"Late delivery rate\")\n    return fig\n"
+  },
+  {
+    "name": "late-rate-chart:variant:no-title",
+    "code": "import matplotlib\n\nmatplotlib.use(\"Agg\")\nimport matplotlib.pyplot as plt\n\n\ndef plot_late_rate_by_mode(df):\n    rates = df.groupby(\"mode\")[\"late\"].mean().sort_index()\n    fig, ax = plt.subplots()\n    ax.bar(rates.index.tolist(), rates.values.tolist())\n    ax.set_xlabel(\"Transport mode\")\n    ax.set_ylabel(\"Late delivery rate\")\n    return fig\n"
+  },
+  {
+    "name": "late-rate-chart:variant:vague-y-label",
+    "code": "import matplotlib\n\nmatplotlib.use(\"Agg\")\nimport matplotlib.pyplot as plt\n\n\ndef plot_late_rate_by_mode(df):\n    rates = df.groupby(\"mode\")[\"late\"].mean().sort_index()\n    fig, ax = plt.subplots()\n    ax.bar(rates.index.tolist(), rates.values.tolist())\n    ax.set_title(\"Late delivery rate by transport mode\")\n    ax.set_xlabel(\"Transport mode\")\n    ax.set_ylabel(\"Shipments\")\n    return fig\n"
+  },
+  {
+    "name": "late-rate-chart:variant:vague-x-label",
+    "code": "import matplotlib\n\nmatplotlib.use(\"Agg\")\nimport matplotlib.pyplot as plt\n\n\ndef plot_late_rate_by_mode(df):\n    rates = df.groupby(\"mode\")[\"late\"].mean().sort_index()\n    fig, ax = plt.subplots()\n    ax.bar(rates.index.tolist(), rates.values.tolist())\n    ax.set_title(\"Late delivery rate by transport mode\")\n    ax.set_xlabel(\"Category\")\n    ax.set_ylabel(\"Late delivery rate\")\n    return fig\n"
+  }
+]
