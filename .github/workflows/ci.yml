@@ -40,8 +40,54 @@ jobs:
       - name: Unit tests (grader runs under Pyodide in Node)
         run: npm test
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Script tests, and the static Python 3.10 check (3.12 finds nested same-quote f-strings)
+        run: |
+          npm run test:scripts
+          npm run check:py310
+
       - name: Build and scan for test hooks
         run: npm run build
+
+  docs-quotes:
+    name: docs quotes (verbatim check against the live pages)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Mismatches fail the job. Network failures are retried and reported as warnings.
+      - name: Check each quote against its page
+        run: npm run check:quotes
+
+  py310:
+    name: CPython 3.10 (every grading payload, verdicts against the engine)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Confirm the interpreter is CPython 3.10
+        run: python --version | grep -q '^Python 3\.10\.'
+
+      - name: Install the pinned pandas, matplotlib, and NumPy for 3.10
+        run: python -m pip install "numpy==1.26.4" "pandas==2.2.3" "matplotlib==3.9.2"
+
+      - name: Run every payload under 3.10 and compare verdicts with the engine's
+        env:
+          MPLBACKEND: Agg
+        run: python scripts/py310/run-cases.py
 
   e2e:
     name: e2e (${{ matrix.browser }})

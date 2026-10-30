@@ -21,6 +21,10 @@ npm run lint
 npm test                # Vitest unit tests
 npm run build           # type check, production build, then the test-hook scan
 npm run e2e             # Playwright: dev server (Chromium and WebKit) and preview (production CSP)
+npm run test:scripts    # Node tests for the quote checker and the Python 3.10 check
+npm run check:quotes    # verbatim docs-quote check (needs network; see Content rules)
+npm run check:py310     # static Python 3.10 check on the snippets (3.12+ for the nested-quote test)
+npm run check:py310-run # every grading payload under this Python, verdicts against the engine's
 ```
 
 ## Git rules
@@ -58,6 +62,24 @@ Evidence: `spike/engine/RESULTS.md`, with the Chromium and WebKit numbers.
 
 **Notebooks.** A notebook shares one namespace across its cells. Submit runs the imports and definitions from the cells in a fresh namespace. Top-level exploration is ignored, so a `print` in a cell cannot break grading.
 
+## Content rules (Step 2a)
+
+**Python 3.10.** Lesson and reference code runs on CPython 3.10 and later. A feature newer than 3.10 is allowed only when the lesson labels it with `newerPython` in the lesson text, next to the example. Two checks enforce this:
+
+- Check 1 (`npm run check:py310`, run in the `checks` job on 3.12): parses each snippet with `ast.parse(..., feature_version=(3, 10))`, rejects standard-library names newer than 3.10 (`tomllib`, `ExceptionGroup`, `typing.Self`, `datetime.UTC`, `asyncio.TaskGroup`, and others), and rejects nested same-quote f-strings, which `feature_version` accepts but 3.10 cannot run.
+- Check 2 (the `py310` job, the real test): `scripts/py310/run-cases.py` runs every exported grading payload under CPython 3.10 with pinned pandas 2.2.3, matplotlib 3.9.2, and NumPy 1.26.4, and compares each verdict with the one the engine recorded in `scripts/py310/cases.json`. Messages are not compared. Status, pass counts, per-case results, and matched mistakes must agree.
+
+No Python 3.10 is installed in the development container, so check 2 runs in CI only.
+
+**Packages by chapter.** Pyodide loads the packages a chapter needs. seaborn 0.13.2 is not in the Pyodide 314.0.7 release. Its pure-Python wheel is vendored by `scripts/fetch-pyodide.mjs` and checked against SHA-256 `636f8336facf092165e27924f223d3c62ca560b1f2bb5dff7ab7fad265361987`. Only chapter 8 may use seaborn. Its items must list `pandas` and `matplotlib` first in `requires`, because a URL install does not resolve dependencies. The content test enforces both.
+
+**Quotes.** Every claim about Python, NumPy, pandas, matplotlib, SciPy, scikit-learn, requests, or JavaScript, in lesson text and JavaScript notes, cites a quote id in `docs/quotes.json`. Each entry holds `id`, `source`, `url`, and `quote`. A claim that no page states is labelled "Demonstrated by the interpreter", with its runnable example as evidence. `scripts/check-quotes.mjs` fetches each URL, strips tags, decodes entities, collapses whitespace, and checks that the quote is a verbatim substring.
+
+- A quote that is not in the page fails the `docs-quotes` job.
+- A missing page (404 or 410) fails the job, because the source has moved or the citation is wrong.
+- A network error is retried three times (2, 4, and 8 seconds). If it still fails, it is a warning, and the job passes.
+- Quotes drafted in a session with no network access are verified only in CI. The audit records which quotes CI has checked.
+
 ## Grading rules
 
 These apply to every graded item. Tests enforce them: `src/challenges/samples.test.ts` runs them against all samples.
@@ -69,6 +91,7 @@ These apply to every graded item. Tests enforce them: `src/challenges/samples.te
 - A Run uses visible cases and visible datasets only. A Submit uses all of them. Hidden data is generated only when Submit needs it.
 - Messages for hidden cases never show inputs or expected values.
 - Floats compare with a stated tolerance. pandas results compare with `pandas.testing`, with its rules stated per task.
+- Integer widths compare by kind, so `int32` and `int64` both count as integers, and any two float widths count as floats. Other dtypes must match exactly. A task opts into exact dtypes with `rules.dtype = "strict"`. Pyodide's bare `int` is 32-bit, so a learner's result can differ in width from native Python without being wrong. The churn task no longer has a width rule.
 - Chart tasks inspect the matplotlib figure object, never pixels. ML tasks score a hidden holdout set against a stated threshold, and the training function receives training data only.
 - Structure checks use Python's `ast` module, never string matching.
 - Hints come in three tiers: nudge, approach, partial code. The solution unlocks after three failed submissions, and a revealed solution earns reduced credit and never counts toward mastery.
@@ -89,6 +112,7 @@ These apply to every graded item. Tests enforce them: `src/challenges/samples.te
 - **Unit (Vitest):** the grader running under Pyodide in Node (`src/engine/python.test.ts`), challenge coverage and reference checks (`src/challenges/samples.test.ts`), the engine controller with a fake worker and fake timers (`src/engine/client.test.ts`), generators with same-seed tests, the curriculum graph, save migrations, and progress rules.
 - **End-to-end (Playwright):** ticket flows, the notebook, the chart task, a buffer stop, a forced restart (`?forceInterruptFailure=1`), memory recycling (`?recycleThresholdBytes=`), the load timeout, and the production CSP on the preview server. Chromium and WebKit run in CI. Chromium also runs locally.
 - **Spike (not required):** `engine-spike` (the harness fails its job on any bad check) and `webkit-interrupt-diagnosis` (50 WebKit contexts, classified by stage) under `.github/workflows/`.
+- **CI jobs (`ci.yml`):** `checks` (types, lint, unit tests, script tests, the static 3.10 check, build and hook scan), `docs-quotes` (verbatim quotes), `py310` (every payload under CPython 3.10), and `e2e` (Chromium and WebKit, dev and production preview).
 
 ## Audits
 
@@ -115,7 +139,7 @@ The source of truth is `src/curriculum/data.ts`. Each competency is taught by a 
 ## Roadmap
 
 1. **Engine, curriculum, grader, three samples, UI, save v1, CI.** (This step.)
-2. Foundations, informatics fundamentals, and testing content, with blind review.
+2. Foundations, informatics fundamentals, and testing content, with blind review. Split. Step 2a builds the tooling fixes and Chapter 1 (Foundations refresh). Step 2b covers the rest of this item.
 3. Files, APIs and automation, NumPy, and pandas content.
 4. Visualization, statistics, and ML content.
 5. Capstones and timed interview problems, including an interview-only reserve.
