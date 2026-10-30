@@ -1,7 +1,7 @@
 // localStorage adapter. Every access is wrapped: storage can be missing, blocked,
 // full, or throw in private windows. The game still works without it.
 import { migrateSave, type MigrationResult } from './migrate';
-import { SAVE_KEY, type SaveV1 } from './schema';
+import { SAVE_KEY, type SaveV2 } from './schema';
 
 export interface StorageLike {
   getItem(key: string): string | null;
@@ -10,7 +10,7 @@ export interface StorageLike {
 
 export interface SaveStore {
   load(now: string): MigrationResult & { persistent: boolean };
-  write(save: SaveV1): { ok: boolean };
+  write(save: SaveV2): { ok: boolean };
 }
 
 export function createSaveStore(storage: StorageLike | null, key = SAVE_KEY): SaveStore {
