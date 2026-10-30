@@ -93,6 +93,7 @@ describe.each(CHALLENGES)('$title', (spec) => {
 
   it('a Run sends and grades only visible data', () => {
     const { payload, datasets } = buildGradeRequest(spec, spec.reference, 'run');
+    if (payload.kind === 'structure') throw new Error('samples are not structure tasks');
     expect(payload.cases.length).toBe(spec.cases.length);
     const hidden = spec.datasets.filter((d) => d.visibility === 'hidden').map((d) => d.name);
     for (const name of hidden) expect(datasets[name]).toBeUndefined();

@@ -1,4 +1,4 @@
-import type { ChallengeKind, GradeCase, Visibility, WrongVariant } from '../engine/types';
+import type { ChallengeKind, GradeCase, StructureCheck, Visibility, WrongVariant } from '../engine/types';
 import type { GeneratorName } from '../data';
 
 export interface DatasetSpec {
@@ -19,7 +19,9 @@ export interface ChallengeSpec {
   id: string;
   chapterId: string;
   title: string;
-  kind: Exclude<ChallengeKind, 'ml' | 'api' | 'testing' | 'structure'>;
+  kind: Exclude<ChallengeKind, 'ml' | 'api' | 'testing'>;
+  // Structure tasks are graded by these ast checks instead of cases.
+  structureChecks?: StructureCheck[];
   notebook: boolean;
   ticket: Ticket;
   // Stated rules. Every rule has at least one wrong variant that violates it (see variantRule).
