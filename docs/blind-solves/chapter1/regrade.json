@@ -24,8 +24,8 @@
     "solution": "solutions/G1/c01-guided-in-batches.py",
     "id": "c01-guided-in-batches",
     "status": "pass",
-    "passed": 7,
-    "total": 7
+    "passed": 8,
+    "total": 8
   },
   {
     "solution": "solutions/G2/c01-ticket-build-label.py",
@@ -38,8 +38,8 @@
     "solution": "solutions/G2/c01-ticket-parse-weight.py",
     "id": "c01-ticket-parse-weight",
     "status": "pass",
-    "passed": 9,
-    "total": 9
+    "passed": 10,
+    "total": 10
   },
   {
     "solution": "solutions/G2/c01-ticket-route-pairs.py",
@@ -52,8 +52,8 @@
     "solution": "solutions/G2/c01-ticket-unique-routes.py",
     "id": "c01-ticket-unique-routes",
     "status": "pass",
-    "passed": 4,
-    "total": 4
+    "passed": 6,
+    "total": 6
   },
   {
     "solution": "solutions/G3/c01-fix-add-stop.py",
@@ -115,8 +115,8 @@
     "solution": "solutions/G4/c01-boss-top-words.py",
     "id": "c01-boss-top-words",
     "status": "pass",
-    "passed": 5,
-    "total": 5
+    "passed": 7,
+    "total": 7
   },
   {
     "solution": "fix-2a/solutions/c01-guided-format-label.py",
@@ -129,15 +129,15 @@
     "solution": "fix-2a/solutions/c01-guided-in-batches.py",
     "id": "c01-guided-in-batches",
     "status": "pass",
-    "passed": 7,
-    "total": 7
+    "passed": 8,
+    "total": 8
   },
   {
     "solution": "fix-2a/solutions/c01-ticket-parse-weight.py",
     "id": "c01-ticket-parse-weight",
     "status": "pass",
-    "passed": 9,
-    "total": 9
+    "passed": 10,
+    "total": 10
   },
   {
     "solution": "fix-2a/solutions/c01-ticket-save-lines.py",
@@ -145,5 +145,131 @@
     "status": "pass",
     "passed": 5,
     "total": 5
+  },
+  {
+    "solution": "fix-2b/A/c01-guided-classify-weight.py",
+    "id": "c01-guided-classify-weight",
+    "status": "pass",
+    "passed": 11,
+    "total": 11
+  },
+  {
+    "solution": "fix-2b/A/c01-guided-count-by-mode.py",
+    "id": "c01-guided-count-by-mode",
+    "status": "pass",
+    "passed": 4,
+    "total": 4
+  },
+  {
+    "solution": "fix-2b/A/c01-guided-format-label.py",
+    "id": "c01-guided-format-label",
+    "status": "pass",
+    "passed": 6,
+    "total": 6
+  },
+  {
+    "solution": "fix-2b/A/c01-guided-in-batches.py",
+    "id": "c01-guided-in-batches",
+    "status": "pass",
+    "passed": 8,
+    "total": 8
+  },
+  {
+    "solution": "fix-2b/B/c01-ticket-build-label.py",
+    "id": "c01-ticket-build-label",
+    "status": "pass",
+    "passed": 5,
+    "total": 5
+  },
+  {
+    "solution": "fix-2b/B/c01-ticket-parse-weight.py",
+    "id": "c01-ticket-parse-weight",
+    "status": "pass",
+    "passed": 10,
+    "total": 10
+  },
+  {
+    "solution": "fix-2b/B/c01-ticket-route-pairs.py",
+    "id": "c01-ticket-route-pairs",
+    "status": "pass",
+    "passed": 6,
+    "total": 6
+  },
+  {
+    "solution": "fix-2b/B/c01-ticket-save-lines.py",
+    "id": "c01-ticket-save-lines",
+    "status": "pass",
+    "passed": 5,
+    "total": 5
+  },
+  {
+    "solution": "fix-2b/B/c01-ticket-unique-routes.py",
+    "id": "c01-ticket-unique-routes",
+    "status": "pass",
+    "passed": 6,
+    "total": 6
+  },
+  {
+    "solution": "fix-2b/C/c01-fix-add-stop.py",
+    "id": "c01-fix-add-stop",
+    "status": "pass",
+    "passed": 5,
+    "total": 5
+  },
+  {
+    "solution": "fix-2b/C/c01-fix-first-total.py",
+    "id": "c01-fix-first-total",
+    "status": "pass",
+    "passed": 5,
+    "total": 5
+  },
+  {
+    "solution": "fix-2b/C/c01-fix-with-extra.py",
+    "id": "c01-fix-with-extra",
+    "status": "pass",
+    "passed": 5,
+    "total": 5
+  },
+  {
+    "solution": "fix-2b/C/c01-structure-countdown.py",
+    "id": "c01-structure-countdown",
+    "status": "pass",
+    "passed": 3,
+    "total": 3
+  },
+  {
+    "solution": "fix-2b/C/c01-structure-squares.py",
+    "id": "c01-structure-squares",
+    "status": "pass",
+    "passed": 3,
+    "total": 3
+  },
+  {
+    "solution": "fix-2b/D/c01-boss-clean-lines.py",
+    "id": "c01-boss-clean-lines",
+    "status": "pass",
+    "passed": 4,
+    "total": 4
+  },
+  {
+    "solution": "fix-2b/D/c01-boss-count-words.py",
+    "id": "c01-boss-count-words",
+    "status": "pass",
+    "passed": 4,
+    "total": 4
+  },
+  {
+    "solution": "fix-2b/D/c01-boss-report-lines.py",
+    "id": "c01-boss-report-lines",
+    "status": "pass",
+    "passed": 4,
+    "total": 4
+  },
+  {
+    "solution": "fix-2b/D/c01-boss-top-words.py",
+    "id": "c01-boss-top-words",
+    "status": "pass",
+    "passed": 7,
+    "total": 7
   }
 ]

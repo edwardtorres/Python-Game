@@ -17,8 +17,8 @@
     "solution": "solutions/G1/c02-guided-loading-order.py",
     "id": "c02-guided-loading-order",
     "status": "pass",
-    "passed": 5,
-    "total": 5
+    "passed": 7,
+    "total": 7
   },
   {
     "solution": "solutions/G2/c02-ticket-first-seen.py",
@@ -45,8 +45,8 @@
     "solution": "solutions/G3/c02-fix-longest-first.py",
     "id": "c02-fix-longest-first",
     "status": "pass",
-    "passed": 5,
-    "total": 5
+    "passed": 7,
+    "total": 7
   },
   {
     "solution": "solutions/G3/c02-fix-nested-total.py",
@@ -101,7 +101,154 @@
     "solution": "solutions/G4-r2/c02-boss-report-lines.py",
     "id": "c02-boss-report-lines",
     "status": "pass",
+    "passed": 7,
+    "total": 7
+  },
+  {
+    "solution": "fix-2b/E/c02-boss-dispatch-heap.py",
+    "id": "c02-boss-dispatch-heap",
+    "status": "pass",
+    "passed": 6,
+    "total": 6
+  },
+  {
+    "solution": "fix-2b/E/c02-boss-flatten-tags.py",
+    "id": "c02-boss-flatten-tags",
+    "status": "pass",
+    "passed": 6,
+    "total": 6
+  },
+  {
+    "solution": "fix-2b/E/c02-boss-rank-rows.py",
+    "id": "c02-boss-rank-rows",
+    "status": "pass",
+    "passed": 6,
+    "total": 6
+  },
+  {
+    "solution": "fix-2b/E/c02-boss-report-lines.py",
+    "id": "c02-boss-report-lines",
+    "status": "pass",
+    "passed": 7,
+    "total": 7
+  },
+  {
+    "solution": "fix-2b/F/c02-guided-depth.py",
+    "id": "c02-guided-depth",
+    "status": "pass",
+    "passed": 6,
+    "total": 6
+  },
+  {
+    "solution": "fix-2b/F/c02-guided-dock-totals.py",
+    "id": "c02-guided-dock-totals",
+    "status": "pass",
     "passed": 5,
     "total": 5
+  },
+  {
+    "solution": "fix-2b/F/c02-guided-loading-order.py",
+    "id": "c02-guided-loading-order",
+    "status": "pass",
+    "passed": 7,
+    "total": 7
+  },
+  {
+    "solution": "fix-2b/F/c02-ticket-first-seen.py",
+    "id": "c02-ticket-first-seen",
+    "status": "pass",
+    "passed": 5,
+    "total": 5
+  },
+  {
+    "solution": "fix-2b/F/c02-ticket-recent-events.py",
+    "id": "c02-ticket-recent-events",
+    "status": "pass",
+    "passed": 6,
+    "total": 6
+  },
+  {
+    "solution": "fix-2b/F/c02-ticket-three-heaviest.py",
+    "id": "c02-ticket-three-heaviest",
+    "status": "pass",
+    "passed": 6,
+    "total": 6
+  },
+  {
+    "solution": "fix-2b/G/c02-fix-longest-first.py",
+    "id": "c02-fix-longest-first",
+    "status": "pass",
+    "passed": 7,
+    "total": 7
+  },
+  {
+    "solution": "fix-2b/G/c02-fix-nested-total.py",
+    "id": "c02-fix-nested-total",
+    "status": "pass",
+    "passed": 6,
+    "total": 6
+  },
+  {
+    "solution": "fix-2b/G/c02-structure-hinted-functions.py",
+    "id": "c02-structure-hinted-functions",
+    "status": "pass",
+    "passed": 4,
+    "total": 4
+  },
+  {
+    "solution": "fix-2b/G/c02-structure-queue-popleft.py",
+    "id": "c02-structure-queue-popleft",
+    "status": "pass",
+    "passed": 3,
+    "total": 3
+  },
+  {
+    "solution": "fix-2b/G/c02-structure-smallest-heapq.py",
+    "id": "c02-structure-smallest-heapq",
+    "status": "pass",
+    "passed": 3,
+    "total": 3
+  },
+  {
+    "solution": "fix-2b/H/c02-class-pallet-inherit.py",
+    "id": "c02-class-pallet-inherit",
+    "status": "pass",
+    "passed": 8,
+    "total": 8
+  },
+  {
+    "solution": "fix-2b/H/c02-class-parcel-order.py",
+    "id": "c02-class-parcel-order",
+    "status": "pass",
+    "passed": 7,
+    "total": 7
+  },
+  {
+    "solution": "fix-2b/H/c02-class-version-dunders.py",
+    "id": "c02-class-version-dunders",
+    "status": "pass",
+    "passed": 6,
+    "total": 6
+  },
+  {
+    "solution": "fix-2b/H/c02-eff-job-queue.py",
+    "id": "c02-eff-job-queue",
+    "status": "pass",
+    "passed": 6,
+    "total": 6
+  },
+  {
+    "solution": "fix-2b/H/c02-eff-repeated-tickets.py",
+    "id": "c02-eff-repeated-tickets",
+    "status": "pass",
+    "passed": 7,
+    "total": 7
+  },
+  {
+    "solution": "fix-2b/H/c02-eff-stock-check.py",
+    "id": "c02-eff-stock-check",
+    "status": "pass",
+    "passed": 6,
+    "total": 6
   }
 ]
