@@ -2,8 +2,12 @@ import { useEffect, useRef } from 'react';
 import { python } from '@codemirror/lang-python';
 import { bracketMatching, defaultHighlightStyle, indentUnit, syntaxHighlighting } from '@codemirror/language';
 import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands';
-import { EditorState } from '@codemirror/state';
+import { Annotation, EditorState } from '@codemirror/state';
 import { EditorView, drawSelection, highlightActiveLine, keymap, lineNumbers } from '@codemirror/view';
+
+// Marks a change that comes from the value prop. Such a change is not the learner's edit, so it
+// must not call onChange: the echo could overwrite newer code that arrived in the same moment.
+const FROM_PROP = Annotation.define<boolean>();
 
 interface CodeEditorProps {
   // Changing the id creates a fresh editor (a new challenge or cell).
@@ -54,7 +58,8 @@ export function CodeEditor({ id, value, label, onChange, onRun }: CodeEditorProp
           ]),
           EditorView.contentAttributes.of({ 'aria-label': latest.current.label, 'aria-multiline': 'true' }),
           EditorView.updateListener.of((update) => {
-            if (update.docChanged) latest.current.onChange(update.state.doc.toString());
+            const fromProp = update.transactions.some((transaction) => transaction.annotation(FROM_PROP) === true);
+            if (update.docChanged && !fromProp) latest.current.onChange(update.state.doc.toString());
           }),
         ],
       }),
@@ -72,7 +77,7 @@ export function CodeEditor({ id, value, label, onChange, onRun }: CodeEditorProp
     const instance = view.current;
     if (instance === null) return;
     if (instance.state.doc.toString() !== value) {
-      instance.dispatch({ changes: { from: 0, to: instance.state.doc.length, insert: value } });
+      instance.dispatch({ changes: { from: 0, to: instance.state.doc.length, insert: value }, annotations: FROM_PROP.of(true) });
     }
   }, [value]);
 
