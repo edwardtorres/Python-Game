@@ -173,7 +173,7 @@
   },
   {
     "name": "c01-guided-in-batches:reference",
-    "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n"
+    "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    return _chunks(items, size)\n\n\ndef _chunks(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n"
   },
   {
     "name": "c01-guided-in-batches:starter",
@@ -181,19 +181,23 @@
   },
   {
     "name": "c01-guided-in-batches:variant:reversed-inside",
-    "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.insert(0, item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n"
+    "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    return _chunks(items, size)\n\n\ndef _chunks(items, size):\n    batch = []\n    for item in items:\n        batch.insert(0, item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n"
   },
   {
     "name": "c01-guided-in-batches:variant:size-plus-one",
-    "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size + 1:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n"
+    "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    return _chunks(items, size)\n\n\ndef _chunks(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size + 1:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n"
   },
   {
     "name": "c01-guided-in-batches:variant:one-empty-batch",
-    "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    if len(items) == 0:\n        yield [None]\n        return\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n"
+    "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    return _chunks(items, size)\n\n\ndef _chunks(items, size):\n    if len(items) == 0:\n        yield [None]\n        return\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n"
   },
   {
     "name": "c01-guided-in-batches:variant:no-size-check",
     "code": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n"
+  },
+  {
+    "name": "c01-guided-in-batches:variant:raises-lazily",
+    "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n"
   },
   {
     "name": "c01-ticket-unique-routes:reference",
@@ -210,6 +214,10 @@
   {
     "name": "c01-ticket-unique-routes:variant:first-seen-order",
     "code": "def unique_routes(stops):\n    return list(dict.fromkeys(stops))\n"
+  },
+  {
+    "name": "c01-ticket-unique-routes:variant:case-insensitive",
+    "code": "def unique_routes(stops):\n    return sorted(set(stops), key=lambda stop: (stop.lower(), stop))\n"
   },
   {
     "name": "c01-ticket-route-pairs:reference",
@@ -440,6 +448,10 @@
     "code": "def top_words(counts, n):\n    ranked = sorted(counts.items(), key=lambda pair: (-pair[1], pair[0]))\n    return ranked[: n - 1]\n"
   },
   {
+    "name": "c01-boss-top-words:variant:case-blind-ties",
+    "code": "def top_words(counts, n):\n    ranked = sorted(counts.items(), key=lambda pair: (-pair[1], pair[0].lower()))\n    return ranked[:n]\n"
+  },
+  {
     "name": "c01-boss-report-lines:reference",
     "code": "def report_lines(pairs):\n    return [f\"{word}: {count}\" for word, count in pairs]\n"
   },
@@ -462,6 +474,10 @@
   {
     "name": "c02-guided-loading-order:starter",
     "code": "def loading_order(parcels):\n    pass\n"
+  },
+  {
+    "name": "c02-guided-loading-order:variant:case-insensitive",
+    "code": "def loading_order(parcels):\n    ordered = sorted(parcels, key=lambda parcel: (-parcel[1], parcel[0].lower()))\n    return [name for name, kg in ordered]\n"
   },
   {
     "name": "c02-guided-loading-order:variant:lightest-first",
@@ -576,6 +592,10 @@
     "code": "def longest_first(words):\n    return sorted(words, key=len)\n"
   },
   {
+    "name": "c02-fix-longest-first:variant:case-insensitive",
+    "code": "def longest_first(words):\n    return sorted(words, key=lambda word: (-len(word), word.lower()))\n"
+  },
+  {
     "name": "c02-fix-longest-first:variant:shortest-first",
     "code": "def longest_first(words):\n    return sorted(words, key=lambda word: (len(word), word))\n"
   },
@@ -648,6 +668,134 @@
     "code": "from heapq import nsmallest\n\n\ndef smallest(values):\n    return nsmallest(3, values)\n"
   },
   {
+    "name": "c02-class-parcel-order:reference",
+    "code": "from dataclasses import dataclass\n\n\n@dataclass(order=True)\nclass Parcel:\n    kg: float\n    name: str\n\n\ndef lightest_names(rows):\n    parcels = [Parcel(kg, name) for kg, name in rows]\n    return [parcel.name for parcel in sorted(parcels)]\n"
+  },
+  {
+    "name": "c02-class-parcel-order:starter",
+    "code": "def lightest_names(rows):\n    pass\n"
+  },
+  {
+    "name": "c02-class-parcel-order:variant:no-ordering",
+    "code": "from dataclasses import dataclass\n\n\n@dataclass\nclass Parcel:\n    kg: float\n    name: str\n\n\ndef lightest_names(rows):\n    parcels = [Parcel(kg, name) for kg, name in rows]\n    return [parcel.name for parcel in sorted(parcels)]\n"
+  },
+  {
+    "name": "c02-class-parcel-order:variant:fields-swapped",
+    "code": "from dataclasses import dataclass\n\n\n@dataclass(order=True)\nclass Parcel:\n    name: str\n    kg: float\n\n\ndef lightest_names(rows):\n    parcels = [Parcel(name, kg) for kg, name in rows]\n    return [parcel.name for parcel in sorted(parcels)]\n"
+  },
+  {
+    "name": "c02-class-parcel-order:variant:objects-returned",
+    "code": "from dataclasses import dataclass\n\n\n@dataclass(order=True)\nclass Parcel:\n    kg: float\n    name: str\n\n\ndef lightest_names(rows):\n    parcels = [Parcel(kg, name) for kg, name in rows]\n    return sorted(parcels)\n"
+  },
+  {
+    "name": "c02-class-parcel-order:variant:weight-only-key",
+    "code": "from dataclasses import dataclass\n\n\n@dataclass(order=True)\nclass Parcel:\n    kg: float\n    name: str\n\n\ndef lightest_names(rows):\n    parcels = [Parcel(kg, name) for kg, name in rows]\n    return [parcel.name for parcel in sorted(parcels, key=lambda parcel: parcel.kg)]\n"
+  },
+  {
+    "name": "c02-class-pallet-inherit:reference",
+    "code": "class Parcel:\n    def __init__(self, kg, name):\n        self.kg = kg\n        self.name = name\n\n\nclass Pallet(Parcel):\n    def __init__(self, kg, name, count):\n        super().__init__(kg, name)\n        self.count = count\n\n    def total_weight(self):\n        return self.kg * self.count\n\n\ndef pallet_totals(rows):\n    totals = []\n    for kg, name, count in rows:\n        pallet = Pallet(kg, name, count)\n        totals.append((pallet.name, pallet.total_weight()))\n    return totals\n"
+  },
+  {
+    "name": "c02-class-pallet-inherit:starter",
+    "code": "def pallet_totals(rows):\n    pass\n"
+  },
+  {
+    "name": "c02-class-pallet-inherit:variant:no-super",
+    "code": "class Parcel:\n    def __init__(self, kg, name):\n        self.kg = kg\n        self.name = name\n\n\nclass Pallet(Parcel):\n    def __init__(self, kg, name, count):\n        self.kg = kg\n        self.count = count\n\n    def total_weight(self):\n        return self.kg * self.count\n\n\ndef pallet_totals(rows):\n    totals = []\n    for kg, name, count in rows:\n        pallet = Pallet(kg, name, count)\n        totals.append((pallet.name, pallet.total_weight()))\n    return totals\n"
+  },
+  {
+    "name": "c02-class-pallet-inherit:variant:adds-not-multiplies",
+    "code": "class Parcel:\n    def __init__(self, kg, name):\n        self.kg = kg\n        self.name = name\n\n\nclass Pallet(Parcel):\n    def __init__(self, kg, name, count):\n        super().__init__(kg, name)\n        self.count = count\n\n    def total_weight(self):\n        return self.kg + self.count\n\n\ndef pallet_totals(rows):\n    totals = []\n    for kg, name, count in rows:\n        pallet = Pallet(kg, name, count)\n        totals.append((pallet.name, pallet.total_weight()))\n    return totals\n"
+  },
+  {
+    "name": "c02-class-pallet-inherit:variant:reversed-rows",
+    "code": "class Parcel:\n    def __init__(self, kg, name):\n        self.kg = kg\n        self.name = name\n\n\nclass Pallet(Parcel):\n    def __init__(self, kg, name, count):\n        super().__init__(kg, name)\n        self.count = count\n\n    def total_weight(self):\n        return self.kg * self.count\n\n\ndef pallet_totals(rows):\n    totals = []\n    for kg, name, count in reversed(rows):\n        pallet = Pallet(kg, name, count)\n        totals.append((pallet.name, pallet.total_weight()))\n    return totals\n"
+  },
+  {
+    "name": "c02-class-version-dunders:reference",
+    "code": "class Version:\n    def __init__(self, major, minor):\n        self.major = major\n        self.minor = minor\n\n    def __repr__(self):\n        return f\"Version({self.major}, {self.minor})\"\n\n    def __lt__(self, other):\n        return (self.major, self.minor) < (other.major, other.minor)\n\n\ndef sorted_versions(pairs):\n    versions = [Version(major, minor) for major, minor in pairs]\n    return [repr(version) for version in sorted(versions)]\n"
+  },
+  {
+    "name": "c02-class-version-dunders:starter",
+    "code": "def sorted_versions(pairs):\n    pass\n"
+  },
+  {
+    "name": "c02-class-version-dunders:variant:text-compare",
+    "code": "class Version:\n    def __init__(self, major, minor):\n        self.major = major\n        self.minor = minor\n\n    def __repr__(self):\n        return f\"Version({self.major}, {self.minor})\"\n\n    def __lt__(self, other):\n        return f\"{self.major}.{self.minor}\" < f\"{other.major}.{other.minor}\"\n\n\ndef sorted_versions(pairs):\n    versions = [Version(major, minor) for major, minor in pairs]\n    return [repr(version) for version in sorted(versions)]\n"
+  },
+  {
+    "name": "c02-class-version-dunders:variant:no-lt",
+    "code": "class Version:\n    def __init__(self, major, minor):\n        self.major = major\n        self.minor = minor\n\n    def __repr__(self):\n        return f\"Version({self.major}, {self.minor})\"\n\n\ndef sorted_versions(pairs):\n    versions = [Version(major, minor) for major, minor in pairs]\n    return [repr(version) for version in sorted(versions)]\n"
+  },
+  {
+    "name": "c02-class-version-dunders:variant:plain-repr",
+    "code": "class Version:\n    def __init__(self, major, minor):\n        self.major = major\n        self.minor = minor\n\n    def __repr__(self):\n        return f\"Version({self.major}.{self.minor})\"\n\n    def __lt__(self, other):\n        return (self.major, self.minor) < (other.major, other.minor)\n\n\ndef sorted_versions(pairs):\n    versions = [Version(major, minor) for major, minor in pairs]\n    return [repr(version) for version in sorted(versions)]\n"
+  },
+  {
+    "name": "c02-class-version-dunders:variant:objects-returned",
+    "code": "class Version:\n    def __init__(self, major, minor):\n        self.major = major\n        self.minor = minor\n\n    def __repr__(self):\n        return f\"Version({self.major}, {self.minor})\"\n\n    def __lt__(self, other):\n        return (self.major, self.minor) < (other.major, other.minor)\n\n\ndef sorted_versions(pairs):\n    versions = [Version(major, minor) for major, minor in pairs]\n    return sorted(versions)\n"
+  },
+  {
+    "name": "c02-eff-repeated-tickets:reference",
+    "code": "def repeated_tickets(tickets):\n    seen = set()\n    reported = set()\n    repeated = []\n    for ticket in tickets:\n        if ticket in seen and ticket not in reported:\n            repeated.append(ticket)\n            reported.add(ticket)\n        seen.add(ticket)\n    return repeated\n"
+  },
+  {
+    "name": "c02-eff-repeated-tickets:starter",
+    "code": "def repeated_tickets(tickets):\n    pass\n"
+  },
+  {
+    "name": "c02-eff-repeated-tickets:variant:slow-scan",
+    "code": "def repeated_tickets(tickets):\n    repeated = []\n    for index, ticket in enumerate(tickets):\n        if ticket in tickets[:index] and ticket not in repeated:\n            repeated.append(ticket)\n    return repeated\n"
+  },
+  {
+    "name": "c02-eff-repeated-tickets:variant:repeats-everything",
+    "code": "def repeated_tickets(tickets):\n    seen = set()\n    repeated = []\n    for ticket in tickets:\n        if ticket in seen:\n            repeated.append(ticket)\n        seen.add(ticket)\n    return repeated\n"
+  },
+  {
+    "name": "c02-eff-repeated-tickets:variant:first-appearance-order",
+    "code": "def repeated_tickets(tickets):\n    counts = {}\n    for ticket in tickets:\n        counts[ticket] = counts.get(ticket, 0) + 1\n    return [ticket for ticket in counts if counts[ticket] > 1]\n"
+  },
+  {
+    "name": "c02-eff-job-queue:reference",
+    "code": "from collections import deque\n\n\ndef running_totals(jobs):\n    queue = deque(jobs)\n    total = 0\n    totals = []\n    while queue:\n        total += queue.popleft()\n        totals.append(total)\n    return totals\n"
+  },
+  {
+    "name": "c02-eff-job-queue:starter",
+    "code": "def running_totals(jobs):\n    pass\n"
+  },
+  {
+    "name": "c02-eff-job-queue:variant:list-front-pop",
+    "code": "def running_totals(jobs):\n    queue = list(jobs)\n    total = 0\n    totals = []\n    while queue:\n        total += queue.pop(0)\n        totals.append(total)\n    return totals\n"
+  },
+  {
+    "name": "c02-eff-job-queue:variant:total-before-add",
+    "code": "from collections import deque\n\n\ndef running_totals(jobs):\n    queue = deque(jobs)\n    total = 0\n    totals = []\n    while queue:\n        totals.append(total)\n        total += queue.popleft()\n    return totals\n"
+  },
+  {
+    "name": "c02-eff-job-queue:variant:one-total",
+    "code": "from collections import deque\n\n\ndef running_totals(jobs):\n    queue = deque(jobs)\n    total = 0\n    while queue:\n        total += queue.popleft()\n    return [total]\n"
+  },
+  {
+    "name": "c02-eff-stock-check:reference",
+    "code": "def stock_check(catalog, orders):\n    stocked = set(catalog)\n    return [sku in stocked for sku in orders]\n"
+  },
+  {
+    "name": "c02-eff-stock-check:starter",
+    "code": "def stock_check(catalog, orders):\n    pass\n"
+  },
+  {
+    "name": "c02-eff-stock-check:variant:list-lookup",
+    "code": "def stock_check(catalog, orders):\n    return [sku in catalog for sku in orders]\n"
+  },
+  {
+    "name": "c02-eff-stock-check:variant:inverted",
+    "code": "def stock_check(catalog, orders):\n    stocked = set(catalog)\n    return [sku not in stocked for sku in orders]\n"
+  },
+  {
+    "name": "c02-eff-stock-check:variant:first-line-only",
+    "code": "def stock_check(catalog, orders):\n    stocked = set(catalog)\n    return [sku in stocked for sku in orders[:1]]\n"
+  },
+  {
     "name": "c02-boss-rank-rows:reference",
     "code": "def rank_rows(rows):\n    ordered = sorted(rows, key=lambda row: (row[0], -row[2], row[1]))\n    return [f\"{dock}/{name}\" for dock, name, kg in ordered]\n"
   },
@@ -718,6 +866,10 @@
   {
     "name": "c02-boss-report-lines:starter",
     "code": "def report_lines(rows):\n    pass\n"
+  },
+  {
+    "name": "c02-boss-report-lines:variant:rounds-half-up",
+    "code": "from decimal import Decimal, ROUND_HALF_UP\n\n\ndef report_lines(rows):\n    return [f\"{dock}: {Decimal(str(total)).quantize(Decimal('0.1'), rounding=ROUND_HALF_UP)}\" for dock, total in sorted(rows)]\n"
   },
   {
     "name": "c02-boss-report-lines:variant:two-decimals",
@@ -800,6 +952,10 @@
     "code": "def median(values):\n    if not values:\n        raise ValueError(\"median needs at least one value\")\n    return values[len(values) // 2]\n"
   },
   {
+    "name": "c03-suite-fix-median:variant:int-division-mean",
+    "code": "def median(values):\n    if not values:\n        raise ValueError(\"median needs at least one value\")\n    ordered = sorted(values)\n    middle = len(ordered) // 2\n    if len(ordered) % 2 == 1:\n        return ordered[middle]\n    return (ordered[middle - 1] + ordered[middle]) // 2\n"
+  },
+  {
     "name": "c03-boss-test-clean-lines:model",
     "code": "def test_trims_and_drops_blanks():\n    assert clean_lines([\"  Dock 1 \", \"\", \"Bay 2\"]) == [\"Dock 1\", \"Bay 2\"]\n\n\ndef test_keeps_order():\n    assert clean_lines([\"z\", \" a \", \"m\"]) == [\"z\", \"a\", \"m\"]\n\n\ndef test_spaces_only_line_is_blank():\n    assert clean_lines([\"   \", \"Gate\"]) == [\"Gate\"]\n\n\ndef test_empty_input():\n    assert clean_lines([]) == []\n"
   },
@@ -858,6 +1014,10 @@
   {
     "name": "example:strings-1",
     "code": "name = \"Ada\"\ncount = 3\nprice = 3.14159\nprint(f\"{name} has {count} parcels\")\nprint(f\"{price:.2f} per kg\")\n"
+  },
+  {
+    "name": "example:strings-tie-1",
+    "code": "print(f\"{2.25:.1f}\", f\"{0.25:.1f}\", f\"{2.35:.1f}\")\n"
   },
   {
     "name": "example:strings-2",
@@ -938,6 +1098,10 @@
   {
     "name": "example:generators-1",
     "code": "def countdown(n):\n    while n > 0:\n        yield n\n        n -= 1\n\ng = countdown(2)\nprint(list(g))\nprint(list(g))\nprint(list(countdown(2)))\n"
+  },
+  {
+    "name": "example:generators-laziness-1",
+    "code": "def count_up(limit):\n    print(\"started\")\n    for number in range(limit):\n        yield number\n\n\nbatches = count_up(2)\nprint(\"created\")\nprint(list(batches))\n"
   },
   {
     "name": "choice:c01-predict-division",

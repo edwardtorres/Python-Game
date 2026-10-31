@@ -16,20 +16,24 @@ interface Record {
   mustPass: (solution: string) => boolean;
 }
 
+// The fix-2b solves were written from the Step 2b review's briefs, one fresh solver per batch. They
+// must pass under the current rules. The older solves are recorded, and only the ones named by
+// mustPass must pass; an older solve can fail when a ticket it was written for has changed since.
 const RECORDS: Record[] = [
   {
     root: 'docs/blind-solves/chapter1',
-    dirs: ['solutions/G1', 'solutions/G2', 'solutions/G3', 'solutions/G4', 'fix-2a/solutions'],
-    mustPass: (solution) => solution.startsWith('fix-2a/'),
+    dirs: ['solutions/G1', 'solutions/G2', 'solutions/G3', 'solutions/G4', 'fix-2a/solutions', 'fix-2b/A', 'fix-2b/B', 'fix-2b/C', 'fix-2b/D'],
+    mustPass: (solution) => solution.startsWith('fix-2a/') || solution.startsWith('fix-2b/'),
   },
   {
     root: 'docs/blind-solves/chapter2',
-    dirs: ['solutions/G1', 'solutions/G2', 'solutions/G3', 'solutions/G4', 'solutions/G4-r2'],
-    mustPass: () => true,
-  },  {
+    dirs: ['solutions/G1', 'solutions/G2', 'solutions/G3', 'solutions/G4', 'solutions/G4-r2', 'fix-2b/E', 'fix-2b/F', 'fix-2b/G', 'fix-2b/H'],
+    mustPass: (solution) => solution.startsWith('fix-2b/'),
+  },
+  {
     root: 'docs/blind-solves/chapter3',
-    dirs: ['solutions/G5', 'solutions/G6'],
-    mustPass: () => true,
+    dirs: ['solutions/G5', 'solutions/G6', 'fix-2b/I', 'fix-2b/J'],
+    mustPass: (solution) => solution.startsWith('fix-2b/'),
   },
 ];
 
@@ -49,6 +53,8 @@ beforeAll(async () => {
     loadModule: async () => (await import('pyodide')) as never,
   });
   await runtime.init();
+  // Testing and suite solves run under pytest, which the engine loads before a grade.
+  await runtime.loadPackages(['pytest']);
 }, 300_000);
 
 function regrade(record: Record): Regrade[] {

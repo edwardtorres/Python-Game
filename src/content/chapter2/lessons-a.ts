@@ -122,7 +122,9 @@ export const LESSONS_A: Lesson[] = [
     number: 4,
     title: 'Dunder methods',
     competency: 'dunder-methods',
-    jsNotes: [],
+    jsNotes: [
+      { id: 'js-object-identity', text: 'In JavaScript, === returns true only when both operands reference the same object. Python\'s default __eq__ uses is, so two instances with the same fields are not equal until the class defines __eq__.', quotes: ['js-identity', 'py-datamodel-eq'] },
+    ],
     intro: 'Methods named with two underscores on each side let your objects work with len(), print(), ==, and +.',
     sections: [
       {
@@ -194,7 +196,10 @@ export const LESSONS_A: Lesson[] = [
     number: 6,
     title: 'Choosing a list, dict, or set',
     competency: 'list-dict-set',
-    jsNotes: [],
+    jsNotes: [
+      { id: 'js-object-keys', text: 'In JavaScript, the order of Object.keys() is the same as a for...in loop. Python dicts keep insertion order as well.', quotes: ['js-keys-order', 'py-dict-insertion'] },
+      { id: 'js-array-copy', text: 'A JavaScript array made with slice() is a shallow copy, as Python\'s list.copy() is.', quotes: ['js-slice-copy', 'py-list-copy'] },
+    ],
     intro: 'Pick the container by the question you ask. A list keeps order, a dict finds values by key, and a set answers membership and removes repeats.',
     sections: [
       {

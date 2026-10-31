@@ -298,5 +298,11 @@
     "source": "pytest documentation: How to write and report assertions in tests",
     "url": "https://docs.pytest.org/en/stable/how-to/assert.html",
     "quote": "Instead of using assert abs(a - b) < tol"
+  },
+  {
+    "id": "py-generator-resumes",
+    "source": "Python documentation: The Python Tutorial, Classes",
+    "url": "https://docs.python.org/3/tutorial/classes.html",
+    "quote": "Each time next() is called on it, the generator resumes where it left off"
   }
 ]

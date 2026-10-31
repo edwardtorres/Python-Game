@@ -96,6 +96,15 @@ export const MISTAKES = {
   SIZE_BELOW_ONE_UNTESTED: mistake('SIZE_BELOW_ONE_UNTESTED', 'A size below 1 was never tested', 'The rule for a size below 1 needs its own test. Without one, a missing check goes unnoticed.'),
   NAN_UNTESTED: mistake('NAN_UNTESTED', 'nan and inf were never tested', 'nan and inf need their own tests. A check that is missing for them passes every other case.'),
   ORDER_UNTESTED: mistake('ORDER_UNTESTED', 'The order of the output was never tested', 'A test that checks only the count or the size misses a bug that changes the order of the items.'),
+  FIRST_SEEN_ORDER: mistake('FIRST_SEEN_ORDER', 'Repeats are ordered by their first appearance', 'The rule orders each repeat by its second appearance. Ordering by the first appearance gives a different list when the repeats are interleaved.'),
+  TOTAL_BEFORE_ADD: mistake('TOTAL_BEFORE_ADD', 'The total is recorded before the job is added', 'Each total includes its own job. Recording the total before adding the job leaves each total one job behind.'),
+  INVERTED_MEMBERSHIP: mistake('INVERTED_MEMBERSHIP', 'The check is the wrong way round', 'In the rule a line is True when its SKU is in the catalog. Using not in gives the opposite answer for every line.'),
+  CASE_INSENSITIVE_SORT: mistake('CASE_INSENSITIVE_SORT', 'Words are sorted without regard to case', 'A to Z here is Python\'s default string order, where uppercase letters sort before lowercase. Sorting by .lower() ignores that, so "Zed" and "amy" come out in the wrong order.'),
+  ROUNDS_HALF_UP: mistake('ROUNDS_HALF_UP', 'An exact tie is rounded up', 'Python formats an exact tie to the even digit, so 2.25 becomes 2.2. Rounding half up gives 2.3, which is not what f"{x:.1f}" writes.'),
+  RAISES_LAZILY: mistake('RAISES_LAZILY', 'The size check runs only when the batches are used', 'A generator function runs its body only when you take an item from it. A check inside it raises late, so a bad size passes until the batches are read. Check the argument first, then return the generator.'),
+  FIELD_ORDER_SORT: mistake('FIELD_ORDER_SORT', 'The dataclass sorts by the wrong field first', 'A dataclass with order=True compares its fields in the order they are written. Put kg before name, so the weight decides the order.'),
+  REPR_FORMAT: mistake('REPR_FORMAT', 'repr() does not match the format', 'The rule writes each entry as Version(major, minor), with a comma and a space. Build the text in that exact form.'),
+  VERSION_AS_TEXT: mistake('VERSION_AS_TEXT', 'Versions are compared as text', 'Text compares character by character, so "10.1" comes before "9.0". Compare the numbers, major first, then minor.'),
 } as const satisfies Record<string, Mistake>;
 
 export type MistakeTag = keyof typeof MISTAKES;

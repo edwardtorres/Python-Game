@@ -8,12 +8,24 @@ import { PyRuntime } from '../engine/runtime';
 import { CHALLENGES } from '../challenges/registry';
 import { buildGradeRequest } from '../challenges/payload';
 import type { ChallengeSpec } from '../challenges/types';
+import type { GradePayload } from '../engine/types';
 import { CHAPTERS } from './chapters';
 import { outputsPath } from './generate';
 import type { ChapterOutputs } from './output-types';
 import type { Chapter } from './types';
 
 const CASES_FILE = path.resolve('scripts/py310/cases.json');
+
+// A timed case gives a verdict that depends on the machine's speed, so the CPython check runs the
+// payload without its timed cases. The engine's timing is checked in the content test and in e2e.
+type Payload = ReturnType<typeof buildGradeRequest>['payload'];
+
+function untimed(payload: Payload): Payload {
+  if (!('timing' in payload) || payload.timing === undefined) return payload;
+  const copy: GradePayload = { ...payload, cases: payload.cases.filter((timedCase) => !('timing' in timedCase && timedCase.timing !== undefined)) };
+  delete copy.timing;
+  return copy;
+}
 const SNIPPETS_FILE = path.resolve('scripts/py310/snippets.json');
 const EXAMPLES_FILE = path.resolve('scripts/py310/examples.json');
 let runtime: PyRuntime;
@@ -80,7 +92,8 @@ function build(): { cases: unknown[]; snippets: unknown[]; examples: Example[] }
   const graded = CHAPTERS.flatMap((chapter) => [...chapter.graded, ...chapter.boss]);
   for (const spec of [...CHALLENGES, ...graded]) {
     for (const item of learnerCases(spec)) {
-      const { payload, datasets } = buildGradeRequest(spec, item.learner, 'submit');
+      const { payload: full, datasets } = buildGradeRequest(spec, item.learner, 'submit');
+      const payload = untimed(full);
       const result = runtime.grade(JSON.stringify(payload), JSON.stringify(datasets));
       cases.push({
         name: item.name,

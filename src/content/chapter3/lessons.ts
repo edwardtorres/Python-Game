@@ -9,7 +9,9 @@ export const LESSONS: Lesson[] = [
     number: 1,
     title: 'Assert statements',
     competency: 'assert',
-    jsNotes: [],
+    jsNotes: [
+      { id: 'js-assert-truthiness', text: 'In Python, an empty list is false, so assert items fails for an empty list. In JavaScript an empty array is truthy, so the same check would pass; a JavaScript test compares the length or the contents.', quotes: ['js-falsy-list', 'py-truthiness'] },
+    ],
     intro: 'An assert statement checks a condition. A true condition does nothing, and a false one stops the code with an error that names the check.',
     sections: [
       {
@@ -95,7 +97,9 @@ export const LESSONS: Lesson[] = [
     number: 3,
     title: 'Choosing good test cases',
     competency: 'good-test-cases',
-    jsNotes: [],
+    jsNotes: [
+      { id: 'js-test-identity', text: 'In JavaScript, === on two arrays checks whether they are the same object. Python\'s is and is not test for the same identity in the same way.', quotes: ['js-identity', 'py-identity'] },
+    ],
     intro: 'A few well-chosen cases catch more bugs than many similar ones. Pick the edges of each rule, and always include the empty input.',
     sections: [
       {

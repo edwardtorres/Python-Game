@@ -190,6 +190,19 @@ export const LESSONS_B: Lesson[] = [
         ],
         commonMistakes: ['GENERATOR_EXHAUSTED'],
       },
+      {
+        id: 'generators-laziness',
+        docClaim: true,
+        quotes: ['py-generator-resumes'],
+        title: 'A generator body runs when you ask for an item',
+        paragraphs: [
+          'Calling a function with yield does not run its body. The body runs when you ask for an item, and each next() resumes it where it left off. So a check at the top of a generator function runs only once the first item is taken. The example prints "created" before "started".',
+        ],
+        examples: [
+          { id: 'generators-laziness-1', code: 'def count_up(limit):\n    print("started")\n    for number in range(limit):\n        yield number\n\n\nbatches = count_up(2)\nprint("created")\nprint(list(batches))\n' },
+        ],
+        commonMistakes: ['RAISES_LAZILY'],
+      },
     ],
   },
 ];

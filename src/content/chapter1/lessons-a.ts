@@ -64,6 +64,19 @@ export const LESSONS_A: Lesson[] = [
         commonMistakes: [],
       },
       {
+        id: 'strings-round-half-even',
+        docClaim: false,
+        quotes: [],
+        title: 'Rounding an exact tie',
+        paragraphs: [
+          'Python writes an exact tie to the even digit. Demonstrated by the interpreter: 2.25 is written as 2.2, and 0.25 as 0.2. 2.35 is not an exact tie in binary, so it is written as 2.4.',
+        ],
+        examples: [
+          { id: 'strings-tie-1', code: 'print(f"{2.25:.1f}", f"{0.25:.1f}", f"{2.35:.1f}")\n' },
+        ],
+        commonMistakes: ['ROUNDS_HALF_UP'],
+      },
+      {
         id: 'strings-immutable',
         docClaim: true,
         quotes: ['py-immutable-str'],

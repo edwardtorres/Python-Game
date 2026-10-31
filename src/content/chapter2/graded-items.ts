@@ -3,6 +3,8 @@
 // the rules it checks, and a wrong variant fails only cases that name its rule.
 import type { ChallengeSpec } from '../../challenges/types';
 import { type GradedItem, fn, functionSpec } from '../graded';
+import { CLASS_SPECS } from './class-items';
+import { EFFICIENCY_SPECS } from './efficiency-items';
 
 const GUIDED: GradedItem[] = [
   {
@@ -10,7 +12,7 @@ const GUIDED: GradedItem[] = [
     title: 'Guided: order parcels for loading',
     lessonId: 'c02-informatics/sorting',
     competencies: ['sort-key'],
-    ticket: { from: 'Ravi, Outbound', subject: 'Loading order', body: 'Each parcel is a (name, kg) pair. Return the names in loading order, with the heaviest parcel first. Parcels with the same weight go A to Z by name.' },
+    ticket: { from: 'Ravi, Outbound', subject: 'Loading order', body: "Write loading_order(parcels). parcels is a list of (name, kg) pairs, where name is text and kg is a number. Return the names in loading order, with the heaviest parcel first. Parcels with the same weight go A to Z by name, which is Python's default string order: uppercase sorts before lowercase." },
     rules: ['Return the names only, as a list.', 'The heaviest parcel comes first.', 'Parcels with the same weight are ordered A to Z by name.'],
     entry: 'loading_order',
     starter: 'def loading_order(parcels):\n    pass\n',
@@ -21,8 +23,11 @@ const GUIDED: GradedItem[] = [
       fn('h-ties', 'Two parcels tie, and a heavier one', 'hidden', [[['Zed', 5], ['Amy', 5], ['Max', 9]]], [0, 1, 2]),
       fn('h-light-only', 'Two light parcels', 'hidden', [[['Pen', 1], ['Box', 2]]], [0, 1]),
       fn('h-empty', 'No parcels', 'hidden', [[]], [0]),
+      fn('v-case-ties', 'Same weight, lowercase name first in the input', 'visible', [[['ann', 4], ['Bob', 4]]], [0, 2]),
+      fn('h-case-mixed', 'Same weight, capitals and lowercase mixed', 'hidden', [[['Zed', 4], ['amy', 4], ['Amy', 4]]], [0, 2]),
     ],
     variants: [
+      ['case-insensitive', 'def loading_order(parcels):\n    ordered = sorted(parcels, key=lambda parcel: (-parcel[1], parcel[0].lower()))\n    return [name for name, kg in ordered]\n', 'CASE_INSENSITIVE_SORT', 2],
       ['lightest-first', 'def loading_order(parcels):\n    ordered = sorted(parcels, key=lambda parcel: (parcel[1], parcel[0]))\n    return [name for name, kg in ordered]\n', 'SORT_DIRECTION', 1],
       ['ties-unsorted', 'def loading_order(parcels):\n    ordered = sorted(parcels, key=lambda parcel: -parcel[1])\n    return [name for name, kg in ordered]\n', 'SORT_TIES_IGNORED', 2],
       ['pairs-returned', 'def loading_order(parcels):\n    return sorted(parcels, key=lambda parcel: (-parcel[1], parcel[0]))\n', 'WRONG_RETURN_SHAPE', 0],
@@ -38,7 +43,7 @@ const GUIDED: GradedItem[] = [
     title: 'Guided: weight per dock',
     lessonId: 'c02-informatics/list-dict-set',
     competencies: ['list-dict-set'],
-    ticket: { from: 'Jun, Dock Planning', subject: 'Weight per dock', body: 'Each parcel is a (dock, kg) pair. Return a dict from each dock to the total kg of its parcels. An empty list gives an empty dict.' },
+    ticket: { from: 'Jun, Dock Planning', subject: 'Weight per dock', body: 'Each parcel is a (dock, kg) pair. Return a dict from each dock to the total kg of its parcels. An empty list gives an empty dict. Write dock_totals(parcels). parcels is a list of (dock, kg) pairs, where dock is text and kg is a number.' },
     rules: ['Each dock maps to the total kg of its parcels.', 'An empty list gives an empty dict, not None.'],
     entry: 'dock_totals',
     starter: 'def dock_totals(parcels):\n    pass\n',
@@ -65,7 +70,7 @@ const GUIDED: GradedItem[] = [
     title: 'Guided: how deep is a nested list?',
     lessonId: 'c02-informatics/recursion',
     competencies: ['recursion'],
-    ticket: { from: 'Lena, Data Quality', subject: 'Nesting depth', body: 'A value that is not a list has depth 0. A list has one more than the deepest item inside it, so an empty list has depth 1.' },
+    ticket: { from: 'Lena, Data Quality', subject: 'Nesting depth', body: 'A value that is not a list has depth 0. A list has one more than the deepest item inside it, so an empty list has depth 1. Write depth(value). value can be any value, including lists nested inside lists.' },
     rules: ['A value that is not a list has depth 0.', 'A list has one more than the deepest item inside it, so an empty list has depth 1.'],
     entry: 'depth',
     starter: 'def depth(value):\n    pass\n',
@@ -96,7 +101,7 @@ const TICKETS: GradedItem[] = [
     title: 'Ticket: keep the last events',
     lessonId: 'c02-informatics/deque-heapq',
     competencies: ['deque-heapq'],
-    ticket: { from: 'Omar, Gate Control', subject: 'Last events on the board', body: 'Show the last n events, oldest first. If there are fewer than n events, show them all. A count of 0 shows nothing.' },
+    ticket: { from: 'Omar, Gate Control', subject: 'Last events on the board', body: 'Show the last n events, oldest first. If there are fewer than n events, show them all. A count of 0 shows nothing. Write last_events(events, n). events is a list of event strings, oldest first, and n is a whole number.' },
     rules: ['Return the last n events, oldest first.', 'If there are fewer than n events, return all of them.', 'When n is 0, return an empty list.'],
     entry: 'last_events',
     starter: 'def last_events(events, n):\n    pass\n',
@@ -125,7 +130,7 @@ const TICKETS: GradedItem[] = [
     title: 'Ticket: the heaviest weights',
     lessonId: 'c02-informatics/deque-heapq',
     competencies: ['deque-heapq'],
-    ticket: { from: 'Priya, Loading', subject: 'Heaviest parcels first', body: 'Return the n heaviest weights, heaviest first. A weight that appears twice counts twice.' },
+    ticket: { from: 'Priya, Loading', subject: 'Heaviest parcels first', body: 'Return the n heaviest weights, heaviest first. A weight that appears twice counts twice. Write heaviest(weights, n). weights is a list of numbers, and n is a whole number.' },
     rules: ['Return the n heaviest weights.', 'The heaviest comes first.', 'A weight listed twice counts twice.'],
     entry: 'heaviest',
     starter: 'def heaviest(weights, n):\n    pass\n',
@@ -154,7 +159,7 @@ const TICKETS: GradedItem[] = [
     title: 'Ticket: each dock once, in order',
     lessonId: 'c02-informatics/list-dict-set',
     competencies: ['list-dict-set'],
-    ticket: { from: 'Sam, Yard Office', subject: 'Docks in order of arrival', body: 'Return each dock name once, in the order it first appears in the log. An empty log gives an empty list.' },
+    ticket: { from: 'Sam, Yard Office', subject: 'Docks in order of arrival', body: 'Return each dock name once, in the order it first appears in the log. An empty log gives an empty list. Write first_seen(log). log is a list of dock names as text, one per scan.' },
     rules: ['Each dock name appears once.', 'The order is the order each name first appears.', 'An empty log gives an empty list, not None.'],
     entry: 'first_seen',
     starter: 'def first_seen(log):\n    pass\n',
@@ -185,7 +190,7 @@ const FIXES: GradedItem[] = [
     title: 'Fix: longest words first',
     lessonId: 'c02-informatics/sorting',
     competencies: ['sort-key'],
-    ticket: { from: 'Hana, Labels', subject: 'Label order is backwards', body: 'The label list should show the longest word first, and words of the same length go A to Z. The current code puts the shortest word first.' },
+    ticket: { from: 'Hana, Labels', subject: 'Label order is backwards', body: "Write longest_first(words). words is a list of words, as text. Show the longest word first, and words of the same length go A to Z, which is Python's default string order: uppercase sorts before lowercase. The current code puts the shortest word first." },
     rules: ['The longest word comes first.', 'Words of the same length are ordered A to Z.'],
     entry: 'longest_first',
     starter: 'def longest_first(words):\n    return sorted(words, key=len)\n',
@@ -196,8 +201,11 @@ const FIXES: GradedItem[] = [
       fn('h-same-length', 'Three words of length two', 'hidden', [['bb', 'aa', 'cc']], [1]),
       fn('h-mixed', 'Words of several lengths', 'hidden', [['hi', 'hello', 'hey', 'howdy']], [0, 1]),
       fn('h-single', 'One word', 'hidden', [['zebra']], [0]),
+      fn('v-case-length', 'Three words of length three, capitals and lowercase', 'visible', [['bee', 'Ant', 'Cat']], [0, 1]),
+      fn('h-case-length', 'Two words of length two, one with a capital', 'hidden', [['zz', 'Ab', 'aa']], [1]),
     ],
     variants: [
+      ['case-insensitive', 'def longest_first(words):\n    return sorted(words, key=lambda word: (-len(word), word.lower()))\n', 'CASE_INSENSITIVE_SORT', 1],
       ['shortest-first', 'def longest_first(words):\n    return sorted(words, key=lambda word: (len(word), word))\n', 'SORT_DIRECTION', 0],
       ['ties-unsorted', 'def longest_first(words):\n    return sorted(words, key=lambda word: -len(word))\n', 'SORT_TIES_IGNORED', 1],
     ],
@@ -212,7 +220,7 @@ const FIXES: GradedItem[] = [
     title: 'Fix: add up nested lists',
     lessonId: 'c02-informatics/recursion',
     competencies: ['recursion'],
-    ticket: { from: 'Noor, Finance', subject: 'Totals miss nested lists', body: 'The total should add every number, including numbers inside nested lists. An empty list adds up to 0. The current code keeps only the last nested total.' },
+    ticket: { from: 'Noor, Finance', subject: 'Totals miss nested lists', body: 'The total should add every number, including numbers inside nested lists. An empty list adds up to 0. The current code keeps only the last nested total. Write nested_total(values). values is a list whose items are numbers or lists of numbers, nested to any depth.' },
     rules: ['Add up every number, however deeply it is nested.', 'An empty list adds up to 0.'],
     entry: 'nested_total',
     starter: 'def nested_total(values):\n    total = 0\n    for value in values:\n        if isinstance(value, list):\n            total = nested_total(value)\n        else:\n            total += value\n    return total\n',
@@ -243,7 +251,7 @@ const STRUCTURE: GradedItem[] = [
     title: 'Structure: annotate two functions',
     lessonId: 'c02-informatics/type-hints',
     competencies: ['type-hints'],
-    ticket: { from: 'Tomas, Reporting', subject: 'Hints for the report tool', body: 'The report tool reads the type hints. Add them to total_weight and label_for so the tool can read each parameter and each result.' },
+    ticket: { from: 'Tomas, Reporting', subject: 'Hints for the report tool', body: 'The report tool reads the type hints. Add them to total_weight and label_for so the tool can read each parameter and each result. Write total_weight(weights) and label_for(name, kg). weights is a list of numbers, and name is text and kg is a number.' },
     rules: ['Define total_weight and label_for.', 'Annotate every parameter and the return value of each function.'],
     entry: 'total_weight',
     starter: 'def total_weight(weights):\n    pass\n\n\ndef label_for(name, kg):\n    pass\n',
@@ -270,7 +278,7 @@ const STRUCTURE: GradedItem[] = [
     title: 'Structure: serve the queue from the front',
     lessonId: 'c02-informatics/deque-heapq',
     competencies: ['deque-heapq'],
-    ticket: { from: 'Bea, Gate 4', subject: 'Serve the queue in order', body: 'Serve every parcel from a deque, front first, and return the parcels in the order they were served.' },
+    ticket: { from: 'Bea, Gate 4', subject: 'Serve the queue in order', body: 'Serve every parcel from a deque, front first, and return the parcels in the order they were served. Write serve_all(queue). queue is a list of parcels, in the order they arrived.' },
     rules: ['Define serve_all.', 'Take each item from the front with popleft(), and do not use pop(0).'],
     entry: 'serve_all',
     starter: 'def serve_all(queue):\n    pass\n',
@@ -296,7 +304,7 @@ const STRUCTURE: GradedItem[] = [
     title: 'Structure: three smallest with heapq',
     lessonId: 'c02-informatics/deque-heapq',
     competencies: ['deque-heapq'],
-    ticket: { from: 'Kenji, Warehouse', subject: 'Three lightest parcels', body: 'Return the three smallest weights. Use heapq.nsmallest, imported with from heapq import nsmallest, and do not sort the whole list.' },
+    ticket: { from: 'Kenji, Warehouse', subject: 'Three lightest parcels', body: 'Write smallest_three(values). values is a list of weights, as numbers. Return the three smallest weights in ascending order, lowest first. Use heapq.nsmallest, imported with from heapq import nsmallest, and do not sort the whole list.' },
     rules: ['Define smallest_three.', 'Use heapq.nsmallest, imported with from heapq import nsmallest, and do not call sorted().'],
     entry: 'smallest_three',
     starter: 'def smallest_three(values):\n    pass\n',
@@ -319,4 +327,8 @@ const STRUCTURE: GradedItem[] = [
   },
 ];
 
-export const GRADED_SPECS: ChallengeSpec[] = [...GUIDED, ...TICKETS, ...FIXES, ...STRUCTURE].map((item) => functionSpec('c02-informatics', item));
+export const GRADED_SPECS: ChallengeSpec[] = [
+  ...[...GUIDED, ...TICKETS, ...FIXES, ...STRUCTURE].map((item) => functionSpec('c02-informatics', item)),
+  ...CLASS_SPECS,
+  ...EFFICIENCY_SPECS,
+];

@@ -15,6 +15,11 @@
       "stdout": "Ada has 3 parcels\n3.14 per kg\n",
       "error": null
     },
+    "strings-tie-1": {
+      "codeHash": "a138d1c257524c21",
+      "stdout": "2.2 0.2 2.4\n",
+      "error": null
+    },
     "strings-2": {
       "codeHash": "d00db47b2ccf0b6d",
       "stdout": "'  freight  '\n'FREIGHT'\n",
@@ -113,6 +118,11 @@
     "generators-1": {
       "codeHash": "eb299c73d28460e7",
       "stdout": "[2, 1]\n[]\n[2, 1]\n",
+      "error": null
+    },
+    "generators-laziness-1": {
+      "codeHash": "ac85db28573c3570",
+      "stdout": "created\nstarted\n[0, 1]\n",
       "error": null
     }
   },

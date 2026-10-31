@@ -42,6 +42,11 @@
         "quotes": []
       },
       {
+        "id": "strings-round-half-even",
+        "docClaim": false,
+        "quotes": []
+      },
+      {
         "id": "strings-immutable",
         "docClaim": true,
         "quotes": [
@@ -277,6 +282,13 @@
           "py-generator",
           "py-stopiteration"
         ]
+      },
+      {
+        "id": "generators-laziness",
+        "docClaim": true,
+        "quotes": [
+          "py-generator-resumes"
+        ]
       }
     ],
     "jsNotes": []
@@ -360,7 +372,15 @@
         ]
       }
     ],
-    "jsNotes": []
+    "jsNotes": [
+      {
+        "id": "js-object-identity",
+        "quotes": [
+          "js-identity",
+          "py-datamodel-eq"
+        ]
+      }
+    ]
   },
   {
     "lesson": "c02-informatics/big-o",
@@ -397,7 +417,22 @@
         ]
       }
     ],
-    "jsNotes": []
+    "jsNotes": [
+      {
+        "id": "js-object-keys",
+        "quotes": [
+          "js-keys-order",
+          "py-dict-insertion"
+        ]
+      },
+      {
+        "id": "js-array-copy",
+        "quotes": [
+          "js-slice-copy",
+          "py-list-copy"
+        ]
+      }
+    ]
   },
   {
     "lesson": "c02-informatics/deque-heapq",
@@ -514,7 +549,15 @@
         ]
       }
     ],
-    "jsNotes": []
+    "jsNotes": [
+      {
+        "id": "js-assert-truthiness",
+        "quotes": [
+          "js-falsy-list",
+          "py-truthiness"
+        ]
+      }
+    ]
   },
   {
     "lesson": "c03-testing/pytest-style",
@@ -548,7 +591,15 @@
         "quotes": []
       }
     ],
-    "jsNotes": []
+    "jsNotes": [
+      {
+        "id": "js-test-identity",
+        "quotes": [
+          "js-identity",
+          "py-identity"
+        ]
+      }
+    ]
   },
   {
     "lesson": "c03-testing/test-first",

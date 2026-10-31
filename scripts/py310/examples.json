@@ -18,6 +18,12 @@
     "expected": "Ada has 3 parcels\n3.14 per kg\n"
   },
   {
+    "name": "example:strings-tie-1",
+    "code": "print(f\"{2.25:.1f}\", f\"{0.25:.1f}\", f\"{2.35:.1f}\")\n",
+    "check": "stdout",
+    "expected": "2.2 0.2 2.4\n"
+  },
+  {
     "name": "example:strings-2",
     "code": "s = \"  freight  \"\nt = s.strip().upper()\nprint(repr(s))\nprint(repr(t))\n",
     "check": "stdout",
@@ -136,6 +142,12 @@
     "code": "def countdown(n):\n    while n > 0:\n        yield n\n        n -= 1\n\ng = countdown(2)\nprint(list(g))\nprint(list(g))\nprint(list(countdown(2)))\n",
     "check": "stdout",
     "expected": "[2, 1]\n[]\n[2, 1]\n"
+  },
+  {
+    "name": "example:generators-laziness-1",
+    "code": "def count_up(limit):\n    print(\"started\")\n    for number in range(limit):\n        yield number\n\n\nbatches = count_up(2)\nprint(\"created\")\nprint(list(batches))\n",
+    "check": "stdout",
+    "expected": "created\nstarted\n[0, 1]\n"
   },
   {
     "name": "choice:c01-predict-division:true",
