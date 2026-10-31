@@ -1,6 +1,6 @@
 # Step 2b review audit (partial): WebKit csp, and the reconciliation with the prompt
 
-Status at the time of writing: **in progress.** Part 1 (the WebKit csp test) has a passing CI run on `57dd154`, but its cause is not confirmed. Part 2 (the reconciliation), Part 3 (the owner decisions), and Step 0 (the prompt file) have not started. Each section below says what is done and what is not.
+Status at the time of writing: **Part 1 passes in both browsers. Parts 2 and 3 and Step 0 have not started.** The last CI run, on `ed19a38`, passed every job. A temporary five-run loop is still in the csp spec, and it comes out before the step's final commit. Each section below says what is done and what is not.
 
 ## The WebKit cause and fix
 
@@ -12,18 +12,26 @@ Status at the time of writing: **in progress.** Part 1 (the WebKit csp test) has
 
 **What the diagnostic showed.**
 
-- The production page logs a refused style on the editor page in both browsers. The browsers report that CodeMirror's injected style is blocked by `style-src 'self'` in the production policy (`PRODUCTION_CSP` in `vite.config.ts`). This is a real production defect, separate from the timeout. Changing the policy is an owner decision, so it is not changed here.
+- Two kinds of item are refused on the editor page, in both browsers, under `style-src 'self'` in the production policy:
+  1. CodeMirror's one injected style element. Its exact text hashes to `sha256-F46hirtH8PYJsIDsSPl2wePAnpACTrugnGsv136vcWU=`, the value Chromium reports for it.
+  2. Inline `style` attributes that CodeMirror sets on its gutter elements, with heights and margins that change as the document grows. Their values are dynamic, so no hash can list them. Chromium states that hashes do not apply to style attributes.
 - Locally in Chromium, against the production preview, the typed reference grades and shows `Submitted. Every check passed.`. The document text is correct once read from the DOM (`textContent`), not from the rendered text, which depends on styles.
 
-**Run `41164449354` (commit `57dd154`): passed.** The test no longer waits for "Python ready". It types, reads the editor's lines from the DOM before Submit (a diagnostic read), submits, and waits for the feedback. In WebKit the test passed on its first attempt, with no retry. The line check found 35 `.cm-line` elements for 34 reference lines, with the first mismatch at -1, meaning every reference line matches in order. The extra element is the trailing newline.
+**Fix.** The production `style-src` is now `'self' 'unsafe-inline'`. `script-src` keeps `'self' 'wasm-unsafe-eval'`. No hash is listed in the same directive, because browsers that support hashes ignore `'unsafe-inline'` when one is present. `e2e/csp.spec.ts` now fails if the production page refuses a style on the editor, in either browser. The owner chose allowing inline styles over keeping the policy.
 
-**What is not established.**
+**Results.**
 
-- The cause of the WebKit timeouts is **not confirmed**. The failing run `0870994` logged no page state, so its failure cannot be read back from the logs.
-- The likeliest explanation, not yet tested, is a timing race: the test clicks Submit straight after typing, and the typed text reaches the app's state a moment later in WebKit. The passing run differs by the DOM read between typing and Submit, which gives the browser a round trip. This is a hypothesis, not a finding.
-- The "Python ready" wait is a test error and is removed. That part is confirmed.
+- Run `41164449354` (commit `57dd154`): passed in both browsers. That run still had the refusals, and it read the editor's lines from the DOM before Submit. The WebKit test passed on its first attempt.
+- Run `41171534718` (commit `ed19a38`): passed in both browsers, with the fix. The csp test ran without the DOM read and without the "Python ready" wait. The temporary loop repeated the typed-and-submitted flow five more times in each browser, and all five passed in Chromium and in WebKit.
 
-**Next step.** Run the csp test several times in WebKit without the diagnostic read (for example with `--repeat-each`). If it fails, the dump names the state. If it passes, the earlier failures came from the same timing race, and the fix is a real precondition before Submit (the editor's text, read from the DOM, must match what was typed), not a longer timeout. The diagnostic read stays until one of those is decided.
+**What the evidence shows, and what it does not.**
+
+- With the refusals present and no DOM read, the WebKit csp test failed twice (run `41161368223`, commit `0870994`). With the refusals present and a DOM read, it passed once (`57dd154`). With the policy allowing styles and no DOM read, it passed six times in WebKit (`ed19a38`, the test and the five-run loop).
+- The race explanation, that Submit is clicked before the typed text reaches the app, is not supported by these runs. The run that failed and the run that passed had the same typing and click sequence, and they differ in the policy. The style refusals fit the difference better.
+- Not shown: how refused styles break WebKit's input. The runs show an association, not a mechanism. No separate run isolated the gutter attributes from the style element.
+- The "Python ready" wait was a test error and is removed. That part is confirmed.
+
+**Next step.** Remove the five-run loop before the final commit. The refusal check stays.
 
 ## The pytest decision
 
@@ -64,18 +72,22 @@ Each changed ticket gets a fresh blind solve, batched as in Step 2b. Chapter 1 c
 
 ## e2e and axe results in both browsers
 
-CI run `41164449354` on `57dd154`, all five jobs passed:
+CI run `41171534718` on `ed19a38`, all five jobs passed:
 
-- e2e (chromium): 49 passed, 1 skipped. This includes `preview-chromium` csp and workers.
-- e2e (webkit): 49 passed, 1 skipped. This includes `preview-webkit` csp (first attempt) and workers.
+- e2e (chromium): 50 passed, 1 skipped. This includes `preview-chromium` csp (the refusal check and the five-run loop) and workers.
+- e2e (webkit): 50 passed, 1 skipped. This includes `preview-webkit` csp (the refusal check and the five-run loop) and workers.
+
+Before the loop was added, run `41164449354` on `57dd154` had 49 passed and 1 skipped in each browser.
 
 The new flows the review lists (class ticket, efficiency ticket that times out, test-writing ticket naming the missed mutant) are not written yet.
 
 ## Anything you were unsure of, and deviations
 
-- **The prompt text was not in the transcript.** The review said the prompt was pasted above the message, but there was no pasted block. I asked the owner to paste it again. `docs/prompts/step-2b.md` is still the reconstruction, and Step 0 waits for the paste.
+- **The prompt text was not in the transcript.** The review said the prompt was pasted above the message, but there was no pasted block. I asked the owner to paste it again, and the paste has not arrived. `docs/prompts/step-2b.md` is still the reconstruction, and Step 0 waits for the paste.
 - **Two runs were cancelled by my own pushes.** Run `41162712628` was cancelled by `d3321c5`. The rule is recorded above.
-- **The production CSP refuses a style on the editor page.** This is recorded, not changed. The owner decides how to allow CodeMirror's injected style under the production policy. The options are a hash of the style text, a nonce, or `'unsafe-inline'` for `style-src`.
+- **The production style policy now allows inline styles.** This was the owner's choice between allowing them and keeping the policy. An injected style can restyle the page but cannot run code, and scripts keep the strict policy. The choice is recorded here so it stays visible.
+- **A wrong hash was tried first, and never committed.** I added only the style element's hash, then a probe showed the refused items were style attributes. The change was reverted before the commit, so `ed19a38` carries only the final policy.
+- **The temporary five-run loop is still in `e2e/csp.spec.ts`.** It comes out before the step's final commit.
 - **The TimeComplexity page cannot be fetched directly.** `docs/snapshot-urls.txt` excludes `wiki.python.org/moin/TimeComplexity`, because its URL answers with a script redirect. A direct URL has not been found yet.
 - **Efficiency margins use wall-clock time.** The grading rule asks for the same result on every run. The wide margin carries that rule, and the margin is recorded.
 - **The `4d3f7b4` commit has no `Co-Authored-By` trailer.** It was already pushed, and CLAUDE.md forbids rewriting pushed history, so it stays. Later commits carry the trailer.
@@ -83,17 +95,16 @@ The new flows the review lists (class ticket, efficiency ticket that times out, 
 
 ## Test and check results, and push status
 
-Local, on this turn's changes:
+Local, on the `ed19a38` change:
 
-- `npx eslint e2e/csp.spec.ts e2e/helpers.ts`, `npx tsc --noEmit`: pass.
+- `npx eslint e2e/csp.spec.ts vite.config.ts`, `npx tsc --noEmit`: pass.
 - `npm run build` (type check, production build, hook scan): pass. The scan found no test hooks.
-- `npx playwright test e2e/csp.spec.ts --project=preview-chromium` against the production preview: 2 passed.
-- Local Chromium repro of the production csp flow: `Submitted. Every check passed.`.
+- `npx playwright test e2e/csp.spec.ts --project=preview-chromium` against the production preview: 3 passed, including the refusal check and the five-run loop.
 
-CI on `57dd154` (run `41164449354`): all five jobs passed. This includes the docs quotes job, the unit and type check job, the CPython 3.10 job, and both e2e jobs.
+CI on `ed19a38` (run `41171534718`): all five jobs passed. These are the docs quotes job, the types, lint, unit, build, and scan job, the CPython 3.10 job, and both e2e jobs.
 
 Push status:
 
-- `claude/busy-wright-rooppm` is at `57dd154`, pushed. This audit is committed on the same branch, to be pushed with it.
-- `main` is still at `7c22dcf`. It does not move until both browsers pass on the final commit of this step, and the cause in the WebKit section is confirmed or the test is changed for a stated reason.
+- `claude/busy-wright-rooppm` is at `ed19a38`, pushed. This audit update is committed on the same branch as the next commit.
+- `main` is still at `7c22dcf`. It does not move while the step is open. Parts 2 and 3 have not started, Step 0 waits for the paste, and the five-run loop is still in the spec.
 - HEAD does not equal `origin/main` yet. That is expected while the step is open.
