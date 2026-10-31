@@ -26,6 +26,7 @@ export function fileFor(url) {
   return path.join('pages', parsed.hostname, `${name}.txt`);
 }
 
+const MIN_CHARACTERS = 200;
 const index = [];
 const failures = [];
 for (const url of urls) {
@@ -37,6 +38,11 @@ for (const url of urls) {
   const fetched = new Date().toISOString();
   const sha256 = createHash('sha256').update(page.text).digest('hex');
   const text = visibleText(page.text);
+  // A redirect page or a script-only page has almost no text. Such a page cannot be quoted, so fail.
+  if (text.length < MIN_CHARACTERS) {
+    failures.push(`${url}: only ${text.length} characters of visible text (a redirect or script-only page)`);
+    continue;
+  }
   const file = fileFor(url);
   const target = path.join(outDir, file);
   fs.mkdirSync(path.dirname(target), { recursive: true });

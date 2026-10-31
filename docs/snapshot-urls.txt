@@ -23,8 +23,7 @@ https://docs.python.org/3/reference/expressions.html
 https://docs.python.org/3/reference/compound_stmts.html
 https://docs.python.org/3/glossary.html
 
-# Python community wiki (Big-O reference for Chapter 2)
-https://wiki.python.org/moin/TimeComplexity
+# wiki.python.org/moin/TimeComplexity is not listed: its URL answers with a script redirect that the fetch cannot follow.
 
 # pytest (Chapter 3)
 https://docs.pytest.org/en/stable/how-to/assert.html
