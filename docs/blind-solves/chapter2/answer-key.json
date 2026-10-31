@@ -1,0 +1,54 @@
+[
+  {
+    "id": "c02-predict-shared-list",
+    "answer": "B"
+  },
+  {
+    "id": "c02-predict-dataclass-equal",
+    "answer": "B"
+  },
+  {
+    "id": "c02-predict-super-setup",
+    "answer": "B"
+  },
+  {
+    "id": "c02-predict-len-method",
+    "answer": "B"
+  },
+  {
+    "id": "c02-predict-list-probe",
+    "answer": "B"
+  },
+  {
+    "id": "c02-predict-heap-order",
+    "answer": "B"
+  },
+  {
+    "id": "c02-predict-sort-ties",
+    "answer": "C"
+  },
+  {
+    "id": "c02-predict-flatten-nested",
+    "answer": "B"
+  },
+  {
+    "id": "c02-traceback-unhashable",
+    "answer": "C"
+  },
+  {
+    "id": "c02-traceback-sort-none",
+    "answer": "A"
+  },
+  {
+    "id": "c02-traceback-empty-deque",
+    "answer": "B"
+  },
+  {
+    "id": "c02-traceback-missing-argument",
+    "answer": "A"
+  },
+  {
+    "id": "c02-traceback-heap-empty",
+    "answer": "A"
+  }
+]

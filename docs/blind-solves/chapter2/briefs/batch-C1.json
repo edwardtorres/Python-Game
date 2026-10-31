@@ -1,0 +1,134 @@
+[
+  {
+    "id": "c02-predict-shared-list",
+    "kind": "predict",
+    "prompt": "Predict the output before you run it. Choose the output the code prints.",
+    "code": "class Dock:\n    queue = []\n\n    def __init__(self, name):\n        self.name = name\n        self.parcels = []\n\n    def receive(self, parcel):\n        self.parcels.append(parcel)\n        Dock.queue.append(parcel)\n\n\nnorth = Dock(\"North\")\nsouth = Dock(\"South\")\nnorth.receive(\"crate\")\nprint(len(north.parcels), len(south.parcels), len(Dock.queue))\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "1 1 1"
+      },
+      {
+        "label": "B",
+        "text": "1 0 1"
+      }
+    ]
+  },
+  {
+    "id": "c02-predict-dataclass-equal",
+    "kind": "predict",
+    "prompt": "Predict the output before you run it. Choose the output the code prints.",
+    "code": "from dataclasses import dataclass\n\n\n@dataclass\nclass Parcel:\n    name: str\n    kg: float\n\n\na = Parcel(\"Crate\", 12.0)\nb = Parcel(\"Crate\", 12.0)\nprint(a == b, a is b)\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "False False"
+      },
+      {
+        "label": "B",
+        "text": "True False"
+      }
+    ]
+  },
+  {
+    "id": "c02-predict-super-setup",
+    "kind": "predict",
+    "prompt": "Predict the output before you run it. Choose the output the code prints.",
+    "code": "class Parcel:\n    def __init__(self, kg):\n        self.kg = kg\n\n\nclass Pallet(Parcel):\n    def __init__(self, kg, boards):\n        super().__init__(kg)\n        self.boards = boards\n\n\npallet = Pallet(30, 4)\nprint(pallet.kg, pallet.boards)\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "AttributeError: 'Pallet' object has no attribute 'kg'"
+      },
+      {
+        "label": "B",
+        "text": "30 4"
+      }
+    ]
+  },
+  {
+    "id": "c02-predict-len-method",
+    "kind": "predict",
+    "prompt": "Predict the output before you run it. Choose the output the code prints.",
+    "code": "class Crate:\n    def __init__(self, items):\n        self.items = items\n\n    def __len__(self):\n        return len(self.items)\n\n\ncrate = Crate([\"a\", \"b\"])\nprint(len(crate), bool(crate))\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "TypeError: object of type 'Crate' has no len()"
+      },
+      {
+        "label": "B",
+        "text": "2 True"
+      }
+    ]
+  },
+  {
+    "id": "c02-predict-list-probe",
+    "kind": "predict",
+    "prompt": "Predict the output before you run it. Choose the output the code prints.",
+    "code": "class Probe:\n    comparisons = 0\n\n    def __init__(self, value):\n        self.value = value\n\n    def __eq__(self, other):\n        Probe.comparisons += 1\n        return self.value == other.value\n\n    def __hash__(self):\n        return hash(self.value)\n\n\nitems = [Probe(i) for i in range(100)]\nlookup = set(items)\ntarget = Probe(99)\nProbe.comparisons = 0\ntarget in items\nprint(Probe.comparisons)\nProbe.comparisons = 0\ntarget in lookup\nprint(Probe.comparisons)\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "100\n100"
+      },
+      {
+        "label": "B",
+        "text": "100\n1"
+      }
+    ]
+  },
+  {
+    "id": "c02-predict-heap-order",
+    "kind": "predict",
+    "prompt": "Predict the output before you run it. Choose the output the code prints.",
+    "code": "import heapq\n\njobs = [4, 2, 9, 1]\nheapq.heapify(jobs)\nprint(jobs[0], heapq.heappop(jobs), heapq.heappop(jobs))\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "1 1 4"
+      },
+      {
+        "label": "B",
+        "text": "1 1 2"
+      }
+    ]
+  },
+  {
+    "id": "c02-predict-sort-ties",
+    "kind": "predict",
+    "prompt": "Predict the output before you run it. Choose the output the code prints.",
+    "code": "words = [\"kiwi\", \"fig\", \"pear\", \"apple\"]\nprint(sorted(words, key=len))\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "['apple', 'kiwi', 'pear', 'fig']"
+      },
+      {
+        "label": "B",
+        "text": "['fig', 'pear', 'kiwi', 'apple']"
+      },
+      {
+        "label": "C",
+        "text": "['fig', 'kiwi', 'pear', 'apple']"
+      }
+    ]
+  },
+  {
+    "id": "c02-predict-flatten-nested",
+    "kind": "predict",
+    "prompt": "Predict the output before you run it. Choose the output the code prints.",
+    "code": "def flatten(items):\n    flat = []\n    for item in items:\n        if isinstance(item, list):\n            flat.extend(flatten(item))\n        else:\n            flat.append(item)\n    return flat\n\n\nprint(flatten([1, [2, [3]], []]))\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "[1, [2, [3]], []]"
+      },
+      {
+        "label": "B",
+        "text": "[1, 2, 3]"
+      }
+    ]
+  }
+]

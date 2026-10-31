@@ -1,0 +1,75 @@
+[
+  {
+    "id": "c02-boss-rank-rows",
+    "title": "Boss part 1: rank the dock rows",
+    "ticket": {
+      "from": "Dana, Dock Board",
+      "subject": "Sort the dock rows",
+      "body": "Each row is (dock, name, kg). Sort the rows by dock, A to Z. Within a dock, the heaviest parcel comes first. Parcels with the same dock and weight go by name. Return \"dock/name\" strings in that order."
+    },
+    "rules": [
+      "Sort the rows by dock, A to Z.",
+      "Within a dock, the heaviest parcel comes first.",
+      "Parcels with the same dock and weight are ordered by name.",
+      "Return \"dock/name\" strings in that order."
+    ],
+    "entry": "rank_rows",
+    "starter": "def rank_rows(rows):\n    pass\n",
+    "kind": "function",
+    "mustFix": false
+  },
+  {
+    "id": "c02-boss-dispatch-heap",
+    "title": "Boss part 2: dispatch by priority",
+    "ticket": {
+      "from": "Ines, Dispatch",
+      "subject": "Dispatch order",
+      "body": "Each job is (priority, name). A lower priority number goes first. Jobs with the same priority go in the order they arrived. Return the job names in dispatch order."
+    },
+    "rules": [
+      "A lower priority number goes first.",
+      "Jobs with the same priority keep their arrival order.",
+      "Return the job names only."
+    ],
+    "entry": "dispatch_order",
+    "starter": "def dispatch_order(jobs):\n    pass\n",
+    "kind": "function",
+    "mustFix": false
+  },
+  {
+    "id": "c02-boss-flatten-tags",
+    "title": "Boss part 3: flatten the tags",
+    "ticket": {
+      "from": "Leo, Parcel Tags",
+      "subject": "Flat list of tags",
+      "body": "Tags arrive in nested lists of any depth. Return one flat list of the tags, in the order they appear. Empty lists add nothing."
+    },
+    "rules": [
+      "The tags keep their left-to-right order.",
+      "Lists nested at any depth are flattened.",
+      "An empty list adds nothing."
+    ],
+    "entry": "flatten_tags",
+    "starter": "def flatten_tags(items):\n    pass\n",
+    "kind": "function",
+    "mustFix": false
+  },
+  {
+    "id": "c02-boss-report-lines",
+    "title": "Boss part 4: the dock report",
+    "ticket": {
+      "from": "Farah, Board Report",
+      "subject": "Report lines",
+      "body": "Each row is a (dock, total kg) pair. Return one line per dock, sorted by dock name A to Z. Each line reads \"dock: total kg\", with the total to one decimal place."
+    },
+    "rules": [
+      "Each line reads \"dock: total\" with the total to one decimal place.",
+      "Lines are sorted by dock name, A to Z.",
+      "Return a list of strings."
+    ],
+    "entry": "report_lines",
+    "starter": "def report_lines(rows):\n    pass\n",
+    "kind": "function",
+    "mustFix": false
+  }
+]

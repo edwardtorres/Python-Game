@@ -1,0 +1,107 @@
+[
+  {
+    "solution": "solutions/G1/c02-guided-depth.py",
+    "id": "c02-guided-depth",
+    "status": "pass",
+    "passed": 6,
+    "total": 6
+  },
+  {
+    "solution": "solutions/G1/c02-guided-dock-totals.py",
+    "id": "c02-guided-dock-totals",
+    "status": "pass",
+    "passed": 5,
+    "total": 5
+  },
+  {
+    "solution": "solutions/G1/c02-guided-loading-order.py",
+    "id": "c02-guided-loading-order",
+    "status": "pass",
+    "passed": 5,
+    "total": 5
+  },
+  {
+    "solution": "solutions/G2/c02-ticket-first-seen.py",
+    "id": "c02-ticket-first-seen",
+    "status": "pass",
+    "passed": 5,
+    "total": 5
+  },
+  {
+    "solution": "solutions/G2/c02-ticket-recent-events.py",
+    "id": "c02-ticket-recent-events",
+    "status": "pass",
+    "passed": 6,
+    "total": 6
+  },
+  {
+    "solution": "solutions/G2/c02-ticket-three-heaviest.py",
+    "id": "c02-ticket-three-heaviest",
+    "status": "pass",
+    "passed": 6,
+    "total": 6
+  },
+  {
+    "solution": "solutions/G3/c02-fix-longest-first.py",
+    "id": "c02-fix-longest-first",
+    "status": "pass",
+    "passed": 5,
+    "total": 5
+  },
+  {
+    "solution": "solutions/G3/c02-fix-nested-total.py",
+    "id": "c02-fix-nested-total",
+    "status": "pass",
+    "passed": 6,
+    "total": 6
+  },
+  {
+    "solution": "solutions/G3/c02-structure-hinted-functions.py",
+    "id": "c02-structure-hinted-functions",
+    "status": "pass",
+    "passed": 4,
+    "total": 4
+  },
+  {
+    "solution": "solutions/G3/c02-structure-queue-popleft.py",
+    "id": "c02-structure-queue-popleft",
+    "status": "pass",
+    "passed": 3,
+    "total": 3
+  },
+  {
+    "solution": "solutions/G3/c02-structure-smallest-heapq.py",
+    "id": "c02-structure-smallest-heapq",
+    "status": "pass",
+    "passed": 3,
+    "total": 3
+  },
+  {
+    "solution": "solutions/G4/c02-boss-dispatch-heap.py",
+    "id": "c02-boss-dispatch-heap",
+    "status": "pass",
+    "passed": 6,
+    "total": 6
+  },
+  {
+    "solution": "solutions/G4/c02-boss-flatten-tags.py",
+    "id": "c02-boss-flatten-tags",
+    "status": "pass",
+    "passed": 6,
+    "total": 6
+  },
+  {
+    "solution": "solutions/G4/c02-boss-rank-rows.py",
+    "id": "c02-boss-rank-rows",
+    "status": "pass",
+    "passed": 6,
+    "total": 6
+  },
+  {
+    "solution": "solutions/G4-r2/c02-boss-report-lines.py",
+    "id": "c02-boss-report-lines",
+    "status": "pass",
+    "passed": 5,
+    "total": 5
+  }
+]

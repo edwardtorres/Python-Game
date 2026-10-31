@@ -1,0 +1,54 @@
+[
+  {
+    "id": "c02-guided-loading-order",
+    "title": "Guided: order parcels for loading",
+    "ticket": {
+      "from": "Ravi, Outbound",
+      "subject": "Loading order",
+      "body": "Each parcel is a (name, kg) pair. Return the names in loading order, with the heaviest parcel first. Parcels with the same weight go A to Z by name."
+    },
+    "rules": [
+      "Return the names only, as a list.",
+      "The heaviest parcel comes first.",
+      "Parcels with the same weight are ordered A to Z by name."
+    ],
+    "entry": "loading_order",
+    "starter": "def loading_order(parcels):\n    pass\n",
+    "kind": "function",
+    "mustFix": false
+  },
+  {
+    "id": "c02-guided-dock-totals",
+    "title": "Guided: weight per dock",
+    "ticket": {
+      "from": "Jun, Dock Planning",
+      "subject": "Weight per dock",
+      "body": "Each parcel is a (dock, kg) pair. Return a dict from each dock to the total kg of its parcels. An empty list gives an empty dict."
+    },
+    "rules": [
+      "Each dock maps to the total kg of its parcels.",
+      "An empty list gives an empty dict, not None."
+    ],
+    "entry": "dock_totals",
+    "starter": "def dock_totals(parcels):\n    pass\n",
+    "kind": "function",
+    "mustFix": false
+  },
+  {
+    "id": "c02-guided-depth",
+    "title": "Guided: how deep is a nested list?",
+    "ticket": {
+      "from": "Lena, Data Quality",
+      "subject": "Nesting depth",
+      "body": "A value that is not a list has depth 0. A list has one more than the deepest item inside it, so an empty list has depth 1."
+    },
+    "rules": [
+      "A value that is not a list has depth 0.",
+      "A list has one more than the deepest item inside it, so an empty list has depth 1."
+    ],
+    "entry": "depth",
+    "starter": "def depth(value):\n    pass\n",
+    "kind": "function",
+    "mustFix": false
+  }
+]

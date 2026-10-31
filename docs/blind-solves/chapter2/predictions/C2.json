@@ -1,0 +1,7 @@
+{
+  "c02-traceback-unhashable": "C",
+  "c02-traceback-sort-none": "A",
+  "c02-traceback-empty-deque": "B",
+  "c02-traceback-missing-argument": "A",
+  "c02-traceback-heap-empty": "A"
+}

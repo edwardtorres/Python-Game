@@ -1,0 +1,87 @@
+[
+  {
+    "id": "c02-fix-longest-first",
+    "title": "Fix: longest words first",
+    "ticket": {
+      "from": "Hana, Labels",
+      "subject": "Label order is backwards",
+      "body": "The label list should show the longest word first, and words of the same length go A to Z. The current code puts the shortest word first."
+    },
+    "rules": [
+      "The longest word comes first.",
+      "Words of the same length are ordered A to Z."
+    ],
+    "entry": "longest_first",
+    "starter": "def longest_first(words):\n    return sorted(words, key=len)\n",
+    "kind": "function",
+    "mustFix": true
+  },
+  {
+    "id": "c02-fix-nested-total",
+    "title": "Fix: add up nested lists",
+    "ticket": {
+      "from": "Noor, Finance",
+      "subject": "Totals miss nested lists",
+      "body": "The total should add every number, including numbers inside nested lists. An empty list adds up to 0. The current code keeps only the last nested total."
+    },
+    "rules": [
+      "Add up every number, however deeply it is nested.",
+      "An empty list adds up to 0."
+    ],
+    "entry": "nested_total",
+    "starter": "def nested_total(values):\n    total = 0\n    for value in values:\n        if isinstance(value, list):\n            total = nested_total(value)\n        else:\n            total += value\n    return total\n",
+    "kind": "function",
+    "mustFix": true
+  },
+  {
+    "id": "c02-structure-hinted-functions",
+    "title": "Structure: annotate two functions",
+    "ticket": {
+      "from": "Tomas, Reporting",
+      "subject": "Hints for the report tool",
+      "body": "The report tool reads the type hints. Add them to total_weight and label_for so the tool can read each parameter and each result."
+    },
+    "rules": [
+      "Define total_weight and label_for.",
+      "Annotate every parameter and the return value of each function."
+    ],
+    "entry": "total_weight",
+    "starter": "def total_weight(weights):\n    pass\n\n\ndef label_for(name, kg):\n    pass\n",
+    "kind": "structure",
+    "mustFix": false
+  },
+  {
+    "id": "c02-structure-queue-popleft",
+    "title": "Structure: serve the queue from the front",
+    "ticket": {
+      "from": "Bea, Gate 4",
+      "subject": "Serve the queue in order",
+      "body": "Serve every parcel from a deque, front first, and return the parcels in the order they were served."
+    },
+    "rules": [
+      "Define serve_all.",
+      "Take each item from the front with popleft(), and do not use pop(0)."
+    ],
+    "entry": "serve_all",
+    "starter": "def serve_all(queue):\n    pass\n",
+    "kind": "structure",
+    "mustFix": false
+  },
+  {
+    "id": "c02-structure-smallest-heapq",
+    "title": "Structure: three smallest with heapq",
+    "ticket": {
+      "from": "Kenji, Warehouse",
+      "subject": "Three lightest parcels",
+      "body": "Return the three smallest weights. Use heapq.nsmallest, imported with from heapq import nsmallest, and do not sort the whole list."
+    },
+    "rules": [
+      "Define smallest_three.",
+      "Use heapq.nsmallest, imported with from heapq import nsmallest, and do not call sorted()."
+    ],
+    "entry": "smallest_three",
+    "starter": "def smallest_three(values):\n    pass\n",
+    "kind": "structure",
+    "mustFix": false
+  }
+]

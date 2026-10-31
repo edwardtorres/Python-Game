@@ -1,0 +1,86 @@
+[
+  {
+    "id": "c02-traceback-unhashable",
+    "kind": "traceback",
+    "prompt": "The code below stops with an error. Choose the error it raises.",
+    "code": "seen = set()\nfor pallet in [[\"A\", 1], [\"B\", 2]]:\n    seen.add(pallet)\nprint(len(seen))\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "AttributeError: 'set' object has no attribute 'append'"
+      },
+      {
+        "label": "B",
+        "text": "KeyError: 'Dock 9'"
+      },
+      {
+        "label": "C",
+        "text": "TypeError: cannot use 'list' as a set element (unhashable type: 'list')"
+      }
+    ]
+  },
+  {
+    "id": "c02-traceback-sort-none",
+    "kind": "traceback",
+    "prompt": "The code below stops with an error. Choose the error it raises.",
+    "code": "parcels = [3, 1, 2]\nordered = parcels.sort()\nprint(ordered[0])\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "TypeError: 'NoneType' object is not subscriptable"
+      },
+      {
+        "label": "B",
+        "text": "(no error)"
+      }
+    ]
+  },
+  {
+    "id": "c02-traceback-empty-deque",
+    "kind": "traceback",
+    "prompt": "The code below stops with an error. Choose the error it raises.",
+    "code": "from collections import deque\n\nqueue = deque()\nqueue.append(\"crate\")\nqueue.popleft()\nprint(queue.popleft())\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "IndexError: pop from empty list"
+      },
+      {
+        "label": "B",
+        "text": "IndexError: pop from an empty deque"
+      }
+    ]
+  },
+  {
+    "id": "c02-traceback-missing-argument",
+    "kind": "traceback",
+    "prompt": "The code below stops with an error. Choose the error it raises.",
+    "code": "class Parcel:\n    def __init__(self, name, kg):\n        self.name = name\n        self.kg = kg\n\n\nparcel = Parcel(\"Crate\")\nprint(parcel.name)\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "TypeError: Parcel.__init__() missing 1 required positional argument: 'kg'"
+      },
+      {
+        "label": "B",
+        "text": "TypeError: Parcel.__init__() takes 3 positional arguments but 4 were given"
+      }
+    ]
+  },
+  {
+    "id": "c02-traceback-heap-empty",
+    "kind": "traceback",
+    "prompt": "The code below stops with an error. Choose the error it raises.",
+    "code": "import heapq\n\njobs = []\nheapq.heappush(jobs, 4)\nheapq.heappop(jobs)\nprint(heapq.heappop(jobs))\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "IndexError: index out of range"
+      },
+      {
+        "label": "B",
+        "text": "IndexError: list index out of range"
+      }
+    ]
+  }
+]

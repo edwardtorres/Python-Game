@@ -1,0 +1,56 @@
+[
+  {
+    "id": "c02-ticket-recent-events",
+    "title": "Ticket: keep the last events",
+    "ticket": {
+      "from": "Omar, Gate Control",
+      "subject": "Last events on the board",
+      "body": "Show the last n events, oldest first. If there are fewer than n events, show them all. A count of 0 shows nothing."
+    },
+    "rules": [
+      "Return the last n events, oldest first.",
+      "If there are fewer than n events, return all of them.",
+      "When n is 0, return an empty list."
+    ],
+    "entry": "last_events",
+    "starter": "def last_events(events, n):\n    pass\n",
+    "kind": "function",
+    "mustFix": false
+  },
+  {
+    "id": "c02-ticket-three-heaviest",
+    "title": "Ticket: the heaviest weights",
+    "ticket": {
+      "from": "Priya, Loading",
+      "subject": "Heaviest parcels first",
+      "body": "Return the n heaviest weights, heaviest first. A weight that appears twice counts twice."
+    },
+    "rules": [
+      "Return the n heaviest weights.",
+      "The heaviest comes first.",
+      "A weight listed twice counts twice."
+    ],
+    "entry": "heaviest",
+    "starter": "def heaviest(weights, n):\n    pass\n",
+    "kind": "function",
+    "mustFix": false
+  },
+  {
+    "id": "c02-ticket-first-seen",
+    "title": "Ticket: each dock once, in order",
+    "ticket": {
+      "from": "Sam, Yard Office",
+      "subject": "Docks in order of arrival",
+      "body": "Return each dock name once, in the order it first appears in the log. An empty log gives an empty list."
+    },
+    "rules": [
+      "Each dock name appears once.",
+      "The order is the order each name first appears.",
+      "An empty log gives an empty list, not None."
+    ],
+    "entry": "first_seen",
+    "starter": "def first_seen(log):\n    pass\n",
+    "kind": "function",
+    "mustFix": false
+  }
+]

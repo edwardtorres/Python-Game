@@ -96,7 +96,7 @@ const BOSS_PARTS: GradedItem[] = [
     title: 'Boss part 4: the dock report',
     lessonId: 'c02-informatics/type-hints',
     competencies: ['type-hints'],
-    ticket: { from: 'Farah, Board Report', subject: 'Report lines', body: 'Each row is a (dock, total kg) pair. Return one line per dock, sorted by dock name A to Z. Each line reads "dock: total kg", with the total to one decimal place.' },
+    ticket: { from: 'Farah, Board Report', subject: 'Report lines', body: 'Each row is a (dock, total kg) pair, and each dock appears in one row. Return one line per row, sorted by dock name A to Z. Each line reads "dock: total", with the total to one decimal place.' },
     rules: ['Each line reads "dock: total" with the total to one decimal place.', 'Lines are sorted by dock name, A to Z.', 'Return a list of strings.'],
     entry: 'report_lines',
     starter: 'def report_lines(rows):\n    pass\n',
