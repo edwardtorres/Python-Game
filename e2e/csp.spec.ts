@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { clean, openTicket } from './helpers';
+import { clean, expectFeedback, logPageErrors, openTicket } from './helpers';
 
 // The production build has no test bridge, so the test types the code like a learner.
 // insertText keeps the spaces as spaces; fill() on a contenteditable can insert non-breaking ones.
@@ -13,10 +13,14 @@ async function typeCode(page: import('@playwright/test').Page, id: string, code:
 // These run against the production build (the preview server), with the production CSP.
 test.describe('production build', () => {
   test('loads Python under the production Content-Security-Policy and grades a function', async ({ page }) => {
+    logPageErrors(page);
     await openTicket(page, clean.title);
+    // Wait for the engine to report ready, so Submit grades with Python already running.
+    await expectFeedback(page, 'Python ready');
     await typeCode(page, clean.id, clean.reference);
     await page.getByRole('button', { name: 'Submit' }).click();
-    await expect(page.getByText('Submitted. Every check passed.')).toBeVisible({ timeout: 120_000 });
+    // On a failure, expectFeedback prints the page text and the engine stats for the CI log.
+    await expectFeedback(page, 'Submitted. Every check passed.');
   });
 
   test('a policy without wasm-unsafe-eval fails at once with a clear message', async ({ page }) => {
