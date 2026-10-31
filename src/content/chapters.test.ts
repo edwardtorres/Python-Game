@@ -60,6 +60,14 @@ function startsBroken(spec: ChallengeSpec): boolean {
   return spec.kind === 'suite' || spec.id.includes('-fix-');
 }
 
+// The rule indexes each case names. The grader names a structure check's case check-<index>.
+function namedRules(spec: ChallengeSpec): Map<string, number[]> {
+  const named = new Map<string, number[]>();
+  for (const item of spec.cases) named.set(item.id, ('rules' in item ? item.rules : undefined) ?? []);
+  (spec.structureChecks ?? []).forEach((check, index) => named.set(`check-${index}`, check.rules ?? []));
+  return named;
+}
+
 describe.each(CHAPTERS.map((chapter) => [chapter.id, chapter] as const))('chapter %s', (_id, chapter) => {
   const outputs = () => outputsOf(chapter);
   const graded = [...chapter.graded, ...chapter.boss];
@@ -131,6 +139,23 @@ describe.each(CHAPTERS.map((chapter) => [chapter.id, chapter] as const))('chapte
       spec.rules.forEach((_, index) => expect(covered.has(index), `no wrong variant breaks rule ${index + 1}`).toBe(true));
       expect(Object.keys(spec.variantRule).sort()).toEqual(spec.variants.map((variant) => variant.id).sort());
     });
+
+    it.each(graded.map((spec) => [spec.id, spec] as const))('%s: every case names its rules, and a wrong variant fails only cases that name its rule', (_id, spec) => {
+      const named = namedRules(spec);
+      for (const [caseId, rules] of named) {
+        expect(rules.length, `${caseId} names a rule`).toBeGreaterThan(0);
+        for (const rule of rules) expect(rule, `${caseId} names a rule that exists`).toBeLessThan(spec.rules.length);
+      }
+      spec.rules.forEach((_, index) => {
+        expect([...named.values()].some((rules) => rules.includes(index)), `rule ${index + 1} is checked by a case`).toBe(true);
+      });
+      for (const variant of spec.variants) {
+        const rule = spec.variantRule[variant.id];
+        for (const caseResult of grade(spec, variant.code, 'submit').cases.filter((c) => !c.ok)) {
+          expect(named.get(caseResult.id), `${variant.id} fails ${caseResult.id}, which does not name rule ${rule}`).toContain(rule);
+        }
+      }
+    }, 240_000);
 
     it.each(graded.map((spec) => [spec.id, spec] as const))('%s: each wrong variant is caught by at least two cases, and one fails visible data', (_id, spec) => {
       expect(spec.variants.length).toBeGreaterThanOrEqual(2);

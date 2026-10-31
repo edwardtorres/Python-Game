@@ -261,11 +261,11 @@
   },
   {
     "name": "c01-ticket-parse-weight:variant:no-fallback",
-    "code": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    return float(text.strip())\n"
+    "code": "import math\n\ndef parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    value = float(text.strip())\n    return value if math.isfinite(value) else None\n"
   },
   {
     "name": "c01-ticket-parse-weight:variant:catches-everything",
-    "code": "def parse_weight(text):\n    try:\n        return float(text)\n    except Exception:\n        return None\n"
+    "code": "import math\n\ndef parse_weight(text):\n    try:\n        value = float(text)\n    except Exception:\n        return None\n    return value if math.isfinite(value) else None\n"
   },
   {
     "name": "c01-ticket-parse-weight:variant:returns-non-finite",

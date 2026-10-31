@@ -39,6 +39,7 @@ export const MISTAKES = {
   UNCHECKED_ARGUMENT: mistake('UNCHECKED_ARGUMENT', 'A size or count must be checked before use', 'Without a check, a size of zero or less quietly gives a wrong answer. Raise ValueError for a value the function cannot use, as itertools.batched does.'),
   NON_FINITE_FLOAT: mistake('NON_FINITE_FLOAT', 'float() reads nan and inf', 'float("nan") and float("inf") are valid floats. They are not weights, so the ticket says to return None for them.'),
   PARTIAL_STRIP: mistake('PARTIAL_STRIP', 'strip(" ") removes spaces only', 'strip() with no argument removes every whitespace character. strip(" ") leaves tabs and line breaks in place.'),
+  UNSTRIPPED_TEXT: mistake('UNSTRIPPED_TEXT', 'Spaces around a name stay in the label', 'The rule says to remove whitespace from both ends of the name. Without strip(), a padded name keeps its spaces, so the label has extra spaces.'),
   LINE_ENDINGS: mistake('LINE_ENDINGS', 'A text file keeps the characters you write', 'Lines are separated by line breaks you write yourself. Without them, lines run together. With them, a read keeps the breaks unless you strip them.'),
   IMPORT_NOT_FOUND: mistake('IMPORT_NOT_FOUND', 'A module must exist before it can be imported', 'import looks for the module by its exact name. A name that is misspelled, or a module that is not installed, raises ModuleNotFoundError.'),
   SINGLE_ELEMENT_TUPLE: mistake('SINGLE_ELEMENT_TUPLE', 'A one-item tuple needs a comma', '(x) is just x in parentheses. (x,) is a tuple with one item.'),

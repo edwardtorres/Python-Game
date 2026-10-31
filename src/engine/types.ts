@@ -23,6 +23,8 @@ export interface FunctionCase {
   visibility: Visibility;
   args?: unknown[];
   kwargs?: Record<string, unknown>;
+  // Indexes into the task's rules that this case checks. A wrong variant may fail only cases that name its rule.
+  rules?: number[];
 }
 
 export interface DatasetCase {
@@ -70,6 +72,8 @@ export interface StructureCheck {
   within?: string;
   // Method checks: a literal first argument, such as 0 for pop(0). Omit it to match any call.
   arg?: string | number | boolean | null;
+  // Indexes into the task's rules that this check covers.
+  rules?: number[];
 }
 
 export interface StructurePayload {

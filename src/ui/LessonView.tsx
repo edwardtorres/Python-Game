@@ -108,6 +108,11 @@ function SectionBlock({ section, engine, engineStatus }: { section: Section; eng
           <Citations ids={section.quotes} />
         </div>
       )}
+      {!section.docClaim && (
+        <p className="rounded-md bg-slate-100 px-3 py-2 text-sm text-slate-800">
+          <span className="font-semibold">Demonstrated by the interpreter.</span> The example below runs the claims in this section.
+        </p>
+      )}
       {section.examples.map((example, index) => (
         <div key={example.id} className="space-y-2">
           <h3 className="text-sm font-semibold text-slate-700">Example {index + 1}</h3>
