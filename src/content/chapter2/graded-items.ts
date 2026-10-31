@@ -1,0 +1,322 @@
+// Chapter 2 graded items: 3 guided functions, 3 tickets, 2 fix-the-bug tasks, and 3 structure
+// tasks. Write tasks start from a bare pass. Only fix tasks start from broken code. Every case names
+// the rules it checks, and a wrong variant fails only cases that name its rule.
+import type { ChallengeSpec } from '../../challenges/types';
+import { type GradedItem, fn, functionSpec } from '../graded';
+
+const GUIDED: GradedItem[] = [
+  {
+    id: 'c02-guided-loading-order',
+    title: 'Guided: order parcels for loading',
+    lessonId: 'c02-informatics/sorting',
+    competencies: ['sort-key'],
+    ticket: { from: 'Ravi, Outbound', subject: 'Loading order', body: 'Each parcel is a (name, kg) pair. Return the names in loading order, with the heaviest parcel first. Parcels with the same weight go A to Z by name.' },
+    rules: ['Return the names only, as a list.', 'The heaviest parcel comes first.', 'Parcels with the same weight are ordered A to Z by name.'],
+    entry: 'loading_order',
+    starter: 'def loading_order(parcels):\n    pass\n',
+    reference: 'def loading_order(parcels):\n    ordered = sorted(parcels, key=lambda parcel: (-parcel[1], parcel[0]))\n    return [name for name, kg in ordered]\n',
+    cases: [
+      fn('v-mixed', 'Three parcels, two of them 12 kg', 'visible', [[['Drum', 12], ['Bag', 3], ['Crate', 12]]], [0, 1, 2]),
+      fn('v-one', 'One parcel', 'visible', [[['Bag', 3]]], [0]),
+      fn('h-ties', 'Two parcels tie, and a heavier one', 'hidden', [[['Zed', 5], ['Amy', 5], ['Max', 9]]], [0, 1, 2]),
+      fn('h-light-only', 'Two light parcels', 'hidden', [[['Pen', 1], ['Box', 2]]], [0, 1]),
+      fn('h-empty', 'No parcels', 'hidden', [[]], [0]),
+    ],
+    variants: [
+      ['lightest-first', 'def loading_order(parcels):\n    ordered = sorted(parcels, key=lambda parcel: (parcel[1], parcel[0]))\n    return [name for name, kg in ordered]\n', 'SORT_DIRECTION', 1],
+      ['ties-unsorted', 'def loading_order(parcels):\n    ordered = sorted(parcels, key=lambda parcel: -parcel[1])\n    return [name for name, kg in ordered]\n', 'SORT_TIES_IGNORED', 2],
+      ['pairs-returned', 'def loading_order(parcels):\n    return sorted(parcels, key=lambda parcel: (-parcel[1], parcel[0]))\n', 'WRONG_RETURN_SHAPE', 0],
+    ],
+    hints: [
+      'The rule asks for names, not pairs. Read the first rule before you sort.',
+      'sorted takes a key. Use a key that puts the heaviest first, then the name for ties.',
+      'ordered = sorted(parcels, key=lambda parcel: (-parcel[1], parcel[0]))',
+    ],
+  },
+  {
+    id: 'c02-guided-dock-totals',
+    title: 'Guided: weight per dock',
+    lessonId: 'c02-informatics/list-dict-set',
+    competencies: ['list-dict-set'],
+    ticket: { from: 'Jun, Dock Planning', subject: 'Weight per dock', body: 'Each parcel is a (dock, kg) pair. Return a dict from each dock to the total kg of its parcels. An empty list gives an empty dict.' },
+    rules: ['Each dock maps to the total kg of its parcels.', 'An empty list gives an empty dict, not None.'],
+    entry: 'dock_totals',
+    starter: 'def dock_totals(parcels):\n    pass\n',
+    reference: 'def dock_totals(parcels):\n    totals = {}\n    for dock, kg in parcels:\n        totals[dock] = totals.get(dock, 0) + kg\n    return totals\n',
+    cases: [
+      fn('v-two-docks', 'Two docks, one with two parcels', 'visible', [[['North', 12], ['South', 3], ['North', 4]]], [0]),
+      fn('v-empty', 'No parcels', 'visible', [[]], [1]),
+      fn('h-one-each', 'One parcel for a dock', 'hidden', [[['Yard', 5]]], [0]),
+      fn('h-repeat', 'Three parcels for one dock', 'hidden', [[['Yard', 5], ['Yard', 5], ['Yard', 5]]], [0]),
+      fn('h-empty-again', 'No parcels, another call', 'hidden', [[]], [1]),
+    ],
+    variants: [
+      ['overwritten', 'def dock_totals(parcels):\n    totals = {}\n    for dock, kg in parcels:\n        totals[dock] = kg\n    return totals\n', 'TOTAL_OVERWRITTEN', 0],
+      ['none-when-empty', 'def dock_totals(parcels):\n    if not parcels:\n        return None\n    totals = {}\n    for dock, kg in parcels:\n        totals[dock] = totals.get(dock, 0) + kg\n    return totals\n', 'EMPTY_NOT_NONE', 1],
+    ],
+    hints: [
+      'Each parcel adds to the total for its dock. Ask what the total is before the first parcel.',
+      'get(dock, 0) gives 0 for a new dock, so the first parcel starts its total.',
+      'totals[dock] = totals.get(dock, 0) + kg',
+    ],
+  },
+  {
+    id: 'c02-guided-depth',
+    title: 'Guided: how deep is a nested list?',
+    lessonId: 'c02-informatics/recursion',
+    competencies: ['recursion'],
+    ticket: { from: 'Lena, Data Quality', subject: 'Nesting depth', body: 'A value that is not a list has depth 0. A list has one more than the deepest item inside it, so an empty list has depth 1.' },
+    rules: ['A value that is not a list has depth 0.', 'A list has one more than the deepest item inside it, so an empty list has depth 1.'],
+    entry: 'depth',
+    starter: 'def depth(value):\n    pass\n',
+    reference: 'def depth(value):\n    if not isinstance(value, list):\n        return 0\n    return 1 + max((depth(item) for item in value), default=0)\n',
+    cases: [
+      fn('v-number', 'A plain number', 'visible', [5], [0]),
+      fn('v-empty', 'An empty list', 'visible', [[]], [1]),
+      fn('v-nested', 'Lists inside lists', 'visible', [[1, [2, [3]]]], [0, 1]),
+      fn('h-flat', 'A flat list of numbers', 'hidden', [[1, 2, 3]], [0, 1]),
+      fn('h-string', 'A string is not a list', 'hidden', ['abc'], [0]),
+      fn('h-deep', 'Empty lists nested three deep', 'hidden', [[[[]]]], [0, 1]),
+    ],
+    variants: [
+      ['non-list-one', 'def depth(value):\n    if not isinstance(value, list):\n        return 1\n    return 1 + max((depth(item) for item in value), default=0)\n', 'NON_LIST_DEPTH', 0],
+      ['no-plus-one', 'def depth(value):\n    if not isinstance(value, list):\n        return 0\n    return max((depth(item) for item in value), default=0)\n', 'NO_PLUS_ONE', 1],
+    ],
+    hints: [
+      'A list is one level deeper than its deepest item, so the function calls itself on each item.',
+      'Check first whether the value is a list. A value that is not a list has depth 0.',
+      'return 1 + max((depth(item) for item in value), default=0)',
+    ],
+  },
+];
+
+const TICKETS: GradedItem[] = [
+  {
+    id: 'c02-ticket-recent-events',
+    title: 'Ticket: keep the last events',
+    lessonId: 'c02-informatics/deque-heapq',
+    competencies: ['deque-heapq'],
+    ticket: { from: 'Omar, Gate Control', subject: 'Last events on the board', body: 'Show the last n events, oldest first. If there are fewer than n events, show them all. A count of 0 shows nothing.' },
+    rules: ['Return the last n events, oldest first.', 'If there are fewer than n events, return all of them.', 'When n is 0, return an empty list.'],
+    entry: 'last_events',
+    starter: 'def last_events(events, n):\n    pass\n',
+    reference: 'from collections import deque\n\n\ndef last_events(events, n):\n    recent = deque(maxlen=n)\n    for event in events:\n        recent.append(event)\n    return list(recent)\n',
+    cases: [
+      fn('v-last-two', 'The last two of four', 'visible', [['a', 'b', 'c', 'd'], 2], [0]),
+      fn('v-short', 'Fewer events than n', 'visible', [['a', 'b'], 3], [1]),
+      fn('v-zero', 'A count of 0', 'visible', [['a', 'b'], 0], [2]),
+      fn('h-zero', 'A count of 0 with three events', 'hidden', [['m', 'n', 'o'], 0], [2]),
+      fn('h-short-two', 'Two events and n of 3', 'hidden', [['x', 'y'], 3], [1]),
+      fn('h-long', 'The last three of five', 'hidden', [['p', 'q', 'r', 's', 't'], 3], [0]),
+    ],
+    variants: [
+      ['first-n', 'def last_events(events, n):\n    return events[:n]\n', 'WRONG_END', 0],
+      ['short-list-slice', 'def last_events(events, n):\n    return events[len(events) - n:]\n', 'SLICE_SHORT_LIST', 1],
+      ['zero-all', 'def last_events(events, n):\n    if n == 0:\n        return events\n    return events[-n:]\n', 'ZERO_COUNT', 2],
+    ],
+    hints: [
+      'The rule asks for the end of the list, not the start. Which items are last?',
+      'A deque with a maximum length keeps only the newest items as you add them.',
+      'recent = deque(maxlen=n), then add each event and return list(recent).',
+    ],
+  },
+  {
+    id: 'c02-ticket-three-heaviest',
+    title: 'Ticket: the heaviest weights',
+    lessonId: 'c02-informatics/deque-heapq',
+    competencies: ['deque-heapq'],
+    ticket: { from: 'Priya, Loading', subject: 'Heaviest parcels first', body: 'Return the n heaviest weights, heaviest first. A weight that appears twice counts twice.' },
+    rules: ['Return the n heaviest weights.', 'The heaviest comes first.', 'A weight listed twice counts twice.'],
+    entry: 'heaviest',
+    starter: 'def heaviest(weights, n):\n    pass\n',
+    reference: 'import heapq\n\n\ndef heaviest(weights, n):\n    return heapq.nlargest(n, weights)\n',
+    cases: [
+      fn('v-three', 'The three heaviest of four', 'visible', [[4, 9, 2, 7], 3], [0, 1]),
+      fn('v-repeat', 'A weight that appears twice', 'visible', [[5, 5, 1], 2], [0, 2]),
+      fn('h-short', 'One weight and n of 3', 'hidden', [[8], 3], [0]),
+      fn('h-zero', 'A count of 0', 'hidden', [[3, 6], 0], [0]),
+      fn('h-decimal', 'Decimal weights', 'hidden', [[1.5, 2.25, 0.5], 2], [0, 1]),
+      fn('h-unsorted-long', 'Repeats in a longer list', 'hidden', [[2, 8, 3, 8, 1], 4], [0, 1, 2]),
+    ],
+    variants: [
+      ['one-short', 'import heapq\n\n\ndef heaviest(weights, n):\n    return heapq.nlargest(n - 1, weights)\n', 'OFF_BY_ONE_RANGE', 0],
+      ['ascending', 'import heapq\n\n\ndef heaviest(weights, n):\n    return sorted(heapq.nlargest(n, weights))\n', 'SORT_DIRECTION', 1],
+      ['distinct-only', 'import heapq\n\n\ndef heaviest(weights, n):\n    return heapq.nlargest(n, set(weights))\n', 'DUPLICATES_DROPPED', 2],
+    ],
+    hints: [
+      'heapq.nlargest gives the largest items. Check how many it returns.',
+      'The rule says heaviest first, and a repeated weight is a second item.',
+      'return heapq.nlargest(n, weights)',
+    ],
+  },
+  {
+    id: 'c02-ticket-first-seen',
+    title: 'Ticket: each dock once, in order',
+    lessonId: 'c02-informatics/list-dict-set',
+    competencies: ['list-dict-set'],
+    ticket: { from: 'Sam, Yard Office', subject: 'Docks in order of arrival', body: 'Return each dock name once, in the order it first appears in the log. An empty log gives an empty list.' },
+    rules: ['Each dock name appears once.', 'The order is the order each name first appears.', 'An empty log gives an empty list, not None.'],
+    entry: 'first_seen',
+    starter: 'def first_seen(log):\n    pass\n',
+    reference: 'def first_seen(log):\n    seen = set()\n    docks = []\n    for dock in log:\n        if dock not in seen:\n            seen.add(dock)\n            docks.append(dock)\n    return docks\n',
+    cases: [
+      fn('v-repeats', 'Dock 2 comes back', 'visible', [['Dock 2', 'Dock 1', 'Dock 2']], [0, 1]),
+      fn('v-empty', 'An empty log', 'visible', [[]], [2]),
+      fn('h-order', 'A name that repeats later', 'hidden', [['b', 'a', 'c', 'a', 'b']], [0, 1]),
+      fn('h-single', 'One name', 'hidden', [['Yard']], [0]),
+      fn('h-empty-again', 'An empty log, another call', 'hidden', [[]], [2]),
+    ],
+    variants: [
+      ['keeps-repeats', 'def first_seen(log):\n    return list(log)\n', 'DUPLICATES_KEPT', 0],
+      ['sorted-unique', 'def first_seen(log):\n    return sorted(set(log))\n', 'SET_ORDER_ASSUMPTION', 1],
+      ['none-when-empty', 'def first_seen(log):\n    if not log:\n        return None\n    seen = set()\n    docks = []\n    for dock in log:\n        if dock not in seen:\n            seen.add(dock)\n            docks.append(dock)\n    return docks\n', 'EMPTY_NOT_NONE', 2],
+    ],
+    hints: [
+      'Keep a set of the names you have already added, and skip any name in it.',
+      'The order is the order of first appearance, so append a name the first time you see it.',
+      'if dock not in seen: seen.add(dock) and docks.append(dock)',
+    ],
+  },
+];
+
+const FIXES: GradedItem[] = [
+  {
+    id: 'c02-fix-longest-first',
+    title: 'Fix: longest words first',
+    lessonId: 'c02-informatics/sorting',
+    competencies: ['sort-key'],
+    ticket: { from: 'Hana, Labels', subject: 'Label order is backwards', body: 'The label list should show the longest word first, and words of the same length go A to Z. The current code puts the shortest word first.' },
+    rules: ['The longest word comes first.', 'Words of the same length are ordered A to Z.'],
+    entry: 'longest_first',
+    starter: 'def longest_first(words):\n    return sorted(words, key=len)\n',
+    reference: 'def longest_first(words):\n    return sorted(words, key=lambda word: (-len(word), word))\n',
+    cases: [
+      fn('v-mixed', 'Four words, two of them the same length', 'visible', [['pear', 'fig', 'apple', 'kiwi']], [0, 1]),
+      fn('v-empty', 'No words', 'visible', [[]], [0]),
+      fn('h-same-length', 'Three words of length two', 'hidden', [['bb', 'aa', 'cc']], [1]),
+      fn('h-mixed', 'Words of several lengths', 'hidden', [['hi', 'hello', 'hey', 'howdy']], [0, 1]),
+      fn('h-single', 'One word', 'hidden', [['zebra']], [0]),
+    ],
+    variants: [
+      ['shortest-first', 'def longest_first(words):\n    return sorted(words, key=lambda word: (len(word), word))\n', 'SORT_DIRECTION', 0],
+      ['ties-unsorted', 'def longest_first(words):\n    return sorted(words, key=lambda word: -len(word))\n', 'SORT_TIES_IGNORED', 1],
+    ],
+    hints: [
+      'The current key is len, which sorts the shortest words first. Read the first rule.',
+      'Use a key with a negated length, so longer words come first. The name breaks ties.',
+      'return sorted(words, key=lambda word: (-len(word), word))',
+    ],
+  },
+  {
+    id: 'c02-fix-nested-total',
+    title: 'Fix: add up nested lists',
+    lessonId: 'c02-informatics/recursion',
+    competencies: ['recursion'],
+    ticket: { from: 'Noor, Finance', subject: 'Totals miss nested lists', body: 'The total should add every number, including numbers inside nested lists. An empty list adds up to 0. The current code keeps only the last nested total.' },
+    rules: ['Add up every number, however deeply it is nested.', 'An empty list adds up to 0.'],
+    entry: 'nested_total',
+    starter: 'def nested_total(values):\n    total = 0\n    for value in values:\n        if isinstance(value, list):\n            total = nested_total(value)\n        else:\n            total += value\n    return total\n',
+    reference: 'def nested_total(values):\n    total = 0\n    for value in values:\n        if isinstance(value, list):\n            total += nested_total(value)\n        else:\n            total += value\n    return total\n',
+    cases: [
+      fn('v-flat', 'Three numbers', 'visible', [[1, 2, 3]], [0]),
+      fn('v-nested', 'Numbers inside nested lists', 'visible', [[1, [2, [3, 4]], 5]], [0]),
+      fn('v-empty', 'An empty list', 'visible', [[]], [1]),
+      fn('h-nested-empty', 'An empty list inside a list', 'hidden', [[[], 4]], [1]),
+      fn('h-deep', 'A number three levels deep', 'hidden', [[[[10]], 1]], [0, 1]),
+      fn('h-empty-deep', 'Empty lists nested', 'hidden', [[[]]], [1]),
+    ],
+    variants: [
+      ['top-level-only', 'def nested_total(values):\n    return sum(value for value in values if not isinstance(value, list))\n', 'NESTED_IGNORED', 0],
+      ['returns-none-empty', 'def nested_total(values):\n    if not values:\n        return None\n    total = 0\n    for value in values:\n        if isinstance(value, list):\n            total += nested_total(value)\n        else:\n            total += value\n    return total\n', 'EMPTY_NOT_NONE', 1],
+    ],
+    hints: [
+      'The loop overwrites the total when it meets a nested list. Read the assignment in that branch.',
+      'A nested list should add its own total to the running total, the same as a number does.',
+      'total += nested_total(value)',
+    ],
+  },
+];
+
+const STRUCTURE: GradedItem[] = [
+  {
+    id: 'c02-structure-hinted-functions',
+    title: 'Structure: annotate two functions',
+    lessonId: 'c02-informatics/type-hints',
+    competencies: ['type-hints'],
+    ticket: { from: 'Tomas, Reporting', subject: 'Hints for the report tool', body: 'The report tool reads the type hints. Add them to total_weight and label_for so the tool can read each parameter and each result.' },
+    rules: ['Define total_weight and label_for.', 'Annotate every parameter and the return value of each function.'],
+    entry: 'total_weight',
+    starter: 'def total_weight(weights):\n    pass\n\n\ndef label_for(name, kg):\n    pass\n',
+    reference: 'def total_weight(weights: list[float]) -> float:\n    return sum(weights)\n\n\ndef label_for(name: str, kg: float) -> str:\n    return f"{name} {kg}"\n',
+    cases: [],
+    variants: [
+      ['no-hints', 'def total_weight(weights):\n    return sum(weights)\n\n\ndef label_for(name, kg):\n    return f"{name} {kg}"\n', 'MISSING_HINT', 1],
+      ['wrong-name', 'def total(weights: list[float]) -> float:\n    return sum(weights)\n\n\ndef label_for(name: str, kg: float) -> str:\n    return f"{name} {kg}"\n', 'WRONG_NAME', 0],
+    ],
+    structure: [
+      { type: 'defines', label: 'define total_weight', name: 'total_weight', rules: [0] },
+      { type: 'defines', label: 'define label_for', name: 'label_for', rules: [0] },
+      { type: 'annotated_in', label: 'annotate total_weight', within: 'total_weight', rules: [0, 1] },
+      { type: 'annotated_in', label: 'annotate label_for', within: 'label_for', rules: [0, 1] },
+    ],
+    hints: [
+      'Each function needs a hint on every parameter and on its return value.',
+      'Write the hint after the parameter name, and the return type after the arrow.',
+      'def total_weight(weights: list[float]) -> float:',
+    ],
+  },
+  {
+    id: 'c02-structure-queue-popleft',
+    title: 'Structure: serve the queue from the front',
+    lessonId: 'c02-informatics/deque-heapq',
+    competencies: ['deque-heapq'],
+    ticket: { from: 'Bea, Gate 4', subject: 'Serve the queue in order', body: 'Serve every parcel from a deque, front first, and return the parcels in the order they were served.' },
+    rules: ['Define serve_all.', 'Take each item from the front with popleft(), and do not use pop(0).'],
+    entry: 'serve_all',
+    starter: 'def serve_all(queue):\n    pass\n',
+    reference: 'from collections import deque\n\n\ndef serve_all(queue):\n    served = []\n    while queue:\n        served.append(queue.popleft())\n    return served\n',
+    cases: [],
+    variants: [
+      ['pop-zero', 'def serve_all(queue):\n    served = []\n    while queue:\n        served.append(queue.pop(0))\n    return served\n', 'LIST_FRONT_POP', 1],
+      ['wrong-name', 'from collections import deque\n\n\ndef serve(queue):\n    served = []\n    while queue:\n        served.append(queue.popleft())\n    return served\n', 'WRONG_NAME', 0],
+    ],
+    structure: [
+      { type: 'defines', label: 'define serve_all', name: 'serve_all', rules: [0] },
+      { type: 'calls_method', label: 'take items with popleft in serve_all', name: 'popleft', within: 'serve_all', rules: [0, 1] },
+      { type: 'forbids_method', label: 'do not call pop(0) in serve_all', name: 'pop', arg: 0, within: 'serve_all', rules: [0, 1] },
+    ],
+    hints: [
+      'The deque method for the front is popleft. Which one does the rule name?',
+      'Call queue.popleft() inside the function, and do not call pop(0) on it.',
+      'while queue: served.append(queue.popleft())',
+    ],
+  },
+  {
+    id: 'c02-structure-smallest-heapq',
+    title: 'Structure: three smallest with heapq',
+    lessonId: 'c02-informatics/deque-heapq',
+    competencies: ['deque-heapq'],
+    ticket: { from: 'Kenji, Warehouse', subject: 'Three lightest parcels', body: 'Return the three smallest weights. Use heapq.nsmallest, imported with from heapq import nsmallest, and do not sort the whole list.' },
+    rules: ['Define smallest_three.', 'Use heapq.nsmallest, imported with from heapq import nsmallest, and do not call sorted().'],
+    entry: 'smallest_three',
+    starter: 'def smallest_three(values):\n    pass\n',
+    reference: 'from heapq import nsmallest\n\n\ndef smallest_three(values):\n    return nsmallest(3, values)\n',
+    cases: [],
+    variants: [
+      ['uses-sorted', 'def smallest_three(values):\n    return sorted(values)[:3]\n', 'SORT_INSTEAD_OF_HEAP', 1],
+      ['wrong-name', 'from heapq import nsmallest\n\n\ndef smallest(values):\n    return nsmallest(3, values)\n', 'WRONG_NAME', 0],
+    ],
+    structure: [
+      { type: 'defines', label: 'define smallest_three', name: 'smallest_three', rules: [0] },
+      { type: 'calls_symbol', label: 'call heapq.nsmallest in smallest_three', name: 'heapq.nsmallest', within: 'smallest_three', rules: [0, 1] },
+      { type: 'forbids_calls', label: 'do not call sorted in smallest_three', name: 'sorted', within: 'smallest_three', rules: [0, 1] },
+    ],
+    hints: [
+      'The rule names a module function. Look at how the module is imported.',
+      'from heapq import nsmallest lets you call nsmallest by its own name, and the check still counts it.',
+      'return nsmallest(3, values)',
+    ],
+  },
+];
+
+export const GRADED_SPECS: ChallengeSpec[] = [...GUIDED, ...TICKETS, ...FIXES, ...STRUCTURE].map((item) => functionSpec('c02-informatics', item));

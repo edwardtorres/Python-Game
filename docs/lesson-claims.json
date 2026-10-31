@@ -280,5 +280,215 @@
       }
     ],
     "jsNotes": []
+  },
+  {
+    "lesson": "c02-informatics/classes",
+    "sections": [
+      {
+        "id": "classes-instances",
+        "docClaim": true,
+        "quotes": [
+          "py-class-variables"
+        ]
+      },
+      {
+        "id": "classes-shared",
+        "docClaim": true,
+        "quotes": [
+          "py-class-variables"
+        ]
+      }
+    ],
+    "jsNotes": []
+  },
+  {
+    "lesson": "c02-informatics/dataclasses",
+    "sections": [
+      {
+        "id": "dataclass-fields",
+        "docClaim": true,
+        "quotes": [
+          "py-dataclass-purpose"
+        ]
+      },
+      {
+        "id": "dataclass-defaults",
+        "docClaim": true,
+        "quotes": [
+          "py-dataclass-mutable"
+        ]
+      }
+    ],
+    "jsNotes": []
+  },
+  {
+    "lesson": "c02-informatics/inheritance",
+    "sections": [
+      {
+        "id": "inherit-override",
+        "docClaim": true,
+        "quotes": [
+          "py-inheritance"
+        ]
+      },
+      {
+        "id": "inherit-super",
+        "docClaim": true,
+        "quotes": [
+          "py-super"
+        ]
+      }
+    ],
+    "jsNotes": []
+  },
+  {
+    "lesson": "c02-informatics/dunder-methods",
+    "sections": [
+      {
+        "id": "dunder-len-str",
+        "docClaim": true,
+        "quotes": [
+          "py-datamodel-len",
+          "py-datamodel-str"
+        ]
+      },
+      {
+        "id": "dunder-eq-add",
+        "docClaim": true,
+        "quotes": [
+          "py-datamodel-eq"
+        ]
+      }
+    ],
+    "jsNotes": []
+  },
+  {
+    "lesson": "c02-informatics/big-o",
+    "sections": [
+      {
+        "id": "bigo-steps",
+        "docClaim": false,
+        "quotes": []
+      },
+      {
+        "id": "bigo-loops",
+        "docClaim": false,
+        "quotes": []
+      }
+    ],
+    "jsNotes": []
+  },
+  {
+    "lesson": "c02-informatics/list-dict-set",
+    "sections": [
+      {
+        "id": "containers-pick",
+        "docClaim": true,
+        "quotes": [
+          "py-sets"
+        ]
+      },
+      {
+        "id": "containers-hashable",
+        "docClaim": true,
+        "quotes": [
+          "py-hashable",
+          "py-mutable-containers"
+        ]
+      }
+    ],
+    "jsNotes": []
+  },
+  {
+    "lesson": "c02-informatics/deque-heapq",
+    "sections": [
+      {
+        "id": "deque-ends",
+        "docClaim": true,
+        "quotes": [
+          "py-deque-ends"
+        ]
+      },
+      {
+        "id": "heap-smallest",
+        "docClaim": true,
+        "quotes": [
+          "py-heap-root"
+        ]
+      }
+    ],
+    "jsNotes": []
+  },
+  {
+    "lesson": "c02-informatics/recursion",
+    "sections": [
+      {
+        "id": "recursion-base",
+        "docClaim": false,
+        "quotes": []
+      },
+      {
+        "id": "recursion-nested",
+        "docClaim": false,
+        "quotes": []
+      }
+    ],
+    "jsNotes": []
+  },
+  {
+    "lesson": "c02-informatics/sorting",
+    "sections": [
+      {
+        "id": "sort-key",
+        "docClaim": true,
+        "quotes": [
+          "py-sort-key"
+        ]
+      },
+      {
+        "id": "sort-ties",
+        "docClaim": true,
+        "quotes": [
+          "py-sort-stable"
+        ]
+      }
+    ],
+    "jsNotes": []
+  },
+  {
+    "lesson": "c02-informatics/type-hints",
+    "sections": [
+      {
+        "id": "hints-syntax",
+        "docClaim": true,
+        "quotes": [
+          "py-hints-not-enforced"
+        ]
+      },
+      {
+        "id": "hints-containers",
+        "docClaim": false,
+        "quotes": []
+      }
+    ],
+    "jsNotes": []
+  },
+  {
+    "lesson": "c02-informatics/tracebacks",
+    "sections": [
+      {
+        "id": "traceback-read",
+        "docClaim": true,
+        "quotes": [
+          "py-errors-last-line"
+        ]
+      },
+      {
+        "id": "debug-print",
+        "docClaim": false,
+        "quotes": []
+      }
+    ],
+    "jsNotes": []
   }
 ]

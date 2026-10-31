@@ -3,11 +3,16 @@
 import type { ChallengeSpec } from '../challenges/types';
 import { CHAPTER1 as CHAPTER1_INFO } from './chapter1/index';
 import chapter1Outputs from './generated/chapter1.outputs.json';
+import { CHAPTER2 as CHAPTER2_INFO } from './chapter2/index';
+import chapter2Outputs from './generated/chapter2.outputs.json';
 import type { Chapter, ChoiceItem, Lesson } from './types';
 
 // The only module that loads the generated outputs. Chapter modules hold content and stay
 // importable without the JSON, which the Playwright runner cannot load.
-export const CHAPTERS: readonly Chapter[] = [{ ...CHAPTER1_INFO, outputs: chapter1Outputs }];
+export const CHAPTERS: readonly Chapter[] = [
+  { ...CHAPTER1_INFO, outputs: chapter1Outputs },
+  { ...CHAPTER2_INFO, outputs: chapter2Outputs },
+];
 
 export interface Found<T> {
   chapter: Chapter;

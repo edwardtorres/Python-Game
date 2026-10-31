@@ -17,6 +17,7 @@ import type { Chapter } from './types';
 // The counts each chapter's plan sets. Changing a chapter's content changes its entry here.
 const COUNTS: Record<string, { lessons: number; choice: number; graded: number; boss: number }> = {
   'c01-foundations': { lessons: 13, choice: 15, graded: 14, boss: 4 },
+  'c02-informatics': { lessons: 11, choice: 13, graded: 11, boss: 4 },
 };
 
 let runtime: PyRuntime;

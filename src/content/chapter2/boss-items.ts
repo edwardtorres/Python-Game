@@ -1,0 +1,124 @@
+// The Chapter 2 boss, the dock dispatch board: four graded function parts, each graded on its own.
+import type { ChallengeSpec } from '../../challenges/types';
+import { type GradedItem, fn, functionSpec } from '../graded';
+
+const BOSS_PARTS: GradedItem[] = [
+  {
+    id: 'c02-boss-rank-rows',
+    title: 'Boss part 1: rank the dock rows',
+    lessonId: 'c02-informatics/sorting',
+    competencies: ['sort-key'],
+    ticket: { from: 'Dana, Dock Board', subject: 'Sort the dock rows', body: 'Each row is (dock, name, kg). Sort the rows by dock, A to Z. Within a dock, the heaviest parcel comes first. Parcels with the same dock and weight go by name. Return "dock/name" strings in that order.' },
+    rules: ['Sort the rows by dock, A to Z.', 'Within a dock, the heaviest parcel comes first.', 'Parcels with the same dock and weight are ordered by name.', 'Return "dock/name" strings in that order.'],
+    entry: 'rank_rows',
+    starter: 'def rank_rows(rows):\n    pass\n',
+    reference: 'def rank_rows(rows):\n    ordered = sorted(rows, key=lambda row: (row[0], -row[2], row[1]))\n    return [f"{dock}/{name}" for dock, name, kg in ordered]\n',
+    cases: [
+      fn('v-mixed', 'Three parcels in two docks', 'visible', [[['North', 'Crate', 12], ['East', 'Bag', 3], ['North', 'Drum', 20]]], [0, 1, 3]),
+      fn('v-empty', 'No rows', 'visible', [[]], [3]),
+      fn('h-ties', 'Three parcels in one dock, two of them 5 kg', 'hidden', [[['Yard', 'Zed', 5], ['Yard', 'Amy', 5], ['Yard', 'Max', 9]]], [1, 2, 3]),
+      fn('h-keys', 'Two docks, the heavier parcel in the later dock', 'hidden', [[['West', 'A', 9], ['East', 'Z', 1]]], [0, 3]),
+      fn('h-weight', 'Two parcels in one dock, different weights', 'hidden', [[['Dock', 'B', 2], ['Dock', 'A', 7]]], [1, 3]),
+      fn('h-same-weight', 'Same dock and weight, names out of order', 'hidden', [[['Dock', 'B', 4], ['Dock', 'A', 4]]], [2, 3]),
+    ],
+    variants: [
+      ['weight-first', 'def rank_rows(rows):\n    ordered = sorted(rows, key=lambda row: (-row[2], row[0], row[1]))\n    return [f"{dock}/{name}" for dock, name, kg in ordered]\n', 'SORT_KEY_ORDER', 0],
+      ['light-first', 'def rank_rows(rows):\n    ordered = sorted(rows, key=lambda row: (row[0], row[2], row[1]))\n    return [f"{dock}/{name}" for dock, name, kg in ordered]\n', 'SORT_DIRECTION', 1],
+      ['names-tie-wrong', 'def rank_rows(rows):\n    ordered = sorted(rows, key=lambda row: (row[0], -row[2]))\n    return [f"{dock}/{name}" for dock, name, kg in ordered]\n', 'SORT_TIES_IGNORED', 2],
+      ['pairs-returned', 'def rank_rows(rows):\n    return sorted(rows, key=lambda row: (row[0], -row[2], row[1]))\n', 'WRONG_RETURN_SHAPE', 3],
+    ],
+    hints: [
+      'Sort on more than one value. The first value in the key is the main order.',
+      'The dock comes first in the key. Then a negated weight puts the heaviest first, and the name breaks ties.',
+      'ordered = sorted(rows, key=lambda row: (row[0], -row[2], row[1]))',
+    ],
+  },
+  {
+    id: 'c02-boss-dispatch-heap',
+    title: 'Boss part 2: dispatch by priority',
+    lessonId: 'c02-informatics/deque-heapq',
+    competencies: ['deque-heapq'],
+    ticket: { from: 'Ines, Dispatch', subject: 'Dispatch order', body: 'Each job is (priority, name). A lower priority number goes first. Jobs with the same priority go in the order they arrived. Return the job names in dispatch order.' },
+    rules: ['A lower priority number goes first.', 'Jobs with the same priority keep their arrival order.', 'Return the job names only.'],
+    entry: 'dispatch_order',
+    starter: 'def dispatch_order(jobs):\n    pass\n',
+    reference: 'import heapq\n\n\ndef dispatch_order(jobs):\n    heap = []\n    for arrival, (priority, name) in enumerate(jobs):\n        heapq.heappush(heap, (priority, arrival, name))\n    return [heapq.heappop(heap)[2] for _ in range(len(heap))]\n',
+    cases: [
+      fn('v-mixed', 'Three jobs, two of them priority 2', 'visible', [[[2, 'build'], [1, 'load'], [2, 'ship']]], [0, 1, 2]),
+      fn('v-empty', 'No jobs', 'visible', [[]], [2]),
+      fn('h-arrival', 'Three jobs with the same priority', 'hidden', [[[3, 'b'], [3, 'a'], [3, 'c']]], [1, 2]),
+      fn('h-arrival-two', 'Two jobs with the same priority, names out of order', 'hidden', [[[2, 'zeta'], [2, 'alpha']]], [1, 2]),
+      fn('h-priority', 'Two jobs in reverse priority order', 'hidden', [[[5, 'x'], [1, 'y']]], [0, 2]),
+      fn('h-single', 'One job', 'hidden', [[[4, 'solo']]], [2]),
+    ],
+    variants: [
+      ['higher-first', 'import heapq\n\n\ndef dispatch_order(jobs):\n    heap = []\n    for arrival, (priority, name) in enumerate(jobs):\n        heapq.heappush(heap, (-priority, arrival, name))\n    return [heapq.heappop(heap)[2] for _ in range(len(heap))]\n', 'SORT_DIRECTION', 0],
+      ['name-ties', 'import heapq\n\n\ndef dispatch_order(jobs):\n    heap = []\n    for priority, name in jobs:\n        heapq.heappush(heap, (priority, name))\n    return [heapq.heappop(heap)[1] for _ in range(len(heap))]\n', 'TIE_ARRIVAL_LOST', 1],
+      ['pairs-returned', 'import heapq\n\n\ndef dispatch_order(jobs):\n    heap = []\n    for arrival, (priority, name) in enumerate(jobs):\n        heapq.heappush(heap, (priority, arrival, name))\n    return [heapq.heappop(heap) for _ in range(len(heap))]\n', 'WRONG_RETURN_SHAPE', 2],
+    ],
+    hints: [
+      'A heap pops the smallest tuple first. Think about what the tuple should hold.',
+      'Put the arrival position in the tuple after the priority, so equal priorities compare by arrival.',
+      'heapq.heappush(heap, (priority, arrival, name))',
+    ],
+  },
+  {
+    id: 'c02-boss-flatten-tags',
+    title: 'Boss part 3: flatten the tags',
+    lessonId: 'c02-informatics/recursion',
+    competencies: ['recursion'],
+    ticket: { from: 'Leo, Parcel Tags', subject: 'Flat list of tags', body: 'Tags arrive in nested lists of any depth. Return one flat list of the tags, in the order they appear. Empty lists add nothing.' },
+    rules: ['The tags keep their left-to-right order.', 'Lists nested at any depth are flattened.', 'An empty list adds nothing.'],
+    entry: 'flatten_tags',
+    starter: 'def flatten_tags(items):\n    pass\n',
+    reference: 'def flatten_tags(items):\n    flat = []\n    for item in items:\n        if isinstance(item, list):\n            flat.extend(flatten_tags(item))\n        else:\n            flat.append(item)\n    return flat\n',
+    cases: [
+      fn('v-nested', 'Tags in nested lists', 'visible', [[['a', ['b', 'c']], 'd']], [0, 1]),
+      fn('v-flat', 'Two tags in one list', 'visible', [[['x', 'y']]], [0, 1]),
+      fn('v-empty-item', 'An empty list before a tag', 'visible', [[[], 'x']], [2]),
+      fn('h-empties', 'Empty lists between tags', 'hidden', [[['a', [], 'b']]], [0, 1, 2]),
+      fn('h-deep', 'One tag five levels deep', 'hidden', [[[[['z']]]]], [1]),
+      fn('h-reverse-check', 'Nested lists in several places', 'hidden', [[['m'], 'n', ['o', 'p']]], [0, 1]),
+    ],
+    variants: [
+      ['top-level-only', 'def flatten_tags(items):\n    return [item for item in items if not isinstance(item, list)]\n', 'NESTED_IGNORED', 1],
+      ['reversed-order', 'def flatten_tags(items):\n    flat = []\n    for item in reversed(items):\n        if isinstance(item, list):\n            flat.extend(flatten_tags(item))\n        else:\n            flat.append(item)\n    return flat\n', 'REVERSED_ORDER', 0],
+      ['empty-as-item', 'def flatten_tags(items):\n    flat = []\n    for item in items:\n        if isinstance(item, list) and item:\n            flat.extend(flatten_tags(item))\n        else:\n            flat.append(item)\n    return flat\n', 'EMPTY_LIST_ITEM', 2],
+    ],
+    hints: [
+      'Each item is either a tag or a list. A list is handled the same way as the whole input.',
+      'Check whether each item is a list. A list goes back into the same function, and its result is added in.',
+      'if isinstance(item, list): flat.extend(flatten_tags(item)) else: flat.append(item)',
+    ],
+  },
+  {
+    id: 'c02-boss-report-lines',
+    title: 'Boss part 4: the dock report',
+    lessonId: 'c02-informatics/type-hints',
+    competencies: ['type-hints'],
+    ticket: { from: 'Farah, Board Report', subject: 'Report lines', body: 'Each row is a (dock, total kg) pair. Return one line per dock, sorted by dock name A to Z. Each line reads "dock: total kg", with the total to one decimal place.' },
+    rules: ['Each line reads "dock: total" with the total to one decimal place.', 'Lines are sorted by dock name, A to Z.', 'Return a list of strings.'],
+    entry: 'report_lines',
+    starter: 'def report_lines(rows):\n    pass\n',
+    reference: 'def report_lines(rows):\n    return [f"{dock}: {total:.1f}" for dock, total in sorted(rows)]\n',
+    cases: [
+      fn('v-two', 'Two docks, one total rounds up', 'visible', [[['North', 12.26], ['East', 3]]], [0, 1, 2]),
+      fn('v-empty', 'No rows', 'visible', [[]], [2]),
+      fn('h-order', 'Three docks out of order', 'hidden', [[['Yard', 1.04], ['Bay', 2.5], ['Gate', 0.0]]], [0, 1, 2]),
+      fn('h-rounding-up', 'One total that rounds up', 'hidden', [[['Dock', 2.96]]], [0, 2]),
+      fn('h-single', 'One whole number', 'hidden', [[['Solo', 7]]], [0, 2]),
+    ],
+    variants: [
+      ['two-decimals', 'def report_lines(rows):\n    return [f"{dock}: {total:.2f}" for dock, total in sorted(rows)]\n', 'ROUNDING_PLACES', 0],
+      ['unsorted', 'def report_lines(rows):\n    return [f"{dock}: {total:.1f}" for dock, total in rows]\n', 'UNSORTED_OUTPUT', 1],
+      ['pairs-returned', 'def report_lines(rows):\n    return [(dock, f"{total:.1f}") for dock, total in sorted(rows)]\n', 'WRONG_RETURN_SHAPE', 2],
+    ],
+    hints: [
+      'Each line needs two things: the dock name, and the total with one decimal place.',
+      'Sort the rows by dock before you format them, and format the total with a fixed number of places.',
+      'return [f"{dock}: {total:.1f}" for dock, total in sorted(rows)]',
+    ],
+  },
+];
+
+export const BOSS_SPECS: ChallengeSpec[] = BOSS_PARTS.map((item) => functionSpec('c02-informatics', item));

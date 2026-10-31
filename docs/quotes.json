@@ -184,5 +184,101 @@
     "source": "MDN: JavaScript data types and structures (scope)",
     "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Grammar_and_types",
     "quote": "Block scope: The scope created with a pair of curly braces"
+  },
+  {
+    "id": "py-class-variables",
+    "source": "Python documentation: Classes, class and instance variables",
+    "url": "https://docs.python.org/3/tutorial/classes.html",
+    "quote": "Generally speaking, instance variables are for data unique to each instance and class variables are for attributes and methods shared by all instances of the class:"
+  },
+  {
+    "id": "py-inheritance",
+    "source": "Python documentation: Classes, inheritance",
+    "url": "https://docs.python.org/3/tutorial/classes.html",
+    "quote": "a derived class can override any methods of its base class or classes, and a method can call the method of a base class with the same name."
+  },
+  {
+    "id": "py-super",
+    "source": "Python documentation: Classes, inheritance",
+    "url": "https://docs.python.org/3/tutorial/classes.html",
+    "quote": "the method resolution order changes dynamically to support cooperative calls to super()"
+  },
+  {
+    "id": "py-dataclass-purpose",
+    "source": "Python documentation: dataclasses",
+    "url": "https://docs.python.org/3/library/dataclasses.html",
+    "quote": "This module provides a decorator and functions for automatically adding generated special methods such as __init__() and __repr__() to user-defined classes."
+  },
+  {
+    "id": "py-dataclass-mutable",
+    "source": "Python documentation: dataclasses",
+    "url": "https://docs.python.org/3/library/dataclasses.html",
+    "quote": "Among other purposes, this can be used to specify fields with mutable default values, as discussed below."
+  },
+  {
+    "id": "py-hashable",
+    "source": "Python documentation: Glossary, hashable",
+    "url": "https://docs.python.org/3/glossary.html",
+    "quote": "An object is hashable if it has a hash value which never changes during its lifetime (it needs a __hash__() method), and can be compared to other objects (it needs an __eq__() method)."
+  },
+  {
+    "id": "py-mutable-containers",
+    "source": "Python documentation: Glossary, hashable",
+    "url": "https://docs.python.org/3/glossary.html",
+    "quote": "mutable containers (such as lists or dictionaries) are not"
+  },
+  {
+    "id": "py-deque-ends",
+    "source": "Python documentation: collections.deque",
+    "url": "https://docs.python.org/3/library/collections.html",
+    "quote": "Deques support thread-safe, memory efficient appends and pops from either side of the deque"
+  },
+  {
+    "id": "py-heap-root",
+    "source": "Python documentation: heapq",
+    "url": "https://docs.python.org/3/library/heapq.html",
+    "quote": "The interesting property of a min-heap is that its smallest element is always the root, heap[0]."
+  },
+  {
+    "id": "py-sort-stable",
+    "source": "Python documentation: Sorting HOW TO, sort stability",
+    "url": "https://docs.python.org/3/howto/sorting.html",
+    "quote": "Sorts are guaranteed to be stable"
+  },
+  {
+    "id": "py-sort-key",
+    "source": "Python documentation: Built-in Functions, sorted",
+    "url": "https://docs.python.org/3/library/functions.html",
+    "quote": "The key argument specifies a one-argument ordering function"
+  },
+  {
+    "id": "py-hints-not-enforced",
+    "source": "Python documentation: typing",
+    "url": "https://docs.python.org/3/library/typing.html",
+    "quote": "The Python runtime does not enforce function and variable type annotations."
+  },
+  {
+    "id": "py-errors-last-line",
+    "source": "Python documentation: Errors and Exceptions",
+    "url": "https://docs.python.org/3/tutorial/errors.html",
+    "quote": "The last line of the error message indicates what happened."
+  },
+  {
+    "id": "py-datamodel-str",
+    "source": "Python documentation: Data model, __str__",
+    "url": "https://docs.python.org/3/reference/datamodel.html",
+    "quote": "to compute the “informal” or nicely printable string representation of an object."
+  },
+  {
+    "id": "py-datamodel-len",
+    "source": "Python documentation: Data model, __len__",
+    "url": "https://docs.python.org/3/reference/datamodel.html",
+    "quote": "Called to implement the built-in function len()"
+  },
+  {
+    "id": "py-datamodel-eq",
+    "source": "Python documentation: Data model, __eq__",
+    "url": "https://docs.python.org/3/reference/datamodel.html",
+    "quote": "By default, object implements __eq__() by using is"
   }
 ]

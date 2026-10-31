@@ -6,64 +6,7 @@
 // variant is caught by at least two cases, with at least one variant failing a visible case.
 // The content checks (src/content/chapters.test.ts) check this for every item.
 import type { ChallengeSpec, Ticket } from '../../challenges/types';
-import type { FunctionCase, StructureCheck, WrongVariant } from '../../engine/types';
-import { MISTAKES, type MistakeTag } from '../mistakes';
-
-type Variant = [id: string, code: string, tag: MistakeTag, rule: number];
-
-function fn(id: string, label: string, visibility: 'visible' | 'hidden', args: unknown[], rules: number[], kwargs?: Record<string, unknown>): FunctionCase {
-  return kwargs === undefined ? { id, label, visibility, args, rules } : { id, label, visibility, args, rules, kwargs };
-}
-
-interface FunctionItem {
-  id: string;
-  title: string;
-  lessonId: string;
-  competencies: string[];
-  ticket: Ticket;
-  rules: string[];
-  entry: string;
-  starter: string;
-  reference: string;
-  cases: FunctionCase[];
-  variants: Variant[];
-  hints: [string, string, string];
-  // Structure tasks are graded by ast checks instead of cases.
-  structure?: StructureCheck[];
-}
-
-function toWrong(variants: Variant[]): { wrong: WrongVariant[]; rules: Record<string, number> } {
-  const rules: Record<string, number> = {};
-  const wrong = variants.map(([id, code, tag, rule]) => {
-    rules[id] = rule;
-    return { id, code, mistake: MISTAKES[tag] };
-  });
-  return { wrong, rules };
-}
-
-function functionSpec(item: FunctionItem): ChallengeSpec {
-  const { wrong, rules } = toWrong(item.variants);
-  const base: ChallengeSpec = {
-    id: item.id,
-    chapterId: 'c01-foundations',
-    title: item.title,
-    kind: 'function',
-    notebook: false,
-    ticket: item.ticket,
-    rules: item.rules,
-    entry: item.entry,
-    starter: item.starter,
-    competencies: item.competencies,
-    datasets: [],
-    cases: item.cases,
-    rulesForGrader: {},
-    reference: item.reference,
-    variants: wrong,
-    variantRule: rules,
-    hints: item.hints,
-  };
-  return item.structure === undefined ? base : { ...base, kind: 'structure', structureChecks: item.structure };
-}
+import { type GradedItem as FunctionItem, fn, functionSpec } from '../graded';
 
 const FUNCTION_ITEMS: FunctionItem[] = [
   // Guided: strings and f-strings.
@@ -596,6 +539,6 @@ const BOSS_PARTS: FunctionItem[] = [
   },
 ];
 
-export const GRADED_SPECS: ChallengeSpec[] = FUNCTION_ITEMS.map(functionSpec);
+export const GRADED_SPECS: ChallengeSpec[] = FUNCTION_ITEMS.map((item) => functionSpec('c01-foundations', item));
 
-export const BOSS_SPECS: ChallengeSpec[] = BOSS_PARTS.map(functionSpec);
+export const BOSS_SPECS: ChallengeSpec[] = BOSS_PARTS.map((item) => functionSpec('c01-foundations', item));

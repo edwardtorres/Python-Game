@@ -364,5 +364,311 @@
     "code": "parcels = 3.0\nprint(parcels + \"x\")\n",
     "check": "error-type",
     "expected": "TypeError"
+  },
+  {
+    "name": "example:c02-classes-1",
+    "code": "class Parcel:\n    def __init__(self, name, kg):\n        self.name = name\n        self.kg = kg\n\n    def label(self):\n        return f\"{self.name} ({self.kg} kg)\"\n\n\na = Parcel(\"Crate\", 12)\nb = Parcel(\"Pallet\", 30)\nprint(a.label(), b.label())\nprint(a.kg + b.kg)\n",
+    "check": "stdout",
+    "expected": "Crate (12 kg) Pallet (30 kg)\n42\n"
+  },
+  {
+    "name": "example:c02-classes-2",
+    "code": "class Dock:\n    shared = []\n\n    def __init__(self, name):\n        self.name = name\n        self.own = []\n\n\none = Dock(\"A\")\ntwo = Dock(\"B\")\none.shared.append(\"x\")\none.own.append(\"y\")\nprint(two.shared, two.own)\n",
+    "check": "stdout",
+    "expected": "['x'] []\n"
+  },
+  {
+    "name": "example:c02-dataclass-1",
+    "code": "from dataclasses import dataclass\n\n\n@dataclass\nclass Parcel:\n    name: str\n    kg: float\n\n\np = Parcel(\"Crate\", 12.5)\nprint(p)\nprint(p == Parcel(\"Crate\", 12.5))\n",
+    "check": "stdout",
+    "expected": "Parcel(name='Crate', kg=12.5)\nTrue\n"
+  },
+  {
+    "name": "example:c02-dataclass-2",
+    "code": "from dataclasses import dataclass, field\n\n\n@dataclass\nclass Route:\n    stops: list = field(default_factory=list)\n\n\na = Route()\nb = Route()\na.stops.append(\"Dock 1\")\nprint(a.stops, b.stops)\n",
+    "check": "stdout",
+    "expected": "['Dock 1'] []\n"
+  },
+  {
+    "name": "example:c02-dataclass-3",
+    "code": "from dataclasses import dataclass\n\ntry:\n    @dataclass\n    class Bad:\n        stops: list = []\nexcept ValueError as error:\n    print(type(error).__name__)\n",
+    "check": "stdout",
+    "expected": "ValueError\n"
+  },
+  {
+    "name": "example:c02-inherit-1",
+    "code": "class Parcel:\n    def label(self):\n        return \"parcel\"\n\n\nclass Pallet(Parcel):\n    def label(self):\n        return \"pallet\"\n\n\nclass Crate(Parcel):\n    pass\n\n\nprint(Parcel().label(), Pallet().label(), Crate().label())\nprint(isinstance(Crate(), Parcel))\n",
+    "check": "stdout",
+    "expected": "parcel pallet parcel\nTrue\n"
+  },
+  {
+    "name": "example:c02-inherit-2",
+    "code": "class Parcel:\n    def __init__(self, kg):\n        self.kg = kg\n\n\nclass Pallet(Parcel):\n    def __init__(self, kg, boards):\n        super().__init__(kg)\n        self.boards = boards\n\n\npallet = Pallet(30, 4)\nprint(pallet.kg, pallet.boards)\n",
+    "check": "stdout",
+    "expected": "30 4\n"
+  },
+  {
+    "name": "example:c02-dunder-1",
+    "code": "class Crate:\n    def __init__(self, items):\n        self.items = items\n\n    def __len__(self):\n        return len(self.items)\n\n    def __str__(self):\n        return f\"Crate with {len(self)} items\"\n\n\ncrate = Crate([\"a\", \"b\", \"c\"])\nprint(len(crate))\nprint(crate)\n",
+    "check": "stdout",
+    "expected": "3\nCrate with 3 items\n"
+  },
+  {
+    "name": "example:c02-dunder-2",
+    "code": "class Weight:\n    def __init__(self, kg):\n        self.kg = kg\n\n    def __eq__(self, other):\n        return self.kg == other.kg\n\n    def __add__(self, other):\n        return Weight(self.kg + other.kg)\n\n\nprint(Weight(2) == Weight(2), Weight(2) == Weight(3))\nprint((Weight(2) + Weight(5)).kg)\n",
+    "check": "stdout",
+    "expected": "True False\n7\n"
+  },
+  {
+    "name": "example:c02-bigo-1",
+    "code": "class Probe:\n    comparisons = 0\n\n    def __init__(self, value):\n        self.value = value\n\n    def __eq__(self, other):\n        Probe.comparisons += 1\n        return self.value == other.value\n\n    def __hash__(self):\n        return hash(self.value)\n\n\ndef lookup_cost(n):\n    items = [Probe(i) for i in range(n)]\n    lookup = set(items)\n    target = Probe(n - 1)\n    Probe.comparisons = 0\n    target in items\n    list_cost = Probe.comparisons\n    Probe.comparisons = 0\n    target in lookup\n    return list_cost, Probe.comparisons\n\n\nfor n in (100, 200):\n    print(n, lookup_cost(n))\n",
+    "check": "stdout",
+    "expected": "100 (100, 1)\n200 (200, 1)\n"
+  },
+  {
+    "name": "example:c02-bigo-2",
+    "code": "def pair_steps(n):\n    steps = 0\n    for i in range(n):\n        for j in range(n):\n            steps += 1\n    return steps\n\n\nprint([pair_steps(n) for n in (10, 20)])\n",
+    "check": "stdout",
+    "expected": "[100, 400]\n"
+  },
+  {
+    "name": "example:c02-containers-1",
+    "code": "stops = [\"Dock 1\", \"Dock 2\", \"Dock 1\"]\nprint(stops[0], stops.count(\"Dock 1\"))\nseen = set(stops)\nprint(len(seen), \"Dock 2\" in seen)\n",
+    "check": "stdout",
+    "expected": "Dock 1 2\n2 True\n"
+  },
+  {
+    "name": "example:c02-containers-2",
+    "code": "try:\n    seen = {[1, 2]}\nexcept TypeError as error:\n    print(type(error).__name__)\nprint({(1, 2): \"pair\"}[(1, 2)])\n",
+    "check": "stdout",
+    "expected": "TypeError\npair\n"
+  },
+  {
+    "name": "example:c02-deque-1",
+    "code": "from collections import deque\n\nqueue = deque([\"Dock 1\", \"Dock 2\"])\nqueue.append(\"Dock 3\")\nprint(queue.popleft(), len(queue))\nprint(list(queue))\n",
+    "check": "stdout",
+    "expected": "Dock 1 2\n['Dock 2', 'Dock 3']\n"
+  },
+  {
+    "name": "example:c02-heap-1",
+    "code": "import heapq\n\njobs = [5, 1, 4]\nheapq.heapify(jobs)\nprint(jobs[0])\nprint(heapq.heappop(jobs), heapq.heappop(jobs), heapq.heappop(jobs))\n",
+    "check": "stdout",
+    "expected": "1\n1 4 5\n"
+  },
+  {
+    "name": "example:c02-recursion-1",
+    "code": "def countdown(n):\n    if n == 0:\n        return [\"liftoff\"]\n    return [n] + countdown(n - 1)\n\n\nprint(countdown(3))\n",
+    "check": "stdout",
+    "expected": "[3, 2, 1, 'liftoff']\n"
+  },
+  {
+    "name": "example:c02-recursion-2",
+    "code": "def flatten(items):\n    flat = []\n    for item in items:\n        if isinstance(item, list):\n            flat.extend(flatten(item))\n        else:\n            flat.append(item)\n    return flat\n\n\nprint(flatten([1, [2, [3, 4]], 5]))\n",
+    "check": "stdout",
+    "expected": "[1, 2, 3, 4, 5]\n"
+  },
+  {
+    "name": "example:c02-sort-1",
+    "code": "parcels = [(\"Crate\", 12), (\"Bag\", 3), (\"Drum\", 12)]\nprint(sorted(parcels, key=lambda parcel: parcel[1]))\nprint(sorted([\"bb\", \"a\", \"ccc\"], key=len))\n",
+    "check": "stdout",
+    "expected": "[('Bag', 3), ('Crate', 12), ('Drum', 12)]\n['a', 'bb', 'ccc']\n"
+  },
+  {
+    "name": "example:c02-sort-2",
+    "code": "words = [\"pear\", \"fig\", \"apple\", \"kiwi\"]\nprint(sorted(words, key=len, reverse=True))\nprint(sorted(words, key=lambda word: (len(word), word)))\n",
+    "check": "stdout",
+    "expected": "['apple', 'pear', 'kiwi', 'fig']\n['fig', 'kiwi', 'pear', 'apple']\n"
+  },
+  {
+    "name": "example:c02-hints-1",
+    "code": "def label(value: int) -> str:\n    return value * 2\n\n\nprint(label(4))\nprint(label(\"ab\"))\n",
+    "check": "stdout",
+    "expected": "8\nabab\n"
+  },
+  {
+    "name": "example:c02-hints-2",
+    "code": "from typing import Optional\n\n\ndef find(counts: dict[str, int], key: str) -> Optional[int]:\n    return counts.get(key)\n\n\nprint(find({\"rail\": 2}, \"rail\"), find({\"rail\": 2}, \"sea\"))\n",
+    "check": "stdout",
+    "expected": "2 None\n"
+  },
+  {
+    "name": "example:c02-traceback-1",
+    "code": "try:\n    numbers = [1, 2]\n    print(numbers[5])\nexcept IndexError as error:\n    print(type(error).__name__, error)\n",
+    "check": "stdout",
+    "expected": "IndexError list index out of range\n"
+  },
+  {
+    "name": "example:c02-traceback-2",
+    "code": "def average(values):\n    print(\"values:\", values, type(values).__name__)\n    return sum(values) / len(values)\n\n\nprint(average([2, 4]))\n",
+    "check": "stdout",
+    "expected": "values: [2, 4] list\n3.0\n"
+  },
+  {
+    "name": "choice:c02-predict-shared-list:class-parcels",
+    "code": "class Dock:\n    queue = []\n    parcels = []\n\n    def __init__(self, name):\n        self.name = name\n\n    def receive(self, parcel):\n        self.parcels.append(parcel)\n        Dock.queue.append(parcel)\n\n\nnorth = Dock(\"North\")\nsouth = Dock(\"South\")\nnorth.receive(\"crate\")\nprint(len(north.parcels), len(south.parcels), len(Dock.queue))\n",
+    "check": "stdout",
+    "expected": "1 1 1\n"
+  },
+  {
+    "name": "choice:c02-predict-shared-list:true",
+    "code": "class Dock:\n    queue = []\n\n    def __init__(self, name):\n        self.name = name\n        self.parcels = []\n\n    def receive(self, parcel):\n        self.parcels.append(parcel)\n        Dock.queue.append(parcel)\n\n\nnorth = Dock(\"North\")\nsouth = Dock(\"South\")\nnorth.receive(\"crate\")\nprint(len(north.parcels), len(south.parcels), len(Dock.queue))\n",
+    "check": "stdout",
+    "expected": "1 0 1\n"
+  },
+  {
+    "name": "choice:c02-predict-dataclass-equal:plain-class",
+    "code": "from dataclasses import dataclass\n\n\nclass Parcel:\n    def __init__(self, name, kg):\n        self.name = name\n        self.kg = kg\n\n\na = Parcel(\"Crate\", 12.0)\nb = Parcel(\"Crate\", 12.0)\nprint(a == b, a is b)\n",
+    "check": "stdout",
+    "expected": "False False\n"
+  },
+  {
+    "name": "choice:c02-predict-dataclass-equal:true",
+    "code": "from dataclasses import dataclass\n\n\n@dataclass\nclass Parcel:\n    name: str\n    kg: float\n\n\na = Parcel(\"Crate\", 12.0)\nb = Parcel(\"Crate\", 12.0)\nprint(a == b, a is b)\n",
+    "check": "stdout",
+    "expected": "True False\n"
+  },
+  {
+    "name": "choice:c02-predict-super-setup:no-super",
+    "code": "class Parcel:\n    def __init__(self, kg):\n        self.kg = kg\n\n\nclass Pallet(Parcel):\n    def __init__(self, kg, boards):\n        self.boards = boards\n\n\npallet = Pallet(30, 4)\nprint(pallet.kg, pallet.boards)\n",
+    "check": "error-type",
+    "expected": "AttributeError"
+  },
+  {
+    "name": "choice:c02-predict-super-setup:true",
+    "code": "class Parcel:\n    def __init__(self, kg):\n        self.kg = kg\n\n\nclass Pallet(Parcel):\n    def __init__(self, kg, boards):\n        super().__init__(kg)\n        self.boards = boards\n\n\npallet = Pallet(30, 4)\nprint(pallet.kg, pallet.boards)\n",
+    "check": "stdout",
+    "expected": "30 4\n"
+  },
+  {
+    "name": "choice:c02-predict-len-method:no-len",
+    "code": "class Crate:\n    def __init__(self, items):\n        self.items = items\n\n\ncrate = Crate([\"a\", \"b\"])\nprint(len(crate), bool(crate))\n",
+    "check": "error-type",
+    "expected": "TypeError"
+  },
+  {
+    "name": "choice:c02-predict-len-method:true",
+    "code": "class Crate:\n    def __init__(self, items):\n        self.items = items\n\n    def __len__(self):\n        return len(self.items)\n\n\ncrate = Crate([\"a\", \"b\"])\nprint(len(crate), bool(crate))\n",
+    "check": "stdout",
+    "expected": "2 True\n"
+  },
+  {
+    "name": "choice:c02-predict-list-probe:set-scans",
+    "code": "class Probe:\n    comparisons = 0\n\n    def __init__(self, value):\n        self.value = value\n\n    def __eq__(self, other):\n        Probe.comparisons += 1\n        return self.value == other.value\n\n    def __hash__(self):\n        return hash(self.value)\n\n\nitems = [Probe(i) for i in range(100)]\nlookup = set(items)\ntarget = Probe(99)\nProbe.comparisons = 0\ntarget in items\nprint(Probe.comparisons)\nProbe.comparisons = 0\nany(target == item for item in items)\nprint(Probe.comparisons)\n",
+    "check": "stdout",
+    "expected": "100\n100\n"
+  },
+  {
+    "name": "choice:c02-predict-list-probe:true",
+    "code": "class Probe:\n    comparisons = 0\n\n    def __init__(self, value):\n        self.value = value\n\n    def __eq__(self, other):\n        Probe.comparisons += 1\n        return self.value == other.value\n\n    def __hash__(self):\n        return hash(self.value)\n\n\nitems = [Probe(i) for i in range(100)]\nlookup = set(items)\ntarget = Probe(99)\nProbe.comparisons = 0\ntarget in items\nprint(Probe.comparisons)\nProbe.comparisons = 0\ntarget in lookup\nprint(Probe.comparisons)\n",
+    "check": "stdout",
+    "expected": "100\n1\n"
+  },
+  {
+    "name": "choice:c02-predict-heap-order:list-order",
+    "code": "import heapq\n\njobs = [4, 2, 9, 1]\nheapq.heapify(jobs)\nprint(jobs[0], heapq.heappop(jobs), jobs[1])\n",
+    "check": "stdout",
+    "expected": "1 1 4\n"
+  },
+  {
+    "name": "choice:c02-predict-heap-order:true",
+    "code": "import heapq\n\njobs = [4, 2, 9, 1]\nheapq.heapify(jobs)\nprint(jobs[0], heapq.heappop(jobs), heapq.heappop(jobs))\n",
+    "check": "stdout",
+    "expected": "1 1 2\n"
+  },
+  {
+    "name": "choice:c02-predict-sort-ties:reverse-first",
+    "code": "words = [\"kiwi\", \"fig\", \"pear\", \"apple\"]\nprint(sorted(words, key=len, reverse=True))\n",
+    "check": "stdout",
+    "expected": "['apple', 'kiwi', 'pear', 'fig']\n"
+  },
+  {
+    "name": "choice:c02-predict-sort-ties:ties-reversed",
+    "code": "words = [\"kiwi\", \"fig\", \"pear\", \"apple\"]\nprint(sorted(reversed(words), key=len))\n",
+    "check": "stdout",
+    "expected": "['fig', 'pear', 'kiwi', 'apple']\n"
+  },
+  {
+    "name": "choice:c02-predict-sort-ties:true",
+    "code": "words = [\"kiwi\", \"fig\", \"pear\", \"apple\"]\nprint(sorted(words, key=len))\n",
+    "check": "stdout",
+    "expected": "['fig', 'kiwi', 'pear', 'apple']\n"
+  },
+  {
+    "name": "choice:c02-predict-flatten-nested:skip-nested",
+    "code": "def flatten(items):\n    flat = []\n    for item in items:\n        flat.append(item)\n    return flat\n\n\nprint(flatten([1, [2, [3]], []]))\n",
+    "check": "stdout",
+    "expected": "[1, [2, [3]], []]\n"
+  },
+  {
+    "name": "choice:c02-predict-flatten-nested:true",
+    "code": "def flatten(items):\n    flat = []\n    for item in items:\n        if isinstance(item, list):\n            flat.extend(flatten(item))\n        else:\n            flat.append(item)\n    return flat\n\n\nprint(flatten([1, [2, [3]], []]))\n",
+    "check": "stdout",
+    "expected": "[1, 2, 3]\n"
+  },
+  {
+    "name": "choice:c02-traceback-unhashable:set-append",
+    "code": "seen = set()\nfor pallet in [[\"A\", 1], [\"B\", 2]]:\n    seen.append(pallet)\nprint(len(seen))\n",
+    "check": "error-type",
+    "expected": "AttributeError"
+  },
+  {
+    "name": "choice:c02-traceback-unhashable:missing-key",
+    "code": "orders = {\"Dock 1\": 3}\nprint(orders[\"Dock 9\"])\n",
+    "check": "error-type",
+    "expected": "KeyError"
+  },
+  {
+    "name": "choice:c02-traceback-unhashable:true",
+    "code": "seen = set()\nfor pallet in [[\"A\", 1], [\"B\", 2]]:\n    seen.add(pallet)\nprint(len(seen))\n",
+    "check": "error-type",
+    "expected": "TypeError"
+  },
+  {
+    "name": "choice:c02-traceback-sort-none:true",
+    "code": "parcels = [3, 1, 2]\nordered = parcels.sort()\nprint(ordered[0])\n",
+    "check": "error-type",
+    "expected": "TypeError"
+  },
+  {
+    "name": "choice:c02-traceback-sort-none:sorted-result",
+    "code": "parcels = [3, 1, 2]\nordered = sorted(parcels)\nprint(ordered[0])\n",
+    "check": "error-type",
+    "expected": "none"
+  },
+  {
+    "name": "choice:c02-traceback-empty-deque:list-front",
+    "code": "queue = []\nqueue.append(\"crate\")\nqueue.pop(0)\nprint(queue.pop(0))\n",
+    "check": "error-type",
+    "expected": "IndexError"
+  },
+  {
+    "name": "choice:c02-traceback-empty-deque:true",
+    "code": "from collections import deque\n\nqueue = deque()\nqueue.append(\"crate\")\nqueue.popleft()\nprint(queue.popleft())\n",
+    "check": "error-type",
+    "expected": "IndexError"
+  },
+  {
+    "name": "choice:c02-traceback-missing-argument:true",
+    "code": "class Parcel:\n    def __init__(self, name, kg):\n        self.name = name\n        self.kg = kg\n\n\nparcel = Parcel(\"Crate\")\nprint(parcel.name)\n",
+    "check": "error-type",
+    "expected": "TypeError"
+  },
+  {
+    "name": "choice:c02-traceback-missing-argument:extra-value",
+    "code": "class Parcel:\n    def __init__(self, name, kg):\n        self.name = name\n        self.kg = kg\n\n\nparcel = Parcel(\"Crate\", 12, 3)\nprint(parcel.name)\n",
+    "check": "error-type",
+    "expected": "TypeError"
+  },
+  {
+    "name": "choice:c02-traceback-heap-empty:true",
+    "code": "import heapq\n\njobs = []\nheapq.heappush(jobs, 4)\nheapq.heappop(jobs)\nprint(heapq.heappop(jobs))\n",
+    "check": "error-type",
+    "expected": "IndexError"
+  },
+  {
+    "name": "choice:c02-traceback-heap-empty:read-front",
+    "code": "jobs = []\njobs.append(4)\njobs.pop(0)\nprint(jobs[0])\n",
+    "check": "error-type",
+    "expected": "IndexError"
   }
 ]

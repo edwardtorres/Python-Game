@@ -1,0 +1,443 @@
+{
+  "examples": {
+    "c02-classes-1": {
+      "codeHash": "8f3c69263a4b5833",
+      "stdout": "Crate (12 kg) Pallet (30 kg)\n42\n",
+      "error": null
+    },
+    "c02-classes-2": {
+      "codeHash": "0cd270685c9efa9f",
+      "stdout": "['x'] []\n",
+      "error": null
+    },
+    "c02-dataclass-1": {
+      "codeHash": "772adecfe108fe55",
+      "stdout": "Parcel(name='Crate', kg=12.5)\nTrue\n",
+      "error": null
+    },
+    "c02-dataclass-2": {
+      "codeHash": "ac7a16012b71d69b",
+      "stdout": "['Dock 1'] []\n",
+      "error": null
+    },
+    "c02-dataclass-3": {
+      "codeHash": "80c249fa56df3025",
+      "stdout": "ValueError\n",
+      "error": null
+    },
+    "c02-inherit-1": {
+      "codeHash": "3f7b6735af44a5bc",
+      "stdout": "parcel pallet parcel\nTrue\n",
+      "error": null
+    },
+    "c02-inherit-2": {
+      "codeHash": "4765397aab9cb336",
+      "stdout": "30 4\n",
+      "error": null
+    },
+    "c02-dunder-1": {
+      "codeHash": "9e4a1c4ab7e66ede",
+      "stdout": "3\nCrate with 3 items\n",
+      "error": null
+    },
+    "c02-dunder-2": {
+      "codeHash": "9d31d7f44a497ba4",
+      "stdout": "True False\n7\n",
+      "error": null
+    },
+    "c02-bigo-1": {
+      "codeHash": "12a4a3e5be9f4145",
+      "stdout": "100 (100, 1)\n200 (200, 1)\n",
+      "error": null
+    },
+    "c02-bigo-2": {
+      "codeHash": "f6dfc87c1af69113",
+      "stdout": "[100, 400]\n",
+      "error": null
+    },
+    "c02-containers-1": {
+      "codeHash": "e69251f72238980a",
+      "stdout": "Dock 1 2\n2 True\n",
+      "error": null
+    },
+    "c02-containers-2": {
+      "codeHash": "63f9414a133983ad",
+      "stdout": "TypeError\npair\n",
+      "error": null
+    },
+    "c02-deque-1": {
+      "codeHash": "123a299696a9d57d",
+      "stdout": "Dock 1 2\n['Dock 2', 'Dock 3']\n",
+      "error": null
+    },
+    "c02-heap-1": {
+      "codeHash": "8bbd9cb8f856cae3",
+      "stdout": "1\n1 4 5\n",
+      "error": null
+    },
+    "c02-recursion-1": {
+      "codeHash": "1a64ed125cb68d3d",
+      "stdout": "[3, 2, 1, 'liftoff']\n",
+      "error": null
+    },
+    "c02-recursion-2": {
+      "codeHash": "bb9c2295c5cab480",
+      "stdout": "[1, 2, 3, 4, 5]\n",
+      "error": null
+    },
+    "c02-sort-1": {
+      "codeHash": "05e50dea09283aec",
+      "stdout": "[('Bag', 3), ('Crate', 12), ('Drum', 12)]\n['a', 'bb', 'ccc']\n",
+      "error": null
+    },
+    "c02-sort-2": {
+      "codeHash": "46a452bfb764cc79",
+      "stdout": "['apple', 'pear', 'kiwi', 'fig']\n['fig', 'kiwi', 'pear', 'apple']\n",
+      "error": null
+    },
+    "c02-hints-1": {
+      "codeHash": "9bbb6521f822a27a",
+      "stdout": "8\nabab\n",
+      "error": null
+    },
+    "c02-hints-2": {
+      "codeHash": "12f1960d07f88d11",
+      "stdout": "2 None\n",
+      "error": null
+    },
+    "c02-traceback-1": {
+      "codeHash": "b501bcb62a3c30bf",
+      "stdout": "IndexError list index out of range\n",
+      "error": null
+    },
+    "c02-traceback-2": {
+      "codeHash": "90b0721ee0817d57",
+      "stdout": "values: [2, 4] list\n3.0\n",
+      "error": null
+    }
+  },
+  "choice": {
+    "c02-predict-shared-list": {
+      "codeHash": "5e45f5033449ba5b",
+      "answer": "true",
+      "options": [
+        {
+          "id": "class-parcels",
+          "text": "1 1 1",
+          "tag": "SHARED_CLASS_ATTRIBUTE",
+          "codeHash": "c3d6e94276865002",
+          "error": null
+        },
+        {
+          "id": "true",
+          "text": "1 0 1",
+          "tag": null,
+          "codeHash": "5e45f5033449ba5b",
+          "error": null
+        }
+      ]
+    },
+    "c02-predict-dataclass-equal": {
+      "codeHash": "047bceef401c9b13",
+      "answer": "true",
+      "options": [
+        {
+          "id": "plain-class",
+          "text": "False False",
+          "tag": "EQ_NOT_DEFINED",
+          "codeHash": "2bbd9062fa67af18",
+          "error": null
+        },
+        {
+          "id": "true",
+          "text": "True False",
+          "tag": null,
+          "codeHash": "047bceef401c9b13",
+          "error": null
+        }
+      ]
+    },
+    "c02-predict-super-setup": {
+      "codeHash": "4765397aab9cb336",
+      "answer": "true",
+      "options": [
+        {
+          "id": "no-super",
+          "text": "AttributeError: 'Pallet' object has no attribute 'kg'",
+          "tag": "SUPER_NOT_CALLED",
+          "codeHash": "6edcb775714d2044",
+          "error": {
+            "type": "AttributeError",
+            "message": "'Pallet' object has no attribute 'kg'",
+            "line": 12
+          }
+        },
+        {
+          "id": "true",
+          "text": "30 4",
+          "tag": null,
+          "codeHash": "4765397aab9cb336",
+          "error": null
+        }
+      ]
+    },
+    "c02-predict-len-method": {
+      "codeHash": "64a726bc51053cc2",
+      "answer": "true",
+      "options": [
+        {
+          "id": "no-len",
+          "text": "TypeError: object of type 'Crate' has no len()",
+          "tag": "DUNDER_MISSING",
+          "codeHash": "69d55bb041e481e9",
+          "error": {
+            "type": "TypeError",
+            "message": "object of type 'Crate' has no len()",
+            "line": 7
+          }
+        },
+        {
+          "id": "true",
+          "text": "2 True",
+          "tag": null,
+          "codeHash": "64a726bc51053cc2",
+          "error": null
+        }
+      ]
+    },
+    "c02-predict-list-probe": {
+      "codeHash": "801d9599be4af641",
+      "answer": "true",
+      "options": [
+        {
+          "id": "set-scans",
+          "text": "100\n100",
+          "tag": "BIGO_LIST_LOOKUP",
+          "codeHash": "bd70718468f23395",
+          "error": null
+        },
+        {
+          "id": "true",
+          "text": "100\n1",
+          "tag": null,
+          "codeHash": "801d9599be4af641",
+          "error": null
+        }
+      ]
+    },
+    "c02-predict-heap-order": {
+      "codeHash": "bc333734a9dca897",
+      "answer": "true",
+      "options": [
+        {
+          "id": "list-order",
+          "text": "1 1 4",
+          "tag": "HEAP_ORDER_ASSUMPTION",
+          "codeHash": "7c30576d4c6b0df0",
+          "error": null
+        },
+        {
+          "id": "true",
+          "text": "1 1 2",
+          "tag": null,
+          "codeHash": "bc333734a9dca897",
+          "error": null
+        }
+      ]
+    },
+    "c02-predict-sort-ties": {
+      "codeHash": "a246833799fd9178",
+      "answer": "true",
+      "options": [
+        {
+          "id": "reverse-first",
+          "text": "['apple', 'kiwi', 'pear', 'fig']",
+          "tag": "SORT_DIRECTION",
+          "codeHash": "a6fd845733032694",
+          "error": null
+        },
+        {
+          "id": "ties-reversed",
+          "text": "['fig', 'pear', 'kiwi', 'apple']",
+          "tag": "SORT_TIES_IGNORED",
+          "codeHash": "2fa0583dec2e3228",
+          "error": null
+        },
+        {
+          "id": "true",
+          "text": "['fig', 'kiwi', 'pear', 'apple']",
+          "tag": null,
+          "codeHash": "a246833799fd9178",
+          "error": null
+        }
+      ]
+    },
+    "c02-predict-flatten-nested": {
+      "codeHash": "9a09e695797416c7",
+      "answer": "true",
+      "options": [
+        {
+          "id": "skip-nested",
+          "text": "[1, [2, [3]], []]",
+          "tag": "NESTED_IGNORED",
+          "codeHash": "5b8d2b60f4054777",
+          "error": null
+        },
+        {
+          "id": "true",
+          "text": "[1, 2, 3]",
+          "tag": null,
+          "codeHash": "9a09e695797416c7",
+          "error": null
+        }
+      ]
+    },
+    "c02-traceback-unhashable": {
+      "codeHash": "53292df031efa506",
+      "answer": "true",
+      "options": [
+        {
+          "id": "set-append",
+          "text": "AttributeError: 'set' object has no attribute 'append'",
+          "tag": "SET_ORDER_ASSUMPTION",
+          "codeHash": "1e6f413ba344a8fc",
+          "error": {
+            "type": "AttributeError",
+            "message": "'set' object has no attribute 'append'",
+            "line": 3
+          }
+        },
+        {
+          "id": "missing-key",
+          "text": "KeyError: 'Dock 9'",
+          "tag": "KEYERROR_VS_GET",
+          "codeHash": "696c0b333c2847e8",
+          "error": {
+            "type": "KeyError",
+            "message": "'Dock 9'",
+            "line": 2
+          }
+        },
+        {
+          "id": "true",
+          "text": "TypeError: cannot use 'list' as a set element (unhashable type: 'list')",
+          "tag": null,
+          "codeHash": "53292df031efa506",
+          "error": {
+            "type": "TypeError",
+            "message": "cannot use 'list' as a set element (unhashable type: 'list')",
+            "line": 3
+          }
+        }
+      ]
+    },
+    "c02-traceback-sort-none": {
+      "codeHash": "2ea68093c1e2dab8",
+      "answer": "true",
+      "options": [
+        {
+          "id": "true",
+          "text": "TypeError: 'NoneType' object is not subscriptable",
+          "tag": null,
+          "codeHash": "2ea68093c1e2dab8",
+          "error": {
+            "type": "TypeError",
+            "message": "'NoneType' object is not subscriptable",
+            "line": 3
+          }
+        },
+        {
+          "id": "sorted-result",
+          "text": "(no error)",
+          "tag": "SORT_RETURNS_NONE",
+          "codeHash": "e320c2a026005ec4",
+          "error": null
+        }
+      ]
+    },
+    "c02-traceback-empty-deque": {
+      "codeHash": "8a459f2ba58fbd8b",
+      "answer": "true",
+      "options": [
+        {
+          "id": "list-front",
+          "text": "IndexError: pop from empty list",
+          "tag": "LIST_FRONT_POP",
+          "codeHash": "787bf45cb526013b",
+          "error": {
+            "type": "IndexError",
+            "message": "pop from empty list",
+            "line": 4
+          }
+        },
+        {
+          "id": "true",
+          "text": "IndexError: pop from an empty deque",
+          "tag": null,
+          "codeHash": "8a459f2ba58fbd8b",
+          "error": {
+            "type": "IndexError",
+            "message": "pop from an empty deque",
+            "line": 6
+          }
+        }
+      ]
+    },
+    "c02-traceback-missing-argument": {
+      "codeHash": "3b984cb667a8eaf6",
+      "answer": "true",
+      "options": [
+        {
+          "id": "true",
+          "text": "TypeError: Parcel.__init__() missing 1 required positional argument: 'kg'",
+          "tag": null,
+          "codeHash": "3b984cb667a8eaf6",
+          "error": {
+            "type": "TypeError",
+            "message": "Parcel.__init__() missing 1 required positional argument: 'kg'",
+            "line": 7
+          }
+        },
+        {
+          "id": "extra-value",
+          "text": "TypeError: Parcel.__init__() takes 3 positional arguments but 4 were given",
+          "tag": "ARGUMENT_COUNT",
+          "codeHash": "5f0688463b9b0e34",
+          "error": {
+            "type": "TypeError",
+            "message": "Parcel.__init__() takes 3 positional arguments but 4 were given",
+            "line": 7
+          }
+        }
+      ]
+    },
+    "c02-traceback-heap-empty": {
+      "codeHash": "11d21e0f378ecfff",
+      "answer": "true",
+      "options": [
+        {
+          "id": "true",
+          "text": "IndexError: index out of range",
+          "tag": null,
+          "codeHash": "11d21e0f378ecfff",
+          "error": {
+            "type": "IndexError",
+            "message": "index out of range",
+            "line": 6
+          }
+        },
+        {
+          "id": "read-front",
+          "text": "IndexError: list index out of range",
+          "tag": "HEAP_ORDER_ASSUMPTION",
+          "codeHash": "c48141905a376d6b",
+          "error": {
+            "type": "IndexError",
+            "message": "list index out of range",
+            "line": 4
+          }
+        }
+      ]
+    }
+  }
+}

@@ -54,11 +54,12 @@ function buildExamples(chapter: Chapter, outputs: ChapterOutputs): Example[] {
     const recorded = outputs.choice[item.id];
     for (const option of recorded?.options ?? []) {
       const code = option.id === 'true' ? item.code : item.variants.find((variant) => variant.id === option.id)?.code ?? '';
-      if (item.kind === 'predict') {
+      // A printed option is compared exactly. An option that raises is compared by exception type,
+      // because CPython words some messages differently from Pyodide.
+      if (item.kind === 'predict' && option.error === null) {
         examples.push({ name: `choice:${item.id}:${option.id}`, code, check: 'stdout', expected: `${option.text}\n` });
       } else {
-        const type = option.error?.type ?? 'none';
-        examples.push({ name: `choice:${item.id}:${option.id}`, code, check: 'error-type', expected: type });
+        examples.push({ name: `choice:${item.id}:${option.id}`, code, check: 'error-type', expected: option.error?.type ?? 'none' });
       }
     }
   }

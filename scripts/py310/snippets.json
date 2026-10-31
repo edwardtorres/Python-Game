@@ -456,6 +456,282 @@
     "code": "def report_lines(pairs):\n    return [f\"{word}: {count}\" for word, count in pairs][::-1]\n"
   },
   {
+    "name": "c02-guided-loading-order:reference",
+    "code": "def loading_order(parcels):\n    ordered = sorted(parcels, key=lambda parcel: (-parcel[1], parcel[0]))\n    return [name for name, kg in ordered]\n"
+  },
+  {
+    "name": "c02-guided-loading-order:starter",
+    "code": "def loading_order(parcels):\n    pass\n"
+  },
+  {
+    "name": "c02-guided-loading-order:variant:lightest-first",
+    "code": "def loading_order(parcels):\n    ordered = sorted(parcels, key=lambda parcel: (parcel[1], parcel[0]))\n    return [name for name, kg in ordered]\n"
+  },
+  {
+    "name": "c02-guided-loading-order:variant:ties-unsorted",
+    "code": "def loading_order(parcels):\n    ordered = sorted(parcels, key=lambda parcel: -parcel[1])\n    return [name for name, kg in ordered]\n"
+  },
+  {
+    "name": "c02-guided-loading-order:variant:pairs-returned",
+    "code": "def loading_order(parcels):\n    return sorted(parcels, key=lambda parcel: (-parcel[1], parcel[0]))\n"
+  },
+  {
+    "name": "c02-guided-dock-totals:reference",
+    "code": "def dock_totals(parcels):\n    totals = {}\n    for dock, kg in parcels:\n        totals[dock] = totals.get(dock, 0) + kg\n    return totals\n"
+  },
+  {
+    "name": "c02-guided-dock-totals:starter",
+    "code": "def dock_totals(parcels):\n    pass\n"
+  },
+  {
+    "name": "c02-guided-dock-totals:variant:overwritten",
+    "code": "def dock_totals(parcels):\n    totals = {}\n    for dock, kg in parcels:\n        totals[dock] = kg\n    return totals\n"
+  },
+  {
+    "name": "c02-guided-dock-totals:variant:none-when-empty",
+    "code": "def dock_totals(parcels):\n    if not parcels:\n        return None\n    totals = {}\n    for dock, kg in parcels:\n        totals[dock] = totals.get(dock, 0) + kg\n    return totals\n"
+  },
+  {
+    "name": "c02-guided-depth:reference",
+    "code": "def depth(value):\n    if not isinstance(value, list):\n        return 0\n    return 1 + max((depth(item) for item in value), default=0)\n"
+  },
+  {
+    "name": "c02-guided-depth:starter",
+    "code": "def depth(value):\n    pass\n"
+  },
+  {
+    "name": "c02-guided-depth:variant:non-list-one",
+    "code": "def depth(value):\n    if not isinstance(value, list):\n        return 1\n    return 1 + max((depth(item) for item in value), default=0)\n"
+  },
+  {
+    "name": "c02-guided-depth:variant:no-plus-one",
+    "code": "def depth(value):\n    if not isinstance(value, list):\n        return 0\n    return max((depth(item) for item in value), default=0)\n"
+  },
+  {
+    "name": "c02-ticket-recent-events:reference",
+    "code": "from collections import deque\n\n\ndef last_events(events, n):\n    recent = deque(maxlen=n)\n    for event in events:\n        recent.append(event)\n    return list(recent)\n"
+  },
+  {
+    "name": "c02-ticket-recent-events:starter",
+    "code": "def last_events(events, n):\n    pass\n"
+  },
+  {
+    "name": "c02-ticket-recent-events:variant:first-n",
+    "code": "def last_events(events, n):\n    return events[:n]\n"
+  },
+  {
+    "name": "c02-ticket-recent-events:variant:short-list-slice",
+    "code": "def last_events(events, n):\n    return events[len(events) - n:]\n"
+  },
+  {
+    "name": "c02-ticket-recent-events:variant:zero-all",
+    "code": "def last_events(events, n):\n    if n == 0:\n        return events\n    return events[-n:]\n"
+  },
+  {
+    "name": "c02-ticket-three-heaviest:reference",
+    "code": "import heapq\n\n\ndef heaviest(weights, n):\n    return heapq.nlargest(n, weights)\n"
+  },
+  {
+    "name": "c02-ticket-three-heaviest:starter",
+    "code": "def heaviest(weights, n):\n    pass\n"
+  },
+  {
+    "name": "c02-ticket-three-heaviest:variant:one-short",
+    "code": "import heapq\n\n\ndef heaviest(weights, n):\n    return heapq.nlargest(n - 1, weights)\n"
+  },
+  {
+    "name": "c02-ticket-three-heaviest:variant:ascending",
+    "code": "import heapq\n\n\ndef heaviest(weights, n):\n    return sorted(heapq.nlargest(n, weights))\n"
+  },
+  {
+    "name": "c02-ticket-three-heaviest:variant:distinct-only",
+    "code": "import heapq\n\n\ndef heaviest(weights, n):\n    return heapq.nlargest(n, set(weights))\n"
+  },
+  {
+    "name": "c02-ticket-first-seen:reference",
+    "code": "def first_seen(log):\n    seen = set()\n    docks = []\n    for dock in log:\n        if dock not in seen:\n            seen.add(dock)\n            docks.append(dock)\n    return docks\n"
+  },
+  {
+    "name": "c02-ticket-first-seen:starter",
+    "code": "def first_seen(log):\n    pass\n"
+  },
+  {
+    "name": "c02-ticket-first-seen:variant:keeps-repeats",
+    "code": "def first_seen(log):\n    return list(log)\n"
+  },
+  {
+    "name": "c02-ticket-first-seen:variant:sorted-unique",
+    "code": "def first_seen(log):\n    return sorted(set(log))\n"
+  },
+  {
+    "name": "c02-ticket-first-seen:variant:none-when-empty",
+    "code": "def first_seen(log):\n    if not log:\n        return None\n    seen = set()\n    docks = []\n    for dock in log:\n        if dock not in seen:\n            seen.add(dock)\n            docks.append(dock)\n    return docks\n"
+  },
+  {
+    "name": "c02-fix-longest-first:reference",
+    "code": "def longest_first(words):\n    return sorted(words, key=lambda word: (-len(word), word))\n"
+  },
+  {
+    "name": "c02-fix-longest-first:starter",
+    "code": "def longest_first(words):\n    return sorted(words, key=len)\n"
+  },
+  {
+    "name": "c02-fix-longest-first:variant:shortest-first",
+    "code": "def longest_first(words):\n    return sorted(words, key=lambda word: (len(word), word))\n"
+  },
+  {
+    "name": "c02-fix-longest-first:variant:ties-unsorted",
+    "code": "def longest_first(words):\n    return sorted(words, key=lambda word: -len(word))\n"
+  },
+  {
+    "name": "c02-fix-nested-total:reference",
+    "code": "def nested_total(values):\n    total = 0\n    for value in values:\n        if isinstance(value, list):\n            total += nested_total(value)\n        else:\n            total += value\n    return total\n"
+  },
+  {
+    "name": "c02-fix-nested-total:starter",
+    "code": "def nested_total(values):\n    total = 0\n    for value in values:\n        if isinstance(value, list):\n            total = nested_total(value)\n        else:\n            total += value\n    return total\n"
+  },
+  {
+    "name": "c02-fix-nested-total:variant:top-level-only",
+    "code": "def nested_total(values):\n    return sum(value for value in values if not isinstance(value, list))\n"
+  },
+  {
+    "name": "c02-fix-nested-total:variant:returns-none-empty",
+    "code": "def nested_total(values):\n    if not values:\n        return None\n    total = 0\n    for value in values:\n        if isinstance(value, list):\n            total += nested_total(value)\n        else:\n            total += value\n    return total\n"
+  },
+  {
+    "name": "c02-structure-hinted-functions:reference",
+    "code": "def total_weight(weights: list[float]) -> float:\n    return sum(weights)\n\n\ndef label_for(name: str, kg: float) -> str:\n    return f\"{name} {kg}\"\n"
+  },
+  {
+    "name": "c02-structure-hinted-functions:starter",
+    "code": "def total_weight(weights):\n    pass\n\n\ndef label_for(name, kg):\n    pass\n"
+  },
+  {
+    "name": "c02-structure-hinted-functions:variant:no-hints",
+    "code": "def total_weight(weights):\n    return sum(weights)\n\n\ndef label_for(name, kg):\n    return f\"{name} {kg}\"\n"
+  },
+  {
+    "name": "c02-structure-hinted-functions:variant:wrong-name",
+    "code": "def total(weights: list[float]) -> float:\n    return sum(weights)\n\n\ndef label_for(name: str, kg: float) -> str:\n    return f\"{name} {kg}\"\n"
+  },
+  {
+    "name": "c02-structure-queue-popleft:reference",
+    "code": "from collections import deque\n\n\ndef serve_all(queue):\n    served = []\n    while queue:\n        served.append(queue.popleft())\n    return served\n"
+  },
+  {
+    "name": "c02-structure-queue-popleft:starter",
+    "code": "def serve_all(queue):\n    pass\n"
+  },
+  {
+    "name": "c02-structure-queue-popleft:variant:pop-zero",
+    "code": "def serve_all(queue):\n    served = []\n    while queue:\n        served.append(queue.pop(0))\n    return served\n"
+  },
+  {
+    "name": "c02-structure-queue-popleft:variant:wrong-name",
+    "code": "from collections import deque\n\n\ndef serve(queue):\n    served = []\n    while queue:\n        served.append(queue.popleft())\n    return served\n"
+  },
+  {
+    "name": "c02-structure-smallest-heapq:reference",
+    "code": "from heapq import nsmallest\n\n\ndef smallest_three(values):\n    return nsmallest(3, values)\n"
+  },
+  {
+    "name": "c02-structure-smallest-heapq:starter",
+    "code": "def smallest_three(values):\n    pass\n"
+  },
+  {
+    "name": "c02-structure-smallest-heapq:variant:uses-sorted",
+    "code": "def smallest_three(values):\n    return sorted(values)[:3]\n"
+  },
+  {
+    "name": "c02-structure-smallest-heapq:variant:wrong-name",
+    "code": "from heapq import nsmallest\n\n\ndef smallest(values):\n    return nsmallest(3, values)\n"
+  },
+  {
+    "name": "c02-boss-rank-rows:reference",
+    "code": "def rank_rows(rows):\n    ordered = sorted(rows, key=lambda row: (row[0], -row[2], row[1]))\n    return [f\"{dock}/{name}\" for dock, name, kg in ordered]\n"
+  },
+  {
+    "name": "c02-boss-rank-rows:starter",
+    "code": "def rank_rows(rows):\n    pass\n"
+  },
+  {
+    "name": "c02-boss-rank-rows:variant:weight-first",
+    "code": "def rank_rows(rows):\n    ordered = sorted(rows, key=lambda row: (-row[2], row[0], row[1]))\n    return [f\"{dock}/{name}\" for dock, name, kg in ordered]\n"
+  },
+  {
+    "name": "c02-boss-rank-rows:variant:light-first",
+    "code": "def rank_rows(rows):\n    ordered = sorted(rows, key=lambda row: (row[0], row[2], row[1]))\n    return [f\"{dock}/{name}\" for dock, name, kg in ordered]\n"
+  },
+  {
+    "name": "c02-boss-rank-rows:variant:names-tie-wrong",
+    "code": "def rank_rows(rows):\n    ordered = sorted(rows, key=lambda row: (row[0], -row[2]))\n    return [f\"{dock}/{name}\" for dock, name, kg in ordered]\n"
+  },
+  {
+    "name": "c02-boss-rank-rows:variant:pairs-returned",
+    "code": "def rank_rows(rows):\n    return sorted(rows, key=lambda row: (row[0], -row[2], row[1]))\n"
+  },
+  {
+    "name": "c02-boss-dispatch-heap:reference",
+    "code": "import heapq\n\n\ndef dispatch_order(jobs):\n    heap = []\n    for arrival, (priority, name) in enumerate(jobs):\n        heapq.heappush(heap, (priority, arrival, name))\n    return [heapq.heappop(heap)[2] for _ in range(len(heap))]\n"
+  },
+  {
+    "name": "c02-boss-dispatch-heap:starter",
+    "code": "def dispatch_order(jobs):\n    pass\n"
+  },
+  {
+    "name": "c02-boss-dispatch-heap:variant:higher-first",
+    "code": "import heapq\n\n\ndef dispatch_order(jobs):\n    heap = []\n    for arrival, (priority, name) in enumerate(jobs):\n        heapq.heappush(heap, (-priority, arrival, name))\n    return [heapq.heappop(heap)[2] for _ in range(len(heap))]\n"
+  },
+  {
+    "name": "c02-boss-dispatch-heap:variant:name-ties",
+    "code": "import heapq\n\n\ndef dispatch_order(jobs):\n    heap = []\n    for priority, name in jobs:\n        heapq.heappush(heap, (priority, name))\n    return [heapq.heappop(heap)[1] for _ in range(len(heap))]\n"
+  },
+  {
+    "name": "c02-boss-dispatch-heap:variant:pairs-returned",
+    "code": "import heapq\n\n\ndef dispatch_order(jobs):\n    heap = []\n    for arrival, (priority, name) in enumerate(jobs):\n        heapq.heappush(heap, (priority, arrival, name))\n    return [heapq.heappop(heap) for _ in range(len(heap))]\n"
+  },
+  {
+    "name": "c02-boss-flatten-tags:reference",
+    "code": "def flatten_tags(items):\n    flat = []\n    for item in items:\n        if isinstance(item, list):\n            flat.extend(flatten_tags(item))\n        else:\n            flat.append(item)\n    return flat\n"
+  },
+  {
+    "name": "c02-boss-flatten-tags:starter",
+    "code": "def flatten_tags(items):\n    pass\n"
+  },
+  {
+    "name": "c02-boss-flatten-tags:variant:top-level-only",
+    "code": "def flatten_tags(items):\n    return [item for item in items if not isinstance(item, list)]\n"
+  },
+  {
+    "name": "c02-boss-flatten-tags:variant:reversed-order",
+    "code": "def flatten_tags(items):\n    flat = []\n    for item in reversed(items):\n        if isinstance(item, list):\n            flat.extend(flatten_tags(item))\n        else:\n            flat.append(item)\n    return flat\n"
+  },
+  {
+    "name": "c02-boss-flatten-tags:variant:empty-as-item",
+    "code": "def flatten_tags(items):\n    flat = []\n    for item in items:\n        if isinstance(item, list) and item:\n            flat.extend(flatten_tags(item))\n        else:\n            flat.append(item)\n    return flat\n"
+  },
+  {
+    "name": "c02-boss-report-lines:reference",
+    "code": "def report_lines(rows):\n    return [f\"{dock}: {total:.1f}\" for dock, total in sorted(rows)]\n"
+  },
+  {
+    "name": "c02-boss-report-lines:starter",
+    "code": "def report_lines(rows):\n    pass\n"
+  },
+  {
+    "name": "c02-boss-report-lines:variant:two-decimals",
+    "code": "def report_lines(rows):\n    return [f\"{dock}: {total:.2f}\" for dock, total in sorted(rows)]\n"
+  },
+  {
+    "name": "c02-boss-report-lines:variant:unsorted",
+    "code": "def report_lines(rows):\n    return [f\"{dock}: {total:.1f}\" for dock, total in rows]\n"
+  },
+  {
+    "name": "c02-boss-report-lines:variant:pairs-returned",
+    "code": "def report_lines(rows):\n    return [(dock, f\"{total:.1f}\") for dock, total in sorted(rows)]\n"
+  },
+  {
     "name": "example:types-1",
     "code": "print(int(\"42\") + 1, float(\"2.5\") * 2, str(7) + \"!\")\nprint(type(3), type(3.0), type(\"3\"))\n"
   },
@@ -698,5 +974,209 @@
   {
     "name": "choice:c01-traceback-name-type:float-text",
     "code": "parcels = 3.0\nprint(parcels + \"x\")\n"
+  },
+  {
+    "name": "example:c02-classes-1",
+    "code": "class Parcel:\n    def __init__(self, name, kg):\n        self.name = name\n        self.kg = kg\n\n    def label(self):\n        return f\"{self.name} ({self.kg} kg)\"\n\n\na = Parcel(\"Crate\", 12)\nb = Parcel(\"Pallet\", 30)\nprint(a.label(), b.label())\nprint(a.kg + b.kg)\n"
+  },
+  {
+    "name": "example:c02-classes-2",
+    "code": "class Dock:\n    shared = []\n\n    def __init__(self, name):\n        self.name = name\n        self.own = []\n\n\none = Dock(\"A\")\ntwo = Dock(\"B\")\none.shared.append(\"x\")\none.own.append(\"y\")\nprint(two.shared, two.own)\n"
+  },
+  {
+    "name": "example:c02-dataclass-1",
+    "code": "from dataclasses import dataclass\n\n\n@dataclass\nclass Parcel:\n    name: str\n    kg: float\n\n\np = Parcel(\"Crate\", 12.5)\nprint(p)\nprint(p == Parcel(\"Crate\", 12.5))\n"
+  },
+  {
+    "name": "example:c02-dataclass-2",
+    "code": "from dataclasses import dataclass, field\n\n\n@dataclass\nclass Route:\n    stops: list = field(default_factory=list)\n\n\na = Route()\nb = Route()\na.stops.append(\"Dock 1\")\nprint(a.stops, b.stops)\n"
+  },
+  {
+    "name": "example:c02-dataclass-3",
+    "code": "from dataclasses import dataclass\n\ntry:\n    @dataclass\n    class Bad:\n        stops: list = []\nexcept ValueError as error:\n    print(type(error).__name__)\n"
+  },
+  {
+    "name": "example:c02-inherit-1",
+    "code": "class Parcel:\n    def label(self):\n        return \"parcel\"\n\n\nclass Pallet(Parcel):\n    def label(self):\n        return \"pallet\"\n\n\nclass Crate(Parcel):\n    pass\n\n\nprint(Parcel().label(), Pallet().label(), Crate().label())\nprint(isinstance(Crate(), Parcel))\n"
+  },
+  {
+    "name": "example:c02-inherit-2",
+    "code": "class Parcel:\n    def __init__(self, kg):\n        self.kg = kg\n\n\nclass Pallet(Parcel):\n    def __init__(self, kg, boards):\n        super().__init__(kg)\n        self.boards = boards\n\n\npallet = Pallet(30, 4)\nprint(pallet.kg, pallet.boards)\n"
+  },
+  {
+    "name": "example:c02-dunder-1",
+    "code": "class Crate:\n    def __init__(self, items):\n        self.items = items\n\n    def __len__(self):\n        return len(self.items)\n\n    def __str__(self):\n        return f\"Crate with {len(self)} items\"\n\n\ncrate = Crate([\"a\", \"b\", \"c\"])\nprint(len(crate))\nprint(crate)\n"
+  },
+  {
+    "name": "example:c02-dunder-2",
+    "code": "class Weight:\n    def __init__(self, kg):\n        self.kg = kg\n\n    def __eq__(self, other):\n        return self.kg == other.kg\n\n    def __add__(self, other):\n        return Weight(self.kg + other.kg)\n\n\nprint(Weight(2) == Weight(2), Weight(2) == Weight(3))\nprint((Weight(2) + Weight(5)).kg)\n"
+  },
+  {
+    "name": "example:c02-bigo-1",
+    "code": "class Probe:\n    comparisons = 0\n\n    def __init__(self, value):\n        self.value = value\n\n    def __eq__(self, other):\n        Probe.comparisons += 1\n        return self.value == other.value\n\n    def __hash__(self):\n        return hash(self.value)\n\n\ndef lookup_cost(n):\n    items = [Probe(i) for i in range(n)]\n    lookup = set(items)\n    target = Probe(n - 1)\n    Probe.comparisons = 0\n    target in items\n    list_cost = Probe.comparisons\n    Probe.comparisons = 0\n    target in lookup\n    return list_cost, Probe.comparisons\n\n\nfor n in (100, 200):\n    print(n, lookup_cost(n))\n"
+  },
+  {
+    "name": "example:c02-bigo-2",
+    "code": "def pair_steps(n):\n    steps = 0\n    for i in range(n):\n        for j in range(n):\n            steps += 1\n    return steps\n\n\nprint([pair_steps(n) for n in (10, 20)])\n"
+  },
+  {
+    "name": "example:c02-containers-1",
+    "code": "stops = [\"Dock 1\", \"Dock 2\", \"Dock 1\"]\nprint(stops[0], stops.count(\"Dock 1\"))\nseen = set(stops)\nprint(len(seen), \"Dock 2\" in seen)\n"
+  },
+  {
+    "name": "example:c02-containers-2",
+    "code": "try:\n    seen = {[1, 2]}\nexcept TypeError as error:\n    print(type(error).__name__)\nprint({(1, 2): \"pair\"}[(1, 2)])\n"
+  },
+  {
+    "name": "example:c02-deque-1",
+    "code": "from collections import deque\n\nqueue = deque([\"Dock 1\", \"Dock 2\"])\nqueue.append(\"Dock 3\")\nprint(queue.popleft(), len(queue))\nprint(list(queue))\n"
+  },
+  {
+    "name": "example:c02-heap-1",
+    "code": "import heapq\n\njobs = [5, 1, 4]\nheapq.heapify(jobs)\nprint(jobs[0])\nprint(heapq.heappop(jobs), heapq.heappop(jobs), heapq.heappop(jobs))\n"
+  },
+  {
+    "name": "example:c02-recursion-1",
+    "code": "def countdown(n):\n    if n == 0:\n        return [\"liftoff\"]\n    return [n] + countdown(n - 1)\n\n\nprint(countdown(3))\n"
+  },
+  {
+    "name": "example:c02-recursion-2",
+    "code": "def flatten(items):\n    flat = []\n    for item in items:\n        if isinstance(item, list):\n            flat.extend(flatten(item))\n        else:\n            flat.append(item)\n    return flat\n\n\nprint(flatten([1, [2, [3, 4]], 5]))\n"
+  },
+  {
+    "name": "example:c02-sort-1",
+    "code": "parcels = [(\"Crate\", 12), (\"Bag\", 3), (\"Drum\", 12)]\nprint(sorted(parcels, key=lambda parcel: parcel[1]))\nprint(sorted([\"bb\", \"a\", \"ccc\"], key=len))\n"
+  },
+  {
+    "name": "example:c02-sort-2",
+    "code": "words = [\"pear\", \"fig\", \"apple\", \"kiwi\"]\nprint(sorted(words, key=len, reverse=True))\nprint(sorted(words, key=lambda word: (len(word), word)))\n"
+  },
+  {
+    "name": "example:c02-hints-1",
+    "code": "def label(value: int) -> str:\n    return value * 2\n\n\nprint(label(4))\nprint(label(\"ab\"))\n"
+  },
+  {
+    "name": "example:c02-hints-2",
+    "code": "from typing import Optional\n\n\ndef find(counts: dict[str, int], key: str) -> Optional[int]:\n    return counts.get(key)\n\n\nprint(find({\"rail\": 2}, \"rail\"), find({\"rail\": 2}, \"sea\"))\n"
+  },
+  {
+    "name": "example:c02-traceback-1",
+    "code": "try:\n    numbers = [1, 2]\n    print(numbers[5])\nexcept IndexError as error:\n    print(type(error).__name__, error)\n"
+  },
+  {
+    "name": "example:c02-traceback-2",
+    "code": "def average(values):\n    print(\"values:\", values, type(values).__name__)\n    return sum(values) / len(values)\n\n\nprint(average([2, 4]))\n"
+  },
+  {
+    "name": "choice:c02-predict-shared-list",
+    "code": "class Dock:\n    queue = []\n\n    def __init__(self, name):\n        self.name = name\n        self.parcels = []\n\n    def receive(self, parcel):\n        self.parcels.append(parcel)\n        Dock.queue.append(parcel)\n\n\nnorth = Dock(\"North\")\nsouth = Dock(\"South\")\nnorth.receive(\"crate\")\nprint(len(north.parcels), len(south.parcels), len(Dock.queue))\n"
+  },
+  {
+    "name": "choice:c02-predict-shared-list:class-parcels",
+    "code": "class Dock:\n    queue = []\n    parcels = []\n\n    def __init__(self, name):\n        self.name = name\n\n    def receive(self, parcel):\n        self.parcels.append(parcel)\n        Dock.queue.append(parcel)\n\n\nnorth = Dock(\"North\")\nsouth = Dock(\"South\")\nnorth.receive(\"crate\")\nprint(len(north.parcels), len(south.parcels), len(Dock.queue))\n"
+  },
+  {
+    "name": "choice:c02-predict-dataclass-equal",
+    "code": "from dataclasses import dataclass\n\n\n@dataclass\nclass Parcel:\n    name: str\n    kg: float\n\n\na = Parcel(\"Crate\", 12.0)\nb = Parcel(\"Crate\", 12.0)\nprint(a == b, a is b)\n"
+  },
+  {
+    "name": "choice:c02-predict-dataclass-equal:plain-class",
+    "code": "from dataclasses import dataclass\n\n\nclass Parcel:\n    def __init__(self, name, kg):\n        self.name = name\n        self.kg = kg\n\n\na = Parcel(\"Crate\", 12.0)\nb = Parcel(\"Crate\", 12.0)\nprint(a == b, a is b)\n"
+  },
+  {
+    "name": "choice:c02-predict-super-setup",
+    "code": "class Parcel:\n    def __init__(self, kg):\n        self.kg = kg\n\n\nclass Pallet(Parcel):\n    def __init__(self, kg, boards):\n        super().__init__(kg)\n        self.boards = boards\n\n\npallet = Pallet(30, 4)\nprint(pallet.kg, pallet.boards)\n"
+  },
+  {
+    "name": "choice:c02-predict-super-setup:no-super",
+    "code": "class Parcel:\n    def __init__(self, kg):\n        self.kg = kg\n\n\nclass Pallet(Parcel):\n    def __init__(self, kg, boards):\n        self.boards = boards\n\n\npallet = Pallet(30, 4)\nprint(pallet.kg, pallet.boards)\n"
+  },
+  {
+    "name": "choice:c02-predict-len-method",
+    "code": "class Crate:\n    def __init__(self, items):\n        self.items = items\n\n    def __len__(self):\n        return len(self.items)\n\n\ncrate = Crate([\"a\", \"b\"])\nprint(len(crate), bool(crate))\n"
+  },
+  {
+    "name": "choice:c02-predict-len-method:no-len",
+    "code": "class Crate:\n    def __init__(self, items):\n        self.items = items\n\n\ncrate = Crate([\"a\", \"b\"])\nprint(len(crate), bool(crate))\n"
+  },
+  {
+    "name": "choice:c02-predict-list-probe",
+    "code": "class Probe:\n    comparisons = 0\n\n    def __init__(self, value):\n        self.value = value\n\n    def __eq__(self, other):\n        Probe.comparisons += 1\n        return self.value == other.value\n\n    def __hash__(self):\n        return hash(self.value)\n\n\nitems = [Probe(i) for i in range(100)]\nlookup = set(items)\ntarget = Probe(99)\nProbe.comparisons = 0\ntarget in items\nprint(Probe.comparisons)\nProbe.comparisons = 0\ntarget in lookup\nprint(Probe.comparisons)\n"
+  },
+  {
+    "name": "choice:c02-predict-list-probe:set-scans",
+    "code": "class Probe:\n    comparisons = 0\n\n    def __init__(self, value):\n        self.value = value\n\n    def __eq__(self, other):\n        Probe.comparisons += 1\n        return self.value == other.value\n\n    def __hash__(self):\n        return hash(self.value)\n\n\nitems = [Probe(i) for i in range(100)]\nlookup = set(items)\ntarget = Probe(99)\nProbe.comparisons = 0\ntarget in items\nprint(Probe.comparisons)\nProbe.comparisons = 0\nany(target == item for item in items)\nprint(Probe.comparisons)\n"
+  },
+  {
+    "name": "choice:c02-predict-heap-order",
+    "code": "import heapq\n\njobs = [4, 2, 9, 1]\nheapq.heapify(jobs)\nprint(jobs[0], heapq.heappop(jobs), heapq.heappop(jobs))\n"
+  },
+  {
+    "name": "choice:c02-predict-heap-order:list-order",
+    "code": "import heapq\n\njobs = [4, 2, 9, 1]\nheapq.heapify(jobs)\nprint(jobs[0], heapq.heappop(jobs), jobs[1])\n"
+  },
+  {
+    "name": "choice:c02-predict-sort-ties",
+    "code": "words = [\"kiwi\", \"fig\", \"pear\", \"apple\"]\nprint(sorted(words, key=len))\n"
+  },
+  {
+    "name": "choice:c02-predict-sort-ties:reverse-first",
+    "code": "words = [\"kiwi\", \"fig\", \"pear\", \"apple\"]\nprint(sorted(words, key=len, reverse=True))\n"
+  },
+  {
+    "name": "choice:c02-predict-sort-ties:ties-reversed",
+    "code": "words = [\"kiwi\", \"fig\", \"pear\", \"apple\"]\nprint(sorted(reversed(words), key=len))\n"
+  },
+  {
+    "name": "choice:c02-predict-flatten-nested",
+    "code": "def flatten(items):\n    flat = []\n    for item in items:\n        if isinstance(item, list):\n            flat.extend(flatten(item))\n        else:\n            flat.append(item)\n    return flat\n\n\nprint(flatten([1, [2, [3]], []]))\n"
+  },
+  {
+    "name": "choice:c02-predict-flatten-nested:skip-nested",
+    "code": "def flatten(items):\n    flat = []\n    for item in items:\n        flat.append(item)\n    return flat\n\n\nprint(flatten([1, [2, [3]], []]))\n"
+  },
+  {
+    "name": "choice:c02-traceback-unhashable",
+    "code": "seen = set()\nfor pallet in [[\"A\", 1], [\"B\", 2]]:\n    seen.add(pallet)\nprint(len(seen))\n"
+  },
+  {
+    "name": "choice:c02-traceback-unhashable:set-append",
+    "code": "seen = set()\nfor pallet in [[\"A\", 1], [\"B\", 2]]:\n    seen.append(pallet)\nprint(len(seen))\n"
+  },
+  {
+    "name": "choice:c02-traceback-unhashable:missing-key",
+    "code": "orders = {\"Dock 1\": 3}\nprint(orders[\"Dock 9\"])\n"
+  },
+  {
+    "name": "choice:c02-traceback-sort-none",
+    "code": "parcels = [3, 1, 2]\nordered = parcels.sort()\nprint(ordered[0])\n"
+  },
+  {
+    "name": "choice:c02-traceback-sort-none:sorted-result",
+    "code": "parcels = [3, 1, 2]\nordered = sorted(parcels)\nprint(ordered[0])\n"
+  },
+  {
+    "name": "choice:c02-traceback-empty-deque",
+    "code": "from collections import deque\n\nqueue = deque()\nqueue.append(\"crate\")\nqueue.popleft()\nprint(queue.popleft())\n"
+  },
+  {
+    "name": "choice:c02-traceback-empty-deque:list-front",
+    "code": "queue = []\nqueue.append(\"crate\")\nqueue.pop(0)\nprint(queue.pop(0))\n"
+  },
+  {
+    "name": "choice:c02-traceback-missing-argument",
+    "code": "class Parcel:\n    def __init__(self, name, kg):\n        self.name = name\n        self.kg = kg\n\n\nparcel = Parcel(\"Crate\")\nprint(parcel.name)\n"
+  },
+  {
+    "name": "choice:c02-traceback-missing-argument:extra-value",
+    "code": "class Parcel:\n    def __init__(self, name, kg):\n        self.name = name\n        self.kg = kg\n\n\nparcel = Parcel(\"Crate\", 12, 3)\nprint(parcel.name)\n"
+  },
+  {
+    "name": "choice:c02-traceback-heap-empty",
+    "code": "import heapq\n\njobs = []\nheapq.heappush(jobs, 4)\nheapq.heappop(jobs)\nprint(heapq.heappop(jobs))\n"
+  },
+  {
+    "name": "choice:c02-traceback-heap-empty:read-front",
+    "code": "jobs = []\njobs.append(4)\njobs.pop(0)\nprint(jobs[0])\n"
   }
 ]
