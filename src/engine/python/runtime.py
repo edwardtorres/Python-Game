@@ -76,3 +76,7 @@ def reset_runtime():
                 shutil.rmtree(path, ignore_errors=True)
             else:
                 os.remove(path)
+    # Relative paths in a learner's code resolve against the working directory. Move it into
+    # the cleared home directory, so files a run writes never reach the host's own folders.
+    if os.path.isdir(WORK_ROOT):
+        os.chdir(WORK_ROOT)

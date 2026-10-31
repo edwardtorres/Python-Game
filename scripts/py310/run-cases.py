@@ -16,6 +16,7 @@ import io
 import json
 import os
 import sys
+import tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.join(ROOT, "src", "engine", "python"))
@@ -80,6 +81,9 @@ def check_examples(version):
 
 
 def main():
+    # A learner's file writes resolve against the working directory. Run in a scratch folder,
+    # so the check leaves nothing behind in the repository.
+    os.chdir(tempfile.mkdtemp(prefix='py310-run-'))
     version = sys.version.split()[0]
     mismatches = check_payloads(version) + check_examples(version)
     return 1 if mismatches else 0
