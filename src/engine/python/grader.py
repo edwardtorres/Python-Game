@@ -1,6 +1,6 @@
 """Grader core. Runs learner code in a fresh namespace and compares it with a reference.
 
-Challenge kinds: function, pandas, chart, ml, api, testing, structure.
+Challenge kinds: function, pandas, chart, ml, api, testing, suite, structure.
 
 Every graded call reseeds Python's random module and NumPy's global RNG first. The
 virtual clock makes retry backoff measurable. Messages for hidden cases never reveal
@@ -22,8 +22,11 @@ from mock_api import MockAPI
 LEARNER = "<learner>"
 REFERENCE = "<reference>"
 VARIANT = "<variant>"
+TESTS = "<tests>"
 CLIP = 220
 HIDDEN_NOTE = "Did not match on a hidden case."
+# NaN has its own summary. None would collide with a real None when variants are matched.
+NAN_SENTINEL = "<nan>"
 
 
 def _clip(text):
@@ -84,7 +87,7 @@ def _plain(value):
     if isinstance(value, bool) or value is None or isinstance(value, (int, str)):
         return value
     if isinstance(value, float):
-        return None if math.isnan(value) else round(value, 12)
+        return NAN_SENTINEL if math.isnan(value) else round(value, 12)
     if isinstance(value, (list, tuple)):
         return [_plain(item) for item in value]
     if isinstance(value, dict):
@@ -334,33 +337,42 @@ def _grade_cases(payload, datasets):
     }
 
 
-def _run_suite(impl_code, filename, tests_code):
+def _run_suite(impl_code, impl_name, tests_code, tests_name, names=None):
+    """Runs tests against an implementation. Returns (test name, failure) pairs, where a
+    failure is None or (exception type, message). Without names, every test_ function runs."""
     namespace = runtime.new_namespace("__tests__")
-    exec(compile(impl_code, filename, "exec"), namespace)
-    exec(compile(tests_code, LEARNER, "exec"), namespace)
+    exec(compile(impl_code, impl_name, "exec"), namespace)
+    exec(compile(tests_code, tests_name, "exec"), namespace)
+    if names is None:
+        names = [name for name in namespace if name.startswith("test_") and callable(namespace[name])]
     outcomes = []
-    for name in list(namespace):
-        test = namespace[name]
-        if not (name.startswith("test_") and callable(test)):
-            continue
+    for name in names:
         runtime.seed_everything()
         try:
-            test()
+            namespace[name]()
             outcomes.append((name, None))
         except AssertionError as exc:
-            outcomes.append((name, _clip(exc) or "an assertion failed"))
+            outcomes.append((name, ("AssertionError", _clip(exc))))
         except Exception as exc:
-            outcomes.append((name, f"{type(exc).__name__}: {_clip(exc)}"))
+            outcomes.append((name, (type(exc).__name__, _clip(exc))))
     return outcomes
+
+
+def _failure_text(failure):
+    error_type, text = failure
+    if error_type == "AssertionError":
+        return text or "an assertion failed"
+    return f"{error_type}: {text}"
 
 
 def _grade_testing(payload):
     try:
-        correct = _run_suite(payload["reference"], REFERENCE, payload["learner"])
+        correct = _run_suite(payload["reference"], REFERENCE, payload["learner"], LEARNER)
     except Exception as exc:
         return {"status": "error", "error": _error_info(exc, LEARNER), "cases": [], "matched": [], "passed": 0, "total": 0}
-    correct_ok = all(message is None for _, message in correct)
-    first_failure = next((f"{name}: {message}" for name, message in correct if message), "")
+    correct_ok = all(failure is None for _, failure in correct)
+    first_failure = next((f"{name}: {_failure_text(failure)}" for name, failure in correct if failure), "")
+    scope = payload.get("scope", "all")
     cases = [
         {
             "id": "correct",
@@ -371,30 +383,94 @@ def _grade_testing(payload):
         }
     ]
     matched = []
-    for mutant in payload["mutants"]:
+    kills = {}
+    for index, mutant in enumerate(payload["mutants"]):
+        hidden = mutant.get("visibility", "visible") == "hidden"
+        if hidden and scope == "visible":
+            continue
         try:
-            outcomes = _run_suite(mutant["code"], VARIANT, payload["learner"])
+            outcomes = _run_suite(mutant["code"], VARIANT, payload["learner"], LEARNER)
         except Exception:
-            outcomes = [("import", "the buggy version does not run")]
-        killed = any(message is not None for _, message in outcomes)
+            outcomes = [("import", ("Error", "the buggy version does not run"))]
+        killed = [name for name, failure in outcomes if failure is not None]
+        caught = bool(killed)
+        # A hidden bug keeps its place in the list, but its label would give the bug away.
         cases.append(
             {
-                "id": mutant["id"],
-                "label": mutant["label"],
-                "visibility": mutant.get("visibility", "visible"),
-                "ok": killed,
-                "message": "" if killed else "Your tests did not catch this bug.",
+                "id": f"hidden-{index}" if hidden else mutant["id"],
+                "label": "A hidden bug" if hidden else mutant["label"],
+                "visibility": "hidden" if hidden else "visible",
+                "ok": caught,
+                "message": "" if caught else "Your tests did not catch this bug.",
             }
         )
-        if not killed:
+        kills[mutant["id"]] = killed
+        if not caught:
             matched.append({"variantId": mutant["id"], **mutant["mistake"]})
     passed = correct_ok and not matched
-    return {
+    result = {
         "status": "pass" if passed else "fail",
         "error": None,
         "cases": cases,
         "passed": sum(1 for case in cases if case["ok"]),
         "total": len(cases),
+        "matched": matched,
+    }
+    if payload.get("report"):
+        # Content checks use this to count how many mutants each test function kills.
+        result["report"] = {
+            "tests": [name for name, _ in correct],
+            "correct": [name for name, failure in correct if failure is None],
+            "kills": kills,
+        }
+    return result
+
+
+def _suite_message(failure, case):
+    if case.get("visibility", "visible") == "visible":
+        return _clip(_failure_text(failure))
+    if failure[0] == "AssertionError":
+        return HIDDEN_NOTE
+    return f"raised {failure[0]} on a hidden case"
+
+
+def _grade_suite(payload):
+    # The learner writes the implementation. Each owner test function is one case.
+    scope = payload.get("scope", "all")
+    cases = [case for case in payload["cases"] if scope == "all" or case.get("visibility", "visible") == "visible"]
+    names = [case["id"] for case in cases]
+    try:
+        outcomes = _run_suite(payload["learner"], LEARNER, payload["tests"], TESTS, names)
+    except Exception as exc:
+        return {"status": "error", "error": _error_info(exc, LEARNER), "cases": [], "matched": [], "passed": 0, "total": len(cases)}
+    results = [
+        {
+            "id": case["id"],
+            "label": case.get("label", case["id"]),
+            "visibility": case.get("visibility", "visible"),
+            "ok": failure is None,
+            "message": "" if failure is None else _suite_message(failure, case),
+        }
+        for case, (_, failure) in zip(cases, outcomes)
+    ]
+    passed = all(result["ok"] for result in results)
+    matched = []
+    if not passed:
+        # A wrong variant matches when the owner tests pass and fail the same cases as the learner.
+        signature = [result["ok"] for result in results]
+        for variant in payload.get("variants", []):
+            try:
+                variant_outcomes = _run_suite(variant["code"], VARIANT, payload["tests"], TESTS, names)
+            except Exception:
+                continue
+            if [failure is None for _, failure in variant_outcomes] == signature:
+                matched.append({"variantId": variant["id"], **variant["mistake"]})
+    return {
+        "status": "pass" if passed else "fail",
+        "error": None,
+        "cases": results,
+        "passed": sum(1 for result in results if result["ok"]),
+        "total": len(results),
         "matched": matched,
     }
 
@@ -408,20 +484,117 @@ def _dotted(node):
     return None
 
 
-def _find_function(tree, name):
-    for node in ast.walk(tree):
-        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name == name:
+_NO_ARG = object()
+_NOT_A_LITERAL = object()
+
+
+def _find_definition(scope, name):
+    """The first function, async function, or class named name under scope."""
+    for node in ast.walk(scope):
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) and node.name == name and node is not scope:
             return node
     return None
 
 
+def _resolve(tree, dotted):
+    """Finds a definition by dotted path, so Parcel.total names a method of class Parcel."""
+    node = tree
+    for part in dotted.split("."):
+        node = _find_definition(node, part)
+        if node is None:
+            return None
+    return node
+
+
+def _literal(node):
+    if isinstance(node, ast.Constant):
+        return node.value
+    if isinstance(node, ast.UnaryOp) and isinstance(node.op, ast.USub) and isinstance(node.operand, ast.Constant) and type(node.operand.value) in (int, float):
+        return -node.operand.value
+    return _NOT_A_LITERAL
+
+
+def _is_literal(node, expected):
+    # Type must match too, so False does not count as 0.
+    value = _literal(node)
+    return value is not _NOT_A_LITERAL and type(value) is type(expected) and value == expected
+
+
+def _method_calls(scope, name, arg):
+    """Calls of .name(...) on any receiver. With arg, the first argument must be that literal."""
+    for node in ast.walk(scope):
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) and node.func.attr == name:
+            if arg is _NO_ARG or (node.args and _is_literal(node.args[0], arg)):
+                yield node
+
+
+def _method_text(name, arg):
+    return f".{name}()" if arg is _NO_ARG else f".{name}({arg!r})"
+
+
+def _import_aliases(tree):
+    """Maps each name an import binds to the dotted name it stands for."""
+    aliases = {}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                if alias.asname:
+                    aliases[alias.asname] = alias.name
+                else:
+                    head = alias.name.split(".")[0]
+                    aliases[head] = head
+        elif isinstance(node, ast.ImportFrom) and node.module and node.level == 0:
+            for alias in node.names:
+                aliases[alias.asname or alias.name] = f"{node.module}.{alias.name}"
+    return aliases
+
+
+def _called_symbol(node, aliases):
+    """The dotted name a call resolves to through the imports, or None if no import binds it."""
+    dotted = _dotted(node.func)
+    if dotted is None:
+        return None
+    head, _, rest = dotted.partition(".")
+    base = aliases.get(head)
+    if base is None:
+        return None
+    return f"{base}.{rest}" if rest else base
+
+
+def _unannotated(func):
+    args = func.args
+    params = [*args.posonlyargs, *args.args, *args.kwonlyargs]
+    params += [param for param in (args.vararg, args.kwarg) if param is not None]
+    missing = [param.arg for param in params if param.arg not in ("self", "cls") and param.annotation is None]
+    if func.returns is None:
+        missing.append("return")
+    return missing
+
+
+def _recurses(func):
+    for node in ast.walk(func):
+        if not isinstance(node, ast.Call):
+            continue
+        if isinstance(node.func, ast.Name) and node.func.id == func.name:
+            return True
+        if isinstance(node.func, ast.Attribute) and node.func.attr == func.name and isinstance(node.func.value, ast.Name) and node.func.value.id in ("self", "cls"):
+            return True
+    return False
+
+
 def _structure_check(tree, check):
     kind = check["type"]
+    within = check.get("within")
     if kind == "defines":
-        return _find_function(tree, check["name"]) is not None, f"define a function named {check['name']}"
-    scope = _find_function(tree, check["within"]) if check.get("within") else tree
+        if within:
+            scope = _resolve(tree, within)
+            found = scope is not None and _find_definition(scope, check["name"]) is not None
+        else:
+            found = _resolve(tree, check["name"]) is not None
+        return found, f"define {check['name']}"
+    scope = _resolve(tree, within) if within else tree
     if scope is None:
-        return False, f"define {check['within']} first"
+        return False, f"define {within} first"
     if kind == "no_loops_in":
         ok = not any(isinstance(node, (ast.For, ast.While)) for node in ast.walk(scope))
         return ok, "use no for or while loops here; work on the whole column at once"
@@ -437,6 +610,23 @@ def _structure_check(tree, check):
     if kind == "forbids_calls":
         ok = not any(isinstance(node, ast.Call) and _dotted(node.func) == check["name"] for node in ast.walk(scope))
         return ok, f"do not call {check['name']} here"
+    if kind == "annotated_in":
+        if not isinstance(scope, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            return False, f"define {within} as a function first"
+        return not _unannotated(scope), f"add a type hint to every parameter and the return value of {within}"
+    if kind in ("calls_method", "forbids_method"):
+        arg = check["arg"] if "arg" in check else _NO_ARG
+        found = any(True for _ in _method_calls(scope, check["name"], arg))
+        if kind == "calls_method":
+            return found, f"call {_method_text(check['name'], arg)}"
+        return not found, f"do not call {_method_text(check['name'], arg)} here"
+    if kind == "calls_symbol":
+        aliases = _import_aliases(tree)
+        ok = any(isinstance(node, ast.Call) and _called_symbol(node, aliases) == check["name"] for node in ast.walk(scope))
+        return ok, f"call {check['name']}"
+    if kind == "recurses_in":
+        ok = isinstance(scope, (ast.FunctionDef, ast.AsyncFunctionDef)) and _recurses(scope)
+        return ok, f"make {within} call itself"
     return False, f"unknown check type {kind}"
 
 
@@ -555,6 +745,8 @@ def grade(payload, datasets):
             return _grade_structure(payload)
         if kind == "testing":
             return _grade_testing(payload)
+        if kind == "suite":
+            return _grade_suite(payload)
         if kind == "api":
             return _grade_api(payload)
         if kind == "ml":

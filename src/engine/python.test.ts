@@ -1,7 +1,7 @@
 import path from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { PyRuntime } from './runtime';
-import type { ApiPayload, GradePayload, MlPayload, StructurePayload, TestingPayload } from './types';
+import type { ApiPayload, GradePayload, MlPayload, StructurePayload, SuitePayload, TestingPayload } from './types';
 
 let runtime: PyRuntime;
 
@@ -216,6 +216,153 @@ describe('structure checks (ast, never string matching)', () => {
     const result = runtime.grade(JSON.stringify(payload(looped)), '{}');
     expect(result.status).toBe('fail');
     expect(result.cases.find((c) => c.id === 'check-1')?.ok).toBe(false);
+  });
+});
+
+describe('structure checks: hints, methods, imports, recursion, and classes', () => {
+  const check = (learner: string, checks: StructurePayload['checks']) => {
+    const payload: StructurePayload = { kind: 'structure', learner, checks, requires: [] };
+    return runtime.grade(JSON.stringify(payload), '{}');
+  };
+
+  it('annotated_in passes when every parameter and the return value has a hint', () => {
+    const result = check('def total(values: list[int]) -> int:\n    return sum(values)\n', [{ type: 'annotated_in', label: 'hints', within: 'total' }]);
+    expect(result.status).toBe('pass');
+  });
+
+  it('annotated_in names the missing return hint', () => {
+    const result = check('def total(values: list[int]):\n    return sum(values)\n', [{ type: 'annotated_in', label: 'hints', within: 'total' }]);
+    expect(result.status).toBe('fail');
+    expect(result.cases[0]?.message).toContain('return value');
+  });
+
+  it('calls_method finds popleft on any receiver, and forbids_method with an argument catches pop(0) only', () => {
+    const checks: StructurePayload['checks'] = [
+      { type: 'calls_method', label: 'uses popleft', name: 'popleft' },
+      { type: 'forbids_method', label: 'no pop(0)', name: 'pop', arg: 0 },
+    ];
+    expect(check('def serve(queue):\n    return queue.popleft()\n', checks).status).toBe('pass');
+    const slow = check('def serve(queue):\n    return queue.pop(0)\n', checks);
+    expect(slow.status).toBe('fail');
+    expect(slow.cases.map((c) => c.ok)).toEqual([false, false]);
+    expect(check('def serve(queue):\n    return queue.pop()\n', [checks[1]!]).status).toBe('pass');
+  });
+
+  it('calls_symbol follows imports, so from-imports and aliases count', () => {
+    const checks: StructurePayload['checks'] = [{ type: 'calls_symbol', label: 'calls heapq.heappush', name: 'heapq.heappush' }];
+    expect(check('from heapq import heappush\n\ndef add(heap, x):\n    heappush(heap, x)\n', checks).status).toBe('pass');
+    expect(check('import heapq as hq\n\ndef add(heap, x):\n    hq.heappush(heap, x)\n', checks).status).toBe('pass');
+    expect(check('def add(heap, x):\n    heappush(heap, x)\n', checks).status).toBe('fail');
+  });
+
+  it('recurses_in passes a function that calls itself and fails one that does not', () => {
+    const checks: StructurePayload['checks'] = [{ type: 'recurses_in', label: 'flatten calls itself', within: 'flatten' }];
+    const recursive = 'def flatten(items):\n    out = []\n    for item in items:\n        if isinstance(item, list):\n            out.extend(flatten(item))\n        else:\n            out.append(item)\n    return out\n';
+    expect(check(recursive, checks).status).toBe('pass');
+    expect(check('def flatten(items):\n    return [x for sub in items for x in sub]\n', checks).status).toBe('fail');
+  });
+
+  it('defines finds classes, and dotted names reach methods and their bodies', () => {
+    const checks: StructurePayload['checks'] = [
+      { type: 'defines', label: 'defines Parcel', name: 'Parcel' },
+      { type: 'defines', label: 'defines Parcel.total', name: 'Parcel.total' },
+      { type: 'no_loops_in', label: 'no loops in Parcel.total', within: 'Parcel.total' },
+    ];
+    const clean = 'class Parcel:\n    def __init__(self, kg):\n        self.kg = kg\n\n    def total(self):\n        return self.kg\n';
+    expect(check(clean, checks).status).toBe('pass');
+    const looped = 'class Parcel:\n    def total(self):\n        out = 0\n        for kg in [self.kg]:\n            out += kg\n        return out\n';
+    expect(check(looped, checks).cases.map((c) => c.ok)).toEqual([true, true, false]);
+    expect(check('def Parcel(kg):\n    return kg\n', checks.slice(0, 2)).cases.map((c) => c.ok)).toEqual([true, false]);
+  });
+});
+
+describe('testing grader: scope, hidden labels, and the per-test report', () => {
+  const correct = 'def add_tax(amount):\n    return round(amount * 1.2, 2)\n';
+  const mutants: TestingPayload['mutants'] = [
+    { id: 'no-tax', label: 'Forgets the tax', code: 'def add_tax(amount):\n    return round(amount, 2)\n', mistake: { tag: 'missing-branch', title: 'The tax was forgotten', explanation: 'A test must check that the total includes the tax.' } },
+    { id: 'wrong-rate', label: 'Uses a 10% tax', code: 'def add_tax(amount):\n    return round(amount * 1.1, 2)\n', visibility: 'hidden', mistake: { tag: 'boundary', title: 'The rate is wrong', explanation: 'Check a concrete number, so a wrong rate is caught.' } },
+  ];
+  const payload = (learner: string, overrides: Partial<TestingPayload> = {}): TestingPayload => ({ kind: 'testing', entry: 'add_tax', learner, reference: correct, mutants, requires: [], ...overrides });
+  const weak = 'def test_zero():\n    assert add_tax(0) == 0\n';
+
+  it('a Run (scope visible) leaves hidden mutants out of the cases', () => {
+    const result = runtime.grade(JSON.stringify(payload(weak, { scope: 'visible' })), JSON.stringify(DATASETS));
+    expect(result.cases.map((c) => c.id)).toEqual(['correct', 'no-tax']);
+    expect(result.matched.map((m) => m.variantId)).toEqual(['no-tax']);
+  });
+
+  it('a Submit names a surviving hidden bug without showing its label', () => {
+    const result = runtime.grade(JSON.stringify(payload(weak, { scope: 'all' })), JSON.stringify(DATASETS));
+    const hidden = result.cases.find((c) => c.visibility === 'hidden');
+    expect(hidden?.label).toBe('A hidden bug');
+    expect(JSON.stringify(result)).not.toContain('10%');
+    expect(result.matched.map((m) => m.variantId)).toEqual(['no-tax', 'wrong-rate']);
+  });
+
+  it('the report lists which test functions kill which mutants', () => {
+    const strong = 'def test_total_includes_tax():\n    assert add_tax(10) == 12.0\n\ndef test_zero():\n    assert add_tax(0) == 0\n';
+    const result = runtime.grade(JSON.stringify(payload(strong, { report: true })), JSON.stringify(DATASETS));
+    expect(result.report).toEqual({
+      tests: ['test_total_includes_tax', 'test_zero'],
+      correct: ['test_total_includes_tax', 'test_zero'],
+      kills: { 'no-tax': ['test_total_includes_tax'], 'wrong-rate': ['test_total_includes_tax'] },
+    });
+    expect(runtime.grade(JSON.stringify(payload(strong)), JSON.stringify(DATASETS)).report).toBeUndefined();
+  });
+});
+
+describe('suite grader: the learner writes the implementation, owner tests run one case each', () => {
+  const tests = 'def test_squares():\n    assert square(3) == 9\n\ndef test_zero():\n    assert square(0) == 0\n\ndef test_negative():\n    assert square(-4) == 16\n';
+  const cases: SuitePayload['cases'] = [
+    { id: 'test_squares', label: 'Squares a positive number', visibility: 'visible' },
+    { id: 'test_zero', label: 'Zero stays zero', visibility: 'visible' },
+    { id: 'test_negative', label: 'Squares a negative number', visibility: 'hidden' },
+  ];
+  const variants = [
+    { id: 'plus-one', code: 'def square(x):\n    return x + 1\n', mistake: { tag: 'arithmetic', title: 'Adds instead of squaring', explanation: 'Squaring multiplies a number by itself.' } },
+    { id: 'no-negatives', code: 'def square(x):\n    return x * x if x >= 0 else 0\n', mistake: { tag: 'sign', title: 'Drops negative inputs', explanation: 'A negative number squared is positive.' } },
+  ];
+  const payload = (learner: string, scope: 'visible' | 'all'): SuitePayload => ({ kind: 'suite', learner, tests, scope, cases, variants, requires: [] });
+
+  it('passes a correct implementation on every owner test', () => {
+    const result = runtime.grade(JSON.stringify(payload('def square(x):\n    return x * x\n', 'all')), JSON.stringify(DATASETS));
+    expect(result.status, JSON.stringify(result.cases)).toBe('pass');
+    expect(result.total).toBe(3);
+  });
+
+  it('a Run grades visible tests only and names the wrong variant that matches', () => {
+    const result = runtime.grade(JSON.stringify(payload('def square(x):\n    return x + 1\n', 'visible')), JSON.stringify(DATASETS));
+    expect(result.cases.map((c) => c.id)).toEqual(['test_squares', 'test_zero']);
+    expect(result.status).toBe('fail');
+    expect(result.matched.map((m) => m.variantId)).toEqual(['plus-one']);
+  });
+
+  it('a Submit fails a hidden case without revealing its input or expected value', () => {
+    const result = runtime.grade(JSON.stringify(payload('def square(x):\n    return x * x if x >= 0 else 0\n', 'all')), JSON.stringify(DATASETS));
+    expect(result.cases[2]?.ok).toBe(false);
+    expect(result.cases[2]?.message).toBe('Did not match on a hidden case.');
+    expect(result.matched.map((m) => m.variantId)).toEqual(['no-negatives']);
+  });
+
+  it('a hidden case that raises names only the exception type', () => {
+    const result = runtime.grade(JSON.stringify(payload('def square(x):\n    raise ValueError(f"no {x}")\n', 'all')), JSON.stringify(DATASETS));
+    expect(result.cases[2]?.message).toBe('raised ValueError on a hidden case');
+  });
+
+  it('reports a learner implementation that does not run', () => {
+    const result = runtime.grade(JSON.stringify(payload('def square(x)\n    return x\n', 'all')), JSON.stringify(DATASETS));
+    expect(result.status).toBe('error');
+    expect(result.error?.type).toBe('SyntaxError');
+  });
+});
+
+describe('summaries: NaN and None stay apart when variants are matched', () => {
+  it('a learner that returns None does not match a variant that returns NaN', () => {
+    const reference = 'def answer():\n    return 1.0\n';
+    const variant = { id: 'nan-result', code: 'def answer():\n    return float("nan")\n', mistake: { tag: 'nan', title: 'Returns NaN', explanation: 'NaN is not a value the task asks for.' } };
+    const result = runtime.grade(JSON.stringify(functionPayload('def answer():\n    return None\n', reference, { variants: [variant] })), JSON.stringify(DATASETS));
+    expect(result.status).toBe('fail');
+    expect(result.matched).toEqual([]);
   });
 });
 
