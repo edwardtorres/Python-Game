@@ -4868,6 +4868,24 @@
             "  Li",
             1
           ]
+        },
+        {
+          "id": "v-tabs",
+          "label": "A tab and a line break around the name",
+          "visibility": "visible",
+          "args": [
+            "\tAda\n",
+            3
+          ]
+        },
+        {
+          "id": "h-mixed",
+          "label": "A tab, a space, and a line break",
+          "visibility": "hidden",
+          "args": [
+            "Bo\t \n",
+            0
+          ]
         }
       ],
       "variants": [
@@ -4888,6 +4906,15 @@
             "title": "Strings cannot change in place",
             "explanation": "Methods such as upper() return a new string. The original stays the same, so the result must be stored or returned."
           }
+        },
+        {
+          "id": "strips-spaces-only",
+          "code": "def format_label(name, count):\n    return name.strip(\" \") + f\": {count} items\"\n",
+          "mistake": {
+            "tag": "PARTIAL_STRIP",
+            "title": "strip(\" \") removes spaces only",
+            "explanation": "strip() with no argument removes every whitespace character. strip(\" \") leaves tabs and line breaks in place."
+          }
         }
       ],
       "requires": [],
@@ -4896,8 +4923,8 @@
     "datasets": {},
     "expected": {
       "status": "pass",
-      "passed": 4,
-      "total": 4,
+      "passed": 6,
+      "total": 6,
       "cases": [
         [
           "v-plain",
@@ -4913,6 +4940,14 @@
         ],
         [
           "h-padded-left",
+          true
+        ],
+        [
+          "v-tabs",
+          true
+        ],
+        [
+          "h-mixed",
           true
         ]
       ],
@@ -4964,6 +4999,24 @@
             "  Li",
             1
           ]
+        },
+        {
+          "id": "v-tabs",
+          "label": "A tab and a line break around the name",
+          "visibility": "visible",
+          "args": [
+            "\tAda\n",
+            3
+          ]
+        },
+        {
+          "id": "h-mixed",
+          "label": "A tab, a space, and a line break",
+          "visibility": "hidden",
+          "args": [
+            "Bo\t \n",
+            0
+          ]
         }
       ],
       "variants": [
@@ -4984,6 +5037,15 @@
             "title": "Strings cannot change in place",
             "explanation": "Methods such as upper() return a new string. The original stays the same, so the result must be stored or returned."
           }
+        },
+        {
+          "id": "strips-spaces-only",
+          "code": "def format_label(name, count):\n    return name.strip(\" \") + f\": {count} items\"\n",
+          "mistake": {
+            "tag": "PARTIAL_STRIP",
+            "title": "strip(\" \") removes spaces only",
+            "explanation": "strip() with no argument removes every whitespace character. strip(\" \") leaves tabs and line breaks in place."
+          }
         }
       ],
       "requires": [],
@@ -4993,7 +5055,7 @@
     "expected": {
       "status": "fail",
       "passed": 0,
-      "total": 4,
+      "total": 6,
       "cases": [
         [
           "v-plain",
@@ -5009,6 +5071,14 @@
         ],
         [
           "h-padded-left",
+          false
+        ],
+        [
+          "v-tabs",
+          false
+        ],
+        [
+          "h-mixed",
           false
         ]
       ],
@@ -5060,6 +5130,24 @@
             "  Li",
             1
           ]
+        },
+        {
+          "id": "v-tabs",
+          "label": "A tab and a line break around the name",
+          "visibility": "visible",
+          "args": [
+            "\tAda\n",
+            3
+          ]
+        },
+        {
+          "id": "h-mixed",
+          "label": "A tab, a space, and a line break",
+          "visibility": "hidden",
+          "args": [
+            "Bo\t \n",
+            0
+          ]
         }
       ],
       "variants": [
@@ -5080,6 +5168,15 @@
             "title": "Strings cannot change in place",
             "explanation": "Methods such as upper() return a new string. The original stays the same, so the result must be stored or returned."
           }
+        },
+        {
+          "id": "strips-spaces-only",
+          "code": "def format_label(name, count):\n    return name.strip(\" \") + f\": {count} items\"\n",
+          "mistake": {
+            "tag": "PARTIAL_STRIP",
+            "title": "strip(\" \") removes spaces only",
+            "explanation": "strip() with no argument removes every whitespace character. strip(\" \") leaves tabs and line breaks in place."
+          }
         }
       ],
       "requires": [],
@@ -5089,7 +5186,7 @@
     "expected": {
       "status": "fail",
       "passed": 0,
-      "total": 4,
+      "total": 6,
       "cases": [
         [
           "v-plain",
@@ -5105,6 +5202,14 @@
         ],
         [
           "h-padded-left",
+          false
+        ],
+        [
+          "v-tabs",
+          false
+        ],
+        [
+          "h-mixed",
           false
         ]
       ],
@@ -5158,6 +5263,24 @@
             "  Li",
             1
           ]
+        },
+        {
+          "id": "v-tabs",
+          "label": "A tab and a line break around the name",
+          "visibility": "visible",
+          "args": [
+            "\tAda\n",
+            3
+          ]
+        },
+        {
+          "id": "h-mixed",
+          "label": "A tab, a space, and a line break",
+          "visibility": "hidden",
+          "args": [
+            "Bo\t \n",
+            0
+          ]
         }
       ],
       "variants": [
@@ -5178,6 +5301,15 @@
             "title": "Strings cannot change in place",
             "explanation": "Methods such as upper() return a new string. The original stays the same, so the result must be stored or returned."
           }
+        },
+        {
+          "id": "strips-spaces-only",
+          "code": "def format_label(name, count):\n    return name.strip(\" \") + f\": {count} items\"\n",
+          "mistake": {
+            "tag": "PARTIAL_STRIP",
+            "title": "strip(\" \") removes spaces only",
+            "explanation": "strip() with no argument removes every whitespace character. strip(\" \") leaves tabs and line breaks in place."
+          }
         }
       ],
       "requires": [],
@@ -5187,7 +5319,7 @@
     "expected": {
       "status": "fail",
       "passed": 2,
-      "total": 4,
+      "total": 6,
       "cases": [
         [
           "v-plain",
@@ -5204,10 +5336,151 @@
         [
           "h-padded-left",
           false
+        ],
+        [
+          "v-tabs",
+          false
+        ],
+        [
+          "h-mixed",
+          false
         ]
       ],
       "matched": [
         "no-strip"
+      ]
+    }
+  },
+  {
+    "name": "c01-guided-format-label:variant:strips-spaces-only",
+    "payload": {
+      "kind": "function",
+      "entry": "format_label",
+      "learner": "def format_label(name, count):\n    return name.strip(\" \") + f\": {count} items\"\n",
+      "reference": "def format_label(name, count):\n    return f\"{name.strip()}: {count} items\"\n",
+      "scope": "all",
+      "rules": {},
+      "cases": [
+        {
+          "id": "v-plain",
+          "label": "A plain name",
+          "visibility": "visible",
+          "args": [
+            "Ada",
+            3
+          ]
+        },
+        {
+          "id": "v-padded",
+          "label": "A name with spaces around it",
+          "visibility": "visible",
+          "args": [
+            "  Bo ",
+            0
+          ]
+        },
+        {
+          "id": "h-long",
+          "label": "A longer name",
+          "visibility": "hidden",
+          "args": [
+            "Marta",
+            12
+          ]
+        },
+        {
+          "id": "h-padded-left",
+          "label": "Spaces only on the left",
+          "visibility": "hidden",
+          "args": [
+            "  Li",
+            1
+          ]
+        },
+        {
+          "id": "v-tabs",
+          "label": "A tab and a line break around the name",
+          "visibility": "visible",
+          "args": [
+            "\tAda\n",
+            3
+          ]
+        },
+        {
+          "id": "h-mixed",
+          "label": "A tab, a space, and a line break",
+          "visibility": "hidden",
+          "args": [
+            "Bo\t \n",
+            0
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "no-items-word",
+          "code": "def format_label(name, count):\n    return f\"{name.strip()}: {count}\"\n",
+          "mistake": {
+            "tag": "FORMAT_SPEC",
+            "title": "The layout must match the rule exactly",
+            "explanation": "A report line is checked character by character. Use the separator and order the rule names."
+          }
+        },
+        {
+          "id": "no-strip",
+          "code": "def format_label(name, count):\n    return f\"{name}: {count} items\"\n",
+          "mistake": {
+            "tag": "STR_IMMUTABLE",
+            "title": "Strings cannot change in place",
+            "explanation": "Methods such as upper() return a new string. The original stays the same, so the result must be stored or returned."
+          }
+        },
+        {
+          "id": "strips-spaces-only",
+          "code": "def format_label(name, count):\n    return name.strip(\" \") + f\": {count} items\"\n",
+          "mistake": {
+            "tag": "PARTIAL_STRIP",
+            "title": "strip(\" \") removes spaces only",
+            "explanation": "strip() with no argument removes every whitespace character. strip(\" \") leaves tabs and line breaks in place."
+          }
+        }
+      ],
+      "requires": [],
+      "definitions_only": false
+    },
+    "datasets": {},
+    "expected": {
+      "status": "fail",
+      "passed": 4,
+      "total": 6,
+      "cases": [
+        [
+          "v-plain",
+          true
+        ],
+        [
+          "v-padded",
+          true
+        ],
+        [
+          "h-long",
+          true
+        ],
+        [
+          "h-padded-left",
+          true
+        ],
+        [
+          "v-tabs",
+          false
+        ],
+        [
+          "h-mixed",
+          false
+        ]
+      ],
+      "matched": [
+        "strips-spaces-only"
       ]
     }
   },
@@ -6852,8 +7125,8 @@
     "payload": {
       "kind": "function",
       "entry": "in_batches",
-      "learner": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
-      "reference": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+      "learner": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+      "reference": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
       "scope": "all",
       "rules": {},
       "cases": [
@@ -6919,12 +7192,34 @@
             [],
             1
           ]
+        },
+        {
+          "id": "h-size-zero-items",
+          "label": "Size zero with parcels",
+          "visibility": "hidden",
+          "args": [
+            [
+              1,
+              2,
+              3
+            ],
+            0
+          ]
+        },
+        {
+          "id": "h-size-zero-empty",
+          "label": "Size zero with no parcels",
+          "visibility": "hidden",
+          "args": [
+            [],
+            0
+          ]
         }
       ],
       "variants": [
         {
           "id": "reversed-inside",
-          "code": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.insert(0, item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.insert(0, item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
           "mistake": {
             "tag": "INSERT_AT_FRONT",
             "title": "Adding at the front puts the item first",
@@ -6933,7 +7228,7 @@
         },
         {
           "id": "size-plus-one",
-          "code": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size + 1:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size + 1:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
           "mistake": {
             "tag": "OFF_BY_ONE_RANGE",
             "title": "range() stops before its end",
@@ -6942,11 +7237,20 @@
         },
         {
           "id": "one-empty-batch",
-          "code": "def in_batches(items, size):\n    if len(items) == 0:\n        yield [None]\n        return\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    if len(items) == 0:\n        yield [None]\n        return\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
           "mistake": {
             "tag": "EMPTY_IS_NONE",
             "title": "An empty total is 0, not None",
             "explanation": "Returning None for an empty input changes the answer type. Let the loop run zero times and return the starting value."
+          }
+        },
+        {
+          "id": "no-size-check",
+          "code": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "mistake": {
+            "tag": "UNCHECKED_ARGUMENT",
+            "title": "A size or count must be checked before use",
+            "explanation": "Without a check, a size of zero or less quietly gives a wrong answer. Raise ValueError for a value the function cannot use, as itertools.batched does."
           }
         }
       ],
@@ -6956,8 +7260,8 @@
     "datasets": {},
     "expected": {
       "status": "pass",
-      "passed": 5,
-      "total": 5,
+      "passed": 7,
+      "total": 7,
       "cases": [
         [
           "v-five-by-two",
@@ -6977,6 +7281,14 @@
         ],
         [
           "h-empty-size-one",
+          true
+        ],
+        [
+          "h-size-zero-items",
+          true
+        ],
+        [
+          "h-size-zero-empty",
           true
         ]
       ],
@@ -6989,7 +7301,7 @@
       "kind": "function",
       "entry": "in_batches",
       "learner": "def in_batches(items, size):\n    pass\n",
-      "reference": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+      "reference": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
       "scope": "all",
       "rules": {},
       "cases": [
@@ -7055,12 +7367,34 @@
             [],
             1
           ]
+        },
+        {
+          "id": "h-size-zero-items",
+          "label": "Size zero with parcels",
+          "visibility": "hidden",
+          "args": [
+            [
+              1,
+              2,
+              3
+            ],
+            0
+          ]
+        },
+        {
+          "id": "h-size-zero-empty",
+          "label": "Size zero with no parcels",
+          "visibility": "hidden",
+          "args": [
+            [],
+            0
+          ]
         }
       ],
       "variants": [
         {
           "id": "reversed-inside",
-          "code": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.insert(0, item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.insert(0, item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
           "mistake": {
             "tag": "INSERT_AT_FRONT",
             "title": "Adding at the front puts the item first",
@@ -7069,7 +7403,7 @@
         },
         {
           "id": "size-plus-one",
-          "code": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size + 1:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size + 1:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
           "mistake": {
             "tag": "OFF_BY_ONE_RANGE",
             "title": "range() stops before its end",
@@ -7078,11 +7412,20 @@
         },
         {
           "id": "one-empty-batch",
-          "code": "def in_batches(items, size):\n    if len(items) == 0:\n        yield [None]\n        return\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    if len(items) == 0:\n        yield [None]\n        return\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
           "mistake": {
             "tag": "EMPTY_IS_NONE",
             "title": "An empty total is 0, not None",
             "explanation": "Returning None for an empty input changes the answer type. Let the loop run zero times and return the starting value."
+          }
+        },
+        {
+          "id": "no-size-check",
+          "code": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "mistake": {
+            "tag": "UNCHECKED_ARGUMENT",
+            "title": "A size or count must be checked before use",
+            "explanation": "Without a check, a size of zero or less quietly gives a wrong answer. Raise ValueError for a value the function cannot use, as itertools.batched does."
           }
         }
       ],
@@ -7093,7 +7436,7 @@
     "expected": {
       "status": "fail",
       "passed": 0,
-      "total": 5,
+      "total": 7,
       "cases": [
         [
           "v-five-by-two",
@@ -7114,6 +7457,14 @@
         [
           "h-empty-size-one",
           false
+        ],
+        [
+          "h-size-zero-items",
+          false
+        ],
+        [
+          "h-size-zero-empty",
+          false
         ]
       ],
       "matched": []
@@ -7124,8 +7475,8 @@
     "payload": {
       "kind": "function",
       "entry": "in_batches",
-      "learner": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.insert(0, item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
-      "reference": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+      "learner": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.insert(0, item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+      "reference": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
       "scope": "all",
       "rules": {},
       "cases": [
@@ -7191,12 +7542,34 @@
             [],
             1
           ]
+        },
+        {
+          "id": "h-size-zero-items",
+          "label": "Size zero with parcels",
+          "visibility": "hidden",
+          "args": [
+            [
+              1,
+              2,
+              3
+            ],
+            0
+          ]
+        },
+        {
+          "id": "h-size-zero-empty",
+          "label": "Size zero with no parcels",
+          "visibility": "hidden",
+          "args": [
+            [],
+            0
+          ]
         }
       ],
       "variants": [
         {
           "id": "reversed-inside",
-          "code": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.insert(0, item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.insert(0, item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
           "mistake": {
             "tag": "INSERT_AT_FRONT",
             "title": "Adding at the front puts the item first",
@@ -7205,7 +7578,7 @@
         },
         {
           "id": "size-plus-one",
-          "code": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size + 1:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size + 1:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
           "mistake": {
             "tag": "OFF_BY_ONE_RANGE",
             "title": "range() stops before its end",
@@ -7214,11 +7587,20 @@
         },
         {
           "id": "one-empty-batch",
-          "code": "def in_batches(items, size):\n    if len(items) == 0:\n        yield [None]\n        return\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    if len(items) == 0:\n        yield [None]\n        return\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
           "mistake": {
             "tag": "EMPTY_IS_NONE",
             "title": "An empty total is 0, not None",
             "explanation": "Returning None for an empty input changes the answer type. Let the loop run zero times and return the starting value."
+          }
+        },
+        {
+          "id": "no-size-check",
+          "code": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "mistake": {
+            "tag": "UNCHECKED_ARGUMENT",
+            "title": "A size or count must be checked before use",
+            "explanation": "Without a check, a size of zero or less quietly gives a wrong answer. Raise ValueError for a value the function cannot use, as itertools.batched does."
           }
         }
       ],
@@ -7228,8 +7610,8 @@
     "datasets": {},
     "expected": {
       "status": "fail",
-      "passed": 2,
-      "total": 5,
+      "passed": 4,
+      "total": 7,
       "cases": [
         [
           "v-five-by-two",
@@ -7249,6 +7631,14 @@
         ],
         [
           "h-empty-size-one",
+          true
+        ],
+        [
+          "h-size-zero-items",
+          true
+        ],
+        [
+          "h-size-zero-empty",
           true
         ]
       ],
@@ -7262,8 +7652,8 @@
     "payload": {
       "kind": "function",
       "entry": "in_batches",
-      "learner": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size + 1:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
-      "reference": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+      "learner": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size + 1:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+      "reference": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
       "scope": "all",
       "rules": {},
       "cases": [
@@ -7329,12 +7719,34 @@
             [],
             1
           ]
+        },
+        {
+          "id": "h-size-zero-items",
+          "label": "Size zero with parcels",
+          "visibility": "hidden",
+          "args": [
+            [
+              1,
+              2,
+              3
+            ],
+            0
+          ]
+        },
+        {
+          "id": "h-size-zero-empty",
+          "label": "Size zero with no parcels",
+          "visibility": "hidden",
+          "args": [
+            [],
+            0
+          ]
         }
       ],
       "variants": [
         {
           "id": "reversed-inside",
-          "code": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.insert(0, item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.insert(0, item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
           "mistake": {
             "tag": "INSERT_AT_FRONT",
             "title": "Adding at the front puts the item first",
@@ -7343,7 +7755,7 @@
         },
         {
           "id": "size-plus-one",
-          "code": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size + 1:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size + 1:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
           "mistake": {
             "tag": "OFF_BY_ONE_RANGE",
             "title": "range() stops before its end",
@@ -7352,11 +7764,20 @@
         },
         {
           "id": "one-empty-batch",
-          "code": "def in_batches(items, size):\n    if len(items) == 0:\n        yield [None]\n        return\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    if len(items) == 0:\n        yield [None]\n        return\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
           "mistake": {
             "tag": "EMPTY_IS_NONE",
             "title": "An empty total is 0, not None",
             "explanation": "Returning None for an empty input changes the answer type. Let the loop run zero times and return the starting value."
+          }
+        },
+        {
+          "id": "no-size-check",
+          "code": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "mistake": {
+            "tag": "UNCHECKED_ARGUMENT",
+            "title": "A size or count must be checked before use",
+            "explanation": "Without a check, a size of zero or less quietly gives a wrong answer. Raise ValueError for a value the function cannot use, as itertools.batched does."
           }
         }
       ],
@@ -7366,8 +7787,8 @@
     "datasets": {},
     "expected": {
       "status": "fail",
-      "passed": 3,
-      "total": 5,
+      "passed": 5,
+      "total": 7,
       "cases": [
         [
           "v-five-by-two",
@@ -7387,6 +7808,14 @@
         ],
         [
           "h-empty-size-one",
+          true
+        ],
+        [
+          "h-size-zero-items",
+          true
+        ],
+        [
+          "h-size-zero-empty",
           true
         ]
       ],
@@ -7400,8 +7829,8 @@
     "payload": {
       "kind": "function",
       "entry": "in_batches",
-      "learner": "def in_batches(items, size):\n    if len(items) == 0:\n        yield [None]\n        return\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
-      "reference": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+      "learner": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    if len(items) == 0:\n        yield [None]\n        return\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+      "reference": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
       "scope": "all",
       "rules": {},
       "cases": [
@@ -7467,12 +7896,34 @@
             [],
             1
           ]
+        },
+        {
+          "id": "h-size-zero-items",
+          "label": "Size zero with parcels",
+          "visibility": "hidden",
+          "args": [
+            [
+              1,
+              2,
+              3
+            ],
+            0
+          ]
+        },
+        {
+          "id": "h-size-zero-empty",
+          "label": "Size zero with no parcels",
+          "visibility": "hidden",
+          "args": [
+            [],
+            0
+          ]
         }
       ],
       "variants": [
         {
           "id": "reversed-inside",
-          "code": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.insert(0, item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.insert(0, item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
           "mistake": {
             "tag": "INSERT_AT_FRONT",
             "title": "Adding at the front puts the item first",
@@ -7481,7 +7932,7 @@
         },
         {
           "id": "size-plus-one",
-          "code": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size + 1:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size + 1:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
           "mistake": {
             "tag": "OFF_BY_ONE_RANGE",
             "title": "range() stops before its end",
@@ -7490,11 +7941,20 @@
         },
         {
           "id": "one-empty-batch",
-          "code": "def in_batches(items, size):\n    if len(items) == 0:\n        yield [None]\n        return\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    if len(items) == 0:\n        yield [None]\n        return\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
           "mistake": {
             "tag": "EMPTY_IS_NONE",
             "title": "An empty total is 0, not None",
             "explanation": "Returning None for an empty input changes the answer type. Let the loop run zero times and return the starting value."
+          }
+        },
+        {
+          "id": "no-size-check",
+          "code": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "mistake": {
+            "tag": "UNCHECKED_ARGUMENT",
+            "title": "A size or count must be checked before use",
+            "explanation": "Without a check, a size of zero or less quietly gives a wrong answer. Raise ValueError for a value the function cannot use, as itertools.batched does."
           }
         }
       ],
@@ -7504,8 +7964,8 @@
     "datasets": {},
     "expected": {
       "status": "fail",
-      "passed": 3,
-      "total": 5,
+      "passed": 5,
+      "total": 7,
       "cases": [
         [
           "v-five-by-two",
@@ -7526,10 +7986,195 @@
         [
           "h-empty-size-one",
           false
+        ],
+        [
+          "h-size-zero-items",
+          true
+        ],
+        [
+          "h-size-zero-empty",
+          true
         ]
       ],
       "matched": [
         "one-empty-batch"
+      ]
+    }
+  },
+  {
+    "name": "c01-guided-in-batches:variant:no-size-check",
+    "payload": {
+      "kind": "function",
+      "entry": "in_batches",
+      "learner": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+      "reference": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+      "scope": "all",
+      "rules": {},
+      "cases": [
+        {
+          "id": "v-five-by-two",
+          "label": "Five parcels in pairs",
+          "visibility": "visible",
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            2
+          ]
+        },
+        {
+          "id": "v-empty",
+          "label": "No parcels",
+          "visibility": "visible",
+          "args": [
+            [],
+            3
+          ]
+        },
+        {
+          "id": "h-letters",
+          "label": "Three letters in one batch",
+          "visibility": "hidden",
+          "args": [
+            [
+              "a",
+              "b",
+              "c"
+            ],
+            3
+          ]
+        },
+        {
+          "id": "h-seven-by-three",
+          "label": "Seven parcels in threes",
+          "visibility": "hidden",
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            3
+          ]
+        },
+        {
+          "id": "h-empty-size-one",
+          "label": "No parcels, size one",
+          "visibility": "hidden",
+          "args": [
+            [],
+            1
+          ]
+        },
+        {
+          "id": "h-size-zero-items",
+          "label": "Size zero with parcels",
+          "visibility": "hidden",
+          "args": [
+            [
+              1,
+              2,
+              3
+            ],
+            0
+          ]
+        },
+        {
+          "id": "h-size-zero-empty",
+          "label": "Size zero with no parcels",
+          "visibility": "hidden",
+          "args": [
+            [],
+            0
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "reversed-inside",
+          "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.insert(0, item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "mistake": {
+            "tag": "INSERT_AT_FRONT",
+            "title": "Adding at the front puts the item first",
+            "explanation": "append() adds at the end, and insert(0, x) puts x first. Check where the rule wants the new item."
+          }
+        },
+        {
+          "id": "size-plus-one",
+          "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size + 1:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "mistake": {
+            "tag": "OFF_BY_ONE_RANGE",
+            "title": "range() stops before its end",
+            "explanation": "range(a, b) stops before b, and range(n) starts at 0. Off-by-one loops skip the first or last item."
+          }
+        },
+        {
+          "id": "one-empty-batch",
+          "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    if len(items) == 0:\n        yield [None]\n        return\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "mistake": {
+            "tag": "EMPTY_IS_NONE",
+            "title": "An empty total is 0, not None",
+            "explanation": "Returning None for an empty input changes the answer type. Let the loop run zero times and return the starting value."
+          }
+        },
+        {
+          "id": "no-size-check",
+          "code": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "mistake": {
+            "tag": "UNCHECKED_ARGUMENT",
+            "title": "A size or count must be checked before use",
+            "explanation": "Without a check, a size of zero or less quietly gives a wrong answer. Raise ValueError for a value the function cannot use, as itertools.batched does."
+          }
+        }
+      ],
+      "requires": [],
+      "definitions_only": false
+    },
+    "datasets": {},
+    "expected": {
+      "status": "fail",
+      "passed": 5,
+      "total": 7,
+      "cases": [
+        [
+          "v-five-by-two",
+          true
+        ],
+        [
+          "v-empty",
+          true
+        ],
+        [
+          "h-letters",
+          true
+        ],
+        [
+          "h-seven-by-three",
+          true
+        ],
+        [
+          "h-empty-size-one",
+          true
+        ],
+        [
+          "h-size-zero-items",
+          false
+        ],
+        [
+          "h-size-zero-empty",
+          false
+        ]
+      ],
+      "matched": [
+        "no-size-check"
       ]
     }
   },
@@ -9327,8 +9972,8 @@
     "payload": {
       "kind": "function",
       "entry": "parse_weight",
-      "learner": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        return float(text.strip())\n    except ValueError:\n        return None\n",
-      "reference": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        return float(text.strip())\n    except ValueError:\n        return None\n",
+      "learner": "import math\n\n\ndef parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        value = float(text.strip())\n    except ValueError:\n        return None\n    if not math.isfinite(value):\n        return None\n    return value\n",
+      "reference": "import math\n\n\ndef parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        value = float(text.strip())\n    except ValueError:\n        return None\n    if not math.isfinite(value):\n        return None\n    return value\n",
       "scope": "all",
       "rules": {},
       "cases": [
@@ -9387,6 +10032,22 @@
           "args": [
             "2.75"
           ]
+        },
+        {
+          "id": "h-nan",
+          "label": "Not-a-number text",
+          "visibility": "hidden",
+          "args": [
+            "nan"
+          ]
+        },
+        {
+          "id": "h-inf",
+          "label": "Infinity text",
+          "visibility": "hidden",
+          "args": [
+            "inf"
+          ]
         }
       ],
       "variants": [
@@ -9406,6 +10067,15 @@
             "tag": "EXCEPTION_TOO_BROAD",
             "title": "A broad except hides other bugs",
             "explanation": "except Exception catches every ordinary error, including ones you did not expect. Catch the error you mean, such as ValueError."
+          }
+        },
+        {
+          "id": "returns-non-finite",
+          "code": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        return float(text.strip())\n    except ValueError:\n        return None\n",
+          "mistake": {
+            "tag": "NON_FINITE_FLOAT",
+            "title": "float() reads nan and inf",
+            "explanation": "float(\"nan\") and float(\"inf\") are valid floats. They are not weights, so the ticket says to return None for them."
           }
         },
         {
@@ -9424,8 +10094,8 @@
     "datasets": {},
     "expected": {
       "status": "pass",
-      "passed": 7,
-      "total": 7,
+      "passed": 9,
+      "total": 9,
       "cases": [
         [
           "v-decimal",
@@ -9454,6 +10124,14 @@
         [
           "h-decimal-two",
           true
+        ],
+        [
+          "h-nan",
+          true
+        ],
+        [
+          "h-inf",
+          true
         ]
       ],
       "matched": []
@@ -9465,7 +10143,7 @@
       "kind": "function",
       "entry": "parse_weight",
       "learner": "def parse_weight(text):\n    pass\n",
-      "reference": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        return float(text.strip())\n    except ValueError:\n        return None\n",
+      "reference": "import math\n\n\ndef parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        value = float(text.strip())\n    except ValueError:\n        return None\n    if not math.isfinite(value):\n        return None\n    return value\n",
       "scope": "all",
       "rules": {},
       "cases": [
@@ -9524,6 +10202,22 @@
           "args": [
             "2.75"
           ]
+        },
+        {
+          "id": "h-nan",
+          "label": "Not-a-number text",
+          "visibility": "hidden",
+          "args": [
+            "nan"
+          ]
+        },
+        {
+          "id": "h-inf",
+          "label": "Infinity text",
+          "visibility": "hidden",
+          "args": [
+            "inf"
+          ]
         }
       ],
       "variants": [
@@ -9543,6 +10237,15 @@
             "tag": "EXCEPTION_TOO_BROAD",
             "title": "A broad except hides other bugs",
             "explanation": "except Exception catches every ordinary error, including ones you did not expect. Catch the error you mean, such as ValueError."
+          }
+        },
+        {
+          "id": "returns-non-finite",
+          "code": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        return float(text.strip())\n    except ValueError:\n        return None\n",
+          "mistake": {
+            "tag": "NON_FINITE_FLOAT",
+            "title": "float() reads nan and inf",
+            "explanation": "float(\"nan\") and float(\"inf\") are valid floats. They are not weights, so the ticket says to return None for them."
           }
         },
         {
@@ -9561,8 +10264,8 @@
     "datasets": {},
     "expected": {
       "status": "fail",
-      "passed": 2,
-      "total": 7,
+      "passed": 4,
+      "total": 9,
       "cases": [
         [
           "v-decimal",
@@ -9591,6 +10294,14 @@
         [
           "h-decimal-two",
           false
+        ],
+        [
+          "h-nan",
+          true
+        ],
+        [
+          "h-inf",
+          true
         ]
       ],
       "matched": []
@@ -9602,7 +10313,7 @@
       "kind": "function",
       "entry": "parse_weight",
       "learner": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    return float(text.strip())\n",
-      "reference": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        return float(text.strip())\n    except ValueError:\n        return None\n",
+      "reference": "import math\n\n\ndef parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        value = float(text.strip())\n    except ValueError:\n        return None\n    if not math.isfinite(value):\n        return None\n    return value\n",
       "scope": "all",
       "rules": {},
       "cases": [
@@ -9661,6 +10372,22 @@
           "args": [
             "2.75"
           ]
+        },
+        {
+          "id": "h-nan",
+          "label": "Not-a-number text",
+          "visibility": "hidden",
+          "args": [
+            "nan"
+          ]
+        },
+        {
+          "id": "h-inf",
+          "label": "Infinity text",
+          "visibility": "hidden",
+          "args": [
+            "inf"
+          ]
         }
       ],
       "variants": [
@@ -9680,6 +10407,15 @@
             "tag": "EXCEPTION_TOO_BROAD",
             "title": "A broad except hides other bugs",
             "explanation": "except Exception catches every ordinary error, including ones you did not expect. Catch the error you mean, such as ValueError."
+          }
+        },
+        {
+          "id": "returns-non-finite",
+          "code": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        return float(text.strip())\n    except ValueError:\n        return None\n",
+          "mistake": {
+            "tag": "NON_FINITE_FLOAT",
+            "title": "float() reads nan and inf",
+            "explanation": "float(\"nan\") and float(\"inf\") are valid floats. They are not weights, so the ticket says to return None for them."
           }
         },
         {
@@ -9699,7 +10435,7 @@
     "expected": {
       "status": "fail",
       "passed": 5,
-      "total": 7,
+      "total": 9,
       "cases": [
         [
           "v-decimal",
@@ -9728,6 +10464,14 @@
         [
           "h-decimal-two",
           true
+        ],
+        [
+          "h-nan",
+          false
+        ],
+        [
+          "h-inf",
+          false
         ]
       ],
       "matched": [
@@ -9741,7 +10485,7 @@
       "kind": "function",
       "entry": "parse_weight",
       "learner": "def parse_weight(text):\n    try:\n        return float(text)\n    except Exception:\n        return None\n",
-      "reference": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        return float(text.strip())\n    except ValueError:\n        return None\n",
+      "reference": "import math\n\n\ndef parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        value = float(text.strip())\n    except ValueError:\n        return None\n    if not math.isfinite(value):\n        return None\n    return value\n",
       "scope": "all",
       "rules": {},
       "cases": [
@@ -9800,6 +10544,22 @@
           "args": [
             "2.75"
           ]
+        },
+        {
+          "id": "h-nan",
+          "label": "Not-a-number text",
+          "visibility": "hidden",
+          "args": [
+            "nan"
+          ]
+        },
+        {
+          "id": "h-inf",
+          "label": "Infinity text",
+          "visibility": "hidden",
+          "args": [
+            "inf"
+          ]
         }
       ],
       "variants": [
@@ -9822,6 +10582,15 @@
           }
         },
         {
+          "id": "returns-non-finite",
+          "code": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        return float(text.strip())\n    except ValueError:\n        return None\n",
+          "mistake": {
+            "tag": "NON_FINITE_FLOAT",
+            "title": "float() reads nan and inf",
+            "explanation": "float(\"nan\") and float(\"inf\") are valid floats. They are not weights, so the ticket says to return None for them."
+          }
+        },
+        {
           "id": "whole-numbers-only",
           "code": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        return float(int(text.strip()))\n    except ValueError:\n        return None\n",
           "mistake": {
@@ -9838,7 +10607,7 @@
     "expected": {
       "status": "fail",
       "passed": 5,
-      "total": 7,
+      "total": 9,
       "cases": [
         [
           "v-decimal",
@@ -9867,10 +10636,190 @@
         [
           "h-decimal-two",
           true
+        ],
+        [
+          "h-nan",
+          false
+        ],
+        [
+          "h-inf",
+          false
         ]
       ],
       "matched": [
         "catches-everything"
+      ]
+    }
+  },
+  {
+    "name": "c01-ticket-parse-weight:variant:returns-non-finite",
+    "payload": {
+      "kind": "function",
+      "entry": "parse_weight",
+      "learner": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        return float(text.strip())\n    except ValueError:\n        return None\n",
+      "reference": "import math\n\n\ndef parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        value = float(text.strip())\n    except ValueError:\n        return None\n    if not math.isfinite(value):\n        return None\n    return value\n",
+      "scope": "all",
+      "rules": {},
+      "cases": [
+        {
+          "id": "v-decimal",
+          "label": "A decimal weight",
+          "visibility": "visible",
+          "args": [
+            "4.5"
+          ]
+        },
+        {
+          "id": "v-letters",
+          "label": "Letters",
+          "visibility": "visible",
+          "args": [
+            "abc"
+          ]
+        },
+        {
+          "id": "v-number",
+          "label": "A number, not text",
+          "visibility": "visible",
+          "args": [
+            12
+          ]
+        },
+        {
+          "id": "h-padded",
+          "label": "Padded whole number",
+          "visibility": "hidden",
+          "args": [
+            " 7 "
+          ]
+        },
+        {
+          "id": "h-empty",
+          "label": "Empty text",
+          "visibility": "hidden",
+          "args": [
+            ""
+          ]
+        },
+        {
+          "id": "h-none",
+          "label": "No value at all",
+          "visibility": "hidden",
+          "args": [
+            null
+          ]
+        },
+        {
+          "id": "h-decimal-two",
+          "label": "Another decimal",
+          "visibility": "hidden",
+          "args": [
+            "2.75"
+          ]
+        },
+        {
+          "id": "h-nan",
+          "label": "Not-a-number text",
+          "visibility": "hidden",
+          "args": [
+            "nan"
+          ]
+        },
+        {
+          "id": "h-inf",
+          "label": "Infinity text",
+          "visibility": "hidden",
+          "args": [
+            "inf"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "no-fallback",
+          "code": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    return float(text.strip())\n",
+          "mistake": {
+            "tag": "NO_FALLBACK",
+            "title": "Expected failures need a fallback",
+            "explanation": "When the rule says to return None for bad text, catch the ValueError that float() raises for it. Let other errors through."
+          }
+        },
+        {
+          "id": "catches-everything",
+          "code": "def parse_weight(text):\n    try:\n        return float(text)\n    except Exception:\n        return None\n",
+          "mistake": {
+            "tag": "EXCEPTION_TOO_BROAD",
+            "title": "A broad except hides other bugs",
+            "explanation": "except Exception catches every ordinary error, including ones you did not expect. Catch the error you mean, such as ValueError."
+          }
+        },
+        {
+          "id": "returns-non-finite",
+          "code": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        return float(text.strip())\n    except ValueError:\n        return None\n",
+          "mistake": {
+            "tag": "NON_FINITE_FLOAT",
+            "title": "float() reads nan and inf",
+            "explanation": "float(\"nan\") and float(\"inf\") are valid floats. They are not weights, so the ticket says to return None for them."
+          }
+        },
+        {
+          "id": "whole-numbers-only",
+          "code": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        return float(int(text.strip()))\n    except ValueError:\n        return None\n",
+          "mistake": {
+            "tag": "INT_FROM_TEXT",
+            "title": "int() cannot read a decimal point",
+            "explanation": "int(\"12.5\") raises ValueError. Use float() for decimal text, then convert with int() if you need a whole number."
+          }
+        }
+      ],
+      "requires": [],
+      "definitions_only": false
+    },
+    "datasets": {},
+    "expected": {
+      "status": "fail",
+      "passed": 7,
+      "total": 9,
+      "cases": [
+        [
+          "v-decimal",
+          true
+        ],
+        [
+          "v-letters",
+          true
+        ],
+        [
+          "v-number",
+          true
+        ],
+        [
+          "h-padded",
+          true
+        ],
+        [
+          "h-empty",
+          true
+        ],
+        [
+          "h-none",
+          true
+        ],
+        [
+          "h-decimal-two",
+          true
+        ],
+        [
+          "h-nan",
+          false
+        ],
+        [
+          "h-inf",
+          false
+        ]
+      ],
+      "matched": [
+        "returns-non-finite"
       ]
     }
   },
@@ -9880,7 +10829,7 @@
       "kind": "function",
       "entry": "parse_weight",
       "learner": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        return float(int(text.strip()))\n    except ValueError:\n        return None\n",
-      "reference": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        return float(text.strip())\n    except ValueError:\n        return None\n",
+      "reference": "import math\n\n\ndef parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        value = float(text.strip())\n    except ValueError:\n        return None\n    if not math.isfinite(value):\n        return None\n    return value\n",
       "scope": "all",
       "rules": {},
       "cases": [
@@ -9939,6 +10888,22 @@
           "args": [
             "2.75"
           ]
+        },
+        {
+          "id": "h-nan",
+          "label": "Not-a-number text",
+          "visibility": "hidden",
+          "args": [
+            "nan"
+          ]
+        },
+        {
+          "id": "h-inf",
+          "label": "Infinity text",
+          "visibility": "hidden",
+          "args": [
+            "inf"
+          ]
         }
       ],
       "variants": [
@@ -9961,6 +10926,15 @@
           }
         },
         {
+          "id": "returns-non-finite",
+          "code": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        return float(text.strip())\n    except ValueError:\n        return None\n",
+          "mistake": {
+            "tag": "NON_FINITE_FLOAT",
+            "title": "float() reads nan and inf",
+            "explanation": "float(\"nan\") and float(\"inf\") are valid floats. They are not weights, so the ticket says to return None for them."
+          }
+        },
+        {
           "id": "whole-numbers-only",
           "code": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        return float(int(text.strip()))\n    except ValueError:\n        return None\n",
           "mistake": {
@@ -9976,8 +10950,8 @@
     "datasets": {},
     "expected": {
       "status": "fail",
-      "passed": 5,
-      "total": 7,
+      "passed": 7,
+      "total": 9,
       "cases": [
         [
           "v-decimal",
@@ -10006,10 +10980,659 @@
         [
           "h-decimal-two",
           false
+        ],
+        [
+          "h-nan",
+          true
+        ],
+        [
+          "h-inf",
+          true
         ]
       ],
       "matched": [
         "whole-numbers-only"
+      ]
+    }
+  },
+  {
+    "name": "c01-ticket-save-lines:reference",
+    "payload": {
+      "kind": "function",
+      "entry": "save_and_reload",
+      "learner": "def save_and_reload(path, lines):\n    with open(path, \"w\") as handle:\n        for line in lines:\n            handle.write(line + \"\\n\")\n    with open(path) as handle:\n        return [line.rstrip(\"\\n\") for line in handle]\n",
+      "reference": "def save_and_reload(path, lines):\n    with open(path, \"w\") as handle:\n        for line in lines:\n            handle.write(line + \"\\n\")\n    with open(path) as handle:\n        return [line.rstrip(\"\\n\") for line in handle]\n",
+      "scope": "all",
+      "rules": {},
+      "cases": [
+        {
+          "id": "v-two-notes",
+          "label": "Two notes",
+          "visibility": "visible",
+          "args": [
+            "notes.txt",
+            [
+              "Dock 1",
+              "Dock 2"
+            ]
+          ]
+        },
+        {
+          "id": "v-no-notes",
+          "label": "No notes",
+          "visibility": "visible",
+          "args": [
+            "empty.txt",
+            []
+          ]
+        },
+        {
+          "id": "h-one-note",
+          "label": "One note",
+          "visibility": "hidden",
+          "args": [
+            "bay.txt",
+            [
+              "Bay 2 is full"
+            ]
+          ]
+        },
+        {
+          "id": "h-blank-note",
+          "label": "A blank note in the middle",
+          "visibility": "hidden",
+          "args": [
+            "gate.txt",
+            [
+              "a",
+              "",
+              "b"
+            ]
+          ]
+        },
+        {
+          "id": "h-no-notes-again",
+          "label": "No notes, another file",
+          "visibility": "hidden",
+          "args": [
+            "empty2.txt",
+            []
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "no-line-break",
+          "code": "def save_and_reload(path, lines):\n    with open(path, \"w\") as handle:\n        for line in lines:\n            handle.write(line)\n    with open(path) as handle:\n        return [line.rstrip(\"\\n\") for line in handle]\n",
+          "mistake": {
+            "tag": "LINE_ENDINGS",
+            "title": "A text file keeps the characters you write",
+            "explanation": "Lines are separated by line breaks you write yourself. Without them, lines run together. With them, a read keeps the breaks unless you strip them."
+          }
+        },
+        {
+          "id": "keeps-line-breaks",
+          "code": "def save_and_reload(path, lines):\n    with open(path, \"w\") as handle:\n        for line in lines:\n            handle.write(line + \"\\n\")\n    with open(path) as handle:\n        return [line for line in handle]\n",
+          "mistake": {
+            "tag": "LINE_ENDINGS",
+            "title": "A text file keeps the characters you write",
+            "explanation": "Lines are separated by line breaks you write yourself. Without them, lines run together. With them, a read keeps the breaks unless you strip them."
+          }
+        },
+        {
+          "id": "blank-for-no-notes",
+          "code": "def save_and_reload(path, lines):\n    with open(path, \"w\") as handle:\n        for line in lines or [\"\"]:\n            handle.write(line + \"\\n\")\n    with open(path) as handle:\n        return [line.rstrip(\"\\n\") for line in handle]\n",
+          "mistake": {
+            "tag": "TRUTHINESS",
+            "title": "Empty values are false",
+            "explanation": "An empty list, string, dict, or 0 is false in an if test. Check the value you mean, such as len(items) == 0 or items is None."
+          }
+        }
+      ],
+      "requires": [],
+      "definitions_only": false
+    },
+    "datasets": {},
+    "expected": {
+      "status": "pass",
+      "passed": 5,
+      "total": 5,
+      "cases": [
+        [
+          "v-two-notes",
+          true
+        ],
+        [
+          "v-no-notes",
+          true
+        ],
+        [
+          "h-one-note",
+          true
+        ],
+        [
+          "h-blank-note",
+          true
+        ],
+        [
+          "h-no-notes-again",
+          true
+        ]
+      ],
+      "matched": []
+    }
+  },
+  {
+    "name": "c01-ticket-save-lines:starter",
+    "payload": {
+      "kind": "function",
+      "entry": "save_and_reload",
+      "learner": "def save_and_reload(path, lines):\n    pass\n",
+      "reference": "def save_and_reload(path, lines):\n    with open(path, \"w\") as handle:\n        for line in lines:\n            handle.write(line + \"\\n\")\n    with open(path) as handle:\n        return [line.rstrip(\"\\n\") for line in handle]\n",
+      "scope": "all",
+      "rules": {},
+      "cases": [
+        {
+          "id": "v-two-notes",
+          "label": "Two notes",
+          "visibility": "visible",
+          "args": [
+            "notes.txt",
+            [
+              "Dock 1",
+              "Dock 2"
+            ]
+          ]
+        },
+        {
+          "id": "v-no-notes",
+          "label": "No notes",
+          "visibility": "visible",
+          "args": [
+            "empty.txt",
+            []
+          ]
+        },
+        {
+          "id": "h-one-note",
+          "label": "One note",
+          "visibility": "hidden",
+          "args": [
+            "bay.txt",
+            [
+              "Bay 2 is full"
+            ]
+          ]
+        },
+        {
+          "id": "h-blank-note",
+          "label": "A blank note in the middle",
+          "visibility": "hidden",
+          "args": [
+            "gate.txt",
+            [
+              "a",
+              "",
+              "b"
+            ]
+          ]
+        },
+        {
+          "id": "h-no-notes-again",
+          "label": "No notes, another file",
+          "visibility": "hidden",
+          "args": [
+            "empty2.txt",
+            []
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "no-line-break",
+          "code": "def save_and_reload(path, lines):\n    with open(path, \"w\") as handle:\n        for line in lines:\n            handle.write(line)\n    with open(path) as handle:\n        return [line.rstrip(\"\\n\") for line in handle]\n",
+          "mistake": {
+            "tag": "LINE_ENDINGS",
+            "title": "A text file keeps the characters you write",
+            "explanation": "Lines are separated by line breaks you write yourself. Without them, lines run together. With them, a read keeps the breaks unless you strip them."
+          }
+        },
+        {
+          "id": "keeps-line-breaks",
+          "code": "def save_and_reload(path, lines):\n    with open(path, \"w\") as handle:\n        for line in lines:\n            handle.write(line + \"\\n\")\n    with open(path) as handle:\n        return [line for line in handle]\n",
+          "mistake": {
+            "tag": "LINE_ENDINGS",
+            "title": "A text file keeps the characters you write",
+            "explanation": "Lines are separated by line breaks you write yourself. Without them, lines run together. With them, a read keeps the breaks unless you strip them."
+          }
+        },
+        {
+          "id": "blank-for-no-notes",
+          "code": "def save_and_reload(path, lines):\n    with open(path, \"w\") as handle:\n        for line in lines or [\"\"]:\n            handle.write(line + \"\\n\")\n    with open(path) as handle:\n        return [line.rstrip(\"\\n\") for line in handle]\n",
+          "mistake": {
+            "tag": "TRUTHINESS",
+            "title": "Empty values are false",
+            "explanation": "An empty list, string, dict, or 0 is false in an if test. Check the value you mean, such as len(items) == 0 or items is None."
+          }
+        }
+      ],
+      "requires": [],
+      "definitions_only": false
+    },
+    "datasets": {},
+    "expected": {
+      "status": "fail",
+      "passed": 0,
+      "total": 5,
+      "cases": [
+        [
+          "v-two-notes",
+          false
+        ],
+        [
+          "v-no-notes",
+          false
+        ],
+        [
+          "h-one-note",
+          false
+        ],
+        [
+          "h-blank-note",
+          false
+        ],
+        [
+          "h-no-notes-again",
+          false
+        ]
+      ],
+      "matched": []
+    }
+  },
+  {
+    "name": "c01-ticket-save-lines:variant:no-line-break",
+    "payload": {
+      "kind": "function",
+      "entry": "save_and_reload",
+      "learner": "def save_and_reload(path, lines):\n    with open(path, \"w\") as handle:\n        for line in lines:\n            handle.write(line)\n    with open(path) as handle:\n        return [line.rstrip(\"\\n\") for line in handle]\n",
+      "reference": "def save_and_reload(path, lines):\n    with open(path, \"w\") as handle:\n        for line in lines:\n            handle.write(line + \"\\n\")\n    with open(path) as handle:\n        return [line.rstrip(\"\\n\") for line in handle]\n",
+      "scope": "all",
+      "rules": {},
+      "cases": [
+        {
+          "id": "v-two-notes",
+          "label": "Two notes",
+          "visibility": "visible",
+          "args": [
+            "notes.txt",
+            [
+              "Dock 1",
+              "Dock 2"
+            ]
+          ]
+        },
+        {
+          "id": "v-no-notes",
+          "label": "No notes",
+          "visibility": "visible",
+          "args": [
+            "empty.txt",
+            []
+          ]
+        },
+        {
+          "id": "h-one-note",
+          "label": "One note",
+          "visibility": "hidden",
+          "args": [
+            "bay.txt",
+            [
+              "Bay 2 is full"
+            ]
+          ]
+        },
+        {
+          "id": "h-blank-note",
+          "label": "A blank note in the middle",
+          "visibility": "hidden",
+          "args": [
+            "gate.txt",
+            [
+              "a",
+              "",
+              "b"
+            ]
+          ]
+        },
+        {
+          "id": "h-no-notes-again",
+          "label": "No notes, another file",
+          "visibility": "hidden",
+          "args": [
+            "empty2.txt",
+            []
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "no-line-break",
+          "code": "def save_and_reload(path, lines):\n    with open(path, \"w\") as handle:\n        for line in lines:\n            handle.write(line)\n    with open(path) as handle:\n        return [line.rstrip(\"\\n\") for line in handle]\n",
+          "mistake": {
+            "tag": "LINE_ENDINGS",
+            "title": "A text file keeps the characters you write",
+            "explanation": "Lines are separated by line breaks you write yourself. Without them, lines run together. With them, a read keeps the breaks unless you strip them."
+          }
+        },
+        {
+          "id": "keeps-line-breaks",
+          "code": "def save_and_reload(path, lines):\n    with open(path, \"w\") as handle:\n        for line in lines:\n            handle.write(line + \"\\n\")\n    with open(path) as handle:\n        return [line for line in handle]\n",
+          "mistake": {
+            "tag": "LINE_ENDINGS",
+            "title": "A text file keeps the characters you write",
+            "explanation": "Lines are separated by line breaks you write yourself. Without them, lines run together. With them, a read keeps the breaks unless you strip them."
+          }
+        },
+        {
+          "id": "blank-for-no-notes",
+          "code": "def save_and_reload(path, lines):\n    with open(path, \"w\") as handle:\n        for line in lines or [\"\"]:\n            handle.write(line + \"\\n\")\n    with open(path) as handle:\n        return [line.rstrip(\"\\n\") for line in handle]\n",
+          "mistake": {
+            "tag": "TRUTHINESS",
+            "title": "Empty values are false",
+            "explanation": "An empty list, string, dict, or 0 is false in an if test. Check the value you mean, such as len(items) == 0 or items is None."
+          }
+        }
+      ],
+      "requires": [],
+      "definitions_only": false
+    },
+    "datasets": {},
+    "expected": {
+      "status": "fail",
+      "passed": 3,
+      "total": 5,
+      "cases": [
+        [
+          "v-two-notes",
+          false
+        ],
+        [
+          "v-no-notes",
+          true
+        ],
+        [
+          "h-one-note",
+          true
+        ],
+        [
+          "h-blank-note",
+          false
+        ],
+        [
+          "h-no-notes-again",
+          true
+        ]
+      ],
+      "matched": [
+        "no-line-break"
+      ]
+    }
+  },
+  {
+    "name": "c01-ticket-save-lines:variant:keeps-line-breaks",
+    "payload": {
+      "kind": "function",
+      "entry": "save_and_reload",
+      "learner": "def save_and_reload(path, lines):\n    with open(path, \"w\") as handle:\n        for line in lines:\n            handle.write(line + \"\\n\")\n    with open(path) as handle:\n        return [line for line in handle]\n",
+      "reference": "def save_and_reload(path, lines):\n    with open(path, \"w\") as handle:\n        for line in lines:\n            handle.write(line + \"\\n\")\n    with open(path) as handle:\n        return [line.rstrip(\"\\n\") for line in handle]\n",
+      "scope": "all",
+      "rules": {},
+      "cases": [
+        {
+          "id": "v-two-notes",
+          "label": "Two notes",
+          "visibility": "visible",
+          "args": [
+            "notes.txt",
+            [
+              "Dock 1",
+              "Dock 2"
+            ]
+          ]
+        },
+        {
+          "id": "v-no-notes",
+          "label": "No notes",
+          "visibility": "visible",
+          "args": [
+            "empty.txt",
+            []
+          ]
+        },
+        {
+          "id": "h-one-note",
+          "label": "One note",
+          "visibility": "hidden",
+          "args": [
+            "bay.txt",
+            [
+              "Bay 2 is full"
+            ]
+          ]
+        },
+        {
+          "id": "h-blank-note",
+          "label": "A blank note in the middle",
+          "visibility": "hidden",
+          "args": [
+            "gate.txt",
+            [
+              "a",
+              "",
+              "b"
+            ]
+          ]
+        },
+        {
+          "id": "h-no-notes-again",
+          "label": "No notes, another file",
+          "visibility": "hidden",
+          "args": [
+            "empty2.txt",
+            []
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "no-line-break",
+          "code": "def save_and_reload(path, lines):\n    with open(path, \"w\") as handle:\n        for line in lines:\n            handle.write(line)\n    with open(path) as handle:\n        return [line.rstrip(\"\\n\") for line in handle]\n",
+          "mistake": {
+            "tag": "LINE_ENDINGS",
+            "title": "A text file keeps the characters you write",
+            "explanation": "Lines are separated by line breaks you write yourself. Without them, lines run together. With them, a read keeps the breaks unless you strip them."
+          }
+        },
+        {
+          "id": "keeps-line-breaks",
+          "code": "def save_and_reload(path, lines):\n    with open(path, \"w\") as handle:\n        for line in lines:\n            handle.write(line + \"\\n\")\n    with open(path) as handle:\n        return [line for line in handle]\n",
+          "mistake": {
+            "tag": "LINE_ENDINGS",
+            "title": "A text file keeps the characters you write",
+            "explanation": "Lines are separated by line breaks you write yourself. Without them, lines run together. With them, a read keeps the breaks unless you strip them."
+          }
+        },
+        {
+          "id": "blank-for-no-notes",
+          "code": "def save_and_reload(path, lines):\n    with open(path, \"w\") as handle:\n        for line in lines or [\"\"]:\n            handle.write(line + \"\\n\")\n    with open(path) as handle:\n        return [line.rstrip(\"\\n\") for line in handle]\n",
+          "mistake": {
+            "tag": "TRUTHINESS",
+            "title": "Empty values are false",
+            "explanation": "An empty list, string, dict, or 0 is false in an if test. Check the value you mean, such as len(items) == 0 or items is None."
+          }
+        }
+      ],
+      "requires": [],
+      "definitions_only": false
+    },
+    "datasets": {},
+    "expected": {
+      "status": "fail",
+      "passed": 2,
+      "total": 5,
+      "cases": [
+        [
+          "v-two-notes",
+          false
+        ],
+        [
+          "v-no-notes",
+          true
+        ],
+        [
+          "h-one-note",
+          false
+        ],
+        [
+          "h-blank-note",
+          false
+        ],
+        [
+          "h-no-notes-again",
+          true
+        ]
+      ],
+      "matched": [
+        "keeps-line-breaks"
+      ]
+    }
+  },
+  {
+    "name": "c01-ticket-save-lines:variant:blank-for-no-notes",
+    "payload": {
+      "kind": "function",
+      "entry": "save_and_reload",
+      "learner": "def save_and_reload(path, lines):\n    with open(path, \"w\") as handle:\n        for line in lines or [\"\"]:\n            handle.write(line + \"\\n\")\n    with open(path) as handle:\n        return [line.rstrip(\"\\n\") for line in handle]\n",
+      "reference": "def save_and_reload(path, lines):\n    with open(path, \"w\") as handle:\n        for line in lines:\n            handle.write(line + \"\\n\")\n    with open(path) as handle:\n        return [line.rstrip(\"\\n\") for line in handle]\n",
+      "scope": "all",
+      "rules": {},
+      "cases": [
+        {
+          "id": "v-two-notes",
+          "label": "Two notes",
+          "visibility": "visible",
+          "args": [
+            "notes.txt",
+            [
+              "Dock 1",
+              "Dock 2"
+            ]
+          ]
+        },
+        {
+          "id": "v-no-notes",
+          "label": "No notes",
+          "visibility": "visible",
+          "args": [
+            "empty.txt",
+            []
+          ]
+        },
+        {
+          "id": "h-one-note",
+          "label": "One note",
+          "visibility": "hidden",
+          "args": [
+            "bay.txt",
+            [
+              "Bay 2 is full"
+            ]
+          ]
+        },
+        {
+          "id": "h-blank-note",
+          "label": "A blank note in the middle",
+          "visibility": "hidden",
+          "args": [
+            "gate.txt",
+            [
+              "a",
+              "",
+              "b"
+            ]
+          ]
+        },
+        {
+          "id": "h-no-notes-again",
+          "label": "No notes, another file",
+          "visibility": "hidden",
+          "args": [
+            "empty2.txt",
+            []
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "no-line-break",
+          "code": "def save_and_reload(path, lines):\n    with open(path, \"w\") as handle:\n        for line in lines:\n            handle.write(line)\n    with open(path) as handle:\n        return [line.rstrip(\"\\n\") for line in handle]\n",
+          "mistake": {
+            "tag": "LINE_ENDINGS",
+            "title": "A text file keeps the characters you write",
+            "explanation": "Lines are separated by line breaks you write yourself. Without them, lines run together. With them, a read keeps the breaks unless you strip them."
+          }
+        },
+        {
+          "id": "keeps-line-breaks",
+          "code": "def save_and_reload(path, lines):\n    with open(path, \"w\") as handle:\n        for line in lines:\n            handle.write(line + \"\\n\")\n    with open(path) as handle:\n        return [line for line in handle]\n",
+          "mistake": {
+            "tag": "LINE_ENDINGS",
+            "title": "A text file keeps the characters you write",
+            "explanation": "Lines are separated by line breaks you write yourself. Without them, lines run together. With them, a read keeps the breaks unless you strip them."
+          }
+        },
+        {
+          "id": "blank-for-no-notes",
+          "code": "def save_and_reload(path, lines):\n    with open(path, \"w\") as handle:\n        for line in lines or [\"\"]:\n            handle.write(line + \"\\n\")\n    with open(path) as handle:\n        return [line.rstrip(\"\\n\") for line in handle]\n",
+          "mistake": {
+            "tag": "TRUTHINESS",
+            "title": "Empty values are false",
+            "explanation": "An empty list, string, dict, or 0 is false in an if test. Check the value you mean, such as len(items) == 0 or items is None."
+          }
+        }
+      ],
+      "requires": [],
+      "definitions_only": false
+    },
+    "datasets": {},
+    "expected": {
+      "status": "fail",
+      "passed": 3,
+      "total": 5,
+      "cases": [
+        [
+          "v-two-notes",
+          true
+        ],
+        [
+          "v-no-notes",
+          false
+        ],
+        [
+          "h-one-note",
+          true
+        ],
+        [
+          "h-blank-note",
+          true
+        ],
+        [
+          "h-no-notes-again",
+          false
+        ]
+      ],
+      "matched": [
+        "blank-for-no-notes"
       ]
     }
   },

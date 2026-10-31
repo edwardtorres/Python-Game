@@ -128,6 +128,10 @@
     "code": "def format_label(name, count):\n    return f\"{name}: {count} items\"\n"
   },
   {
+    "name": "c01-guided-format-label:variant:strips-spaces-only",
+    "code": "def format_label(name, count):\n    return name.strip(\" \") + f\": {count} items\"\n"
+  },
+  {
     "name": "c01-guided-count-by-mode:reference",
     "code": "def count_by_mode(records):\n    counts = {}\n    for record in records:\n        mode = record[\"mode\"]\n        counts[mode] = counts.get(mode, 0) + 1\n    return counts\n"
   },
@@ -169,7 +173,7 @@
   },
   {
     "name": "c01-guided-in-batches:reference",
-    "code": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n"
+    "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n"
   },
   {
     "name": "c01-guided-in-batches:starter",
@@ -177,15 +181,19 @@
   },
   {
     "name": "c01-guided-in-batches:variant:reversed-inside",
-    "code": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.insert(0, item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n"
+    "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.insert(0, item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n"
   },
   {
     "name": "c01-guided-in-batches:variant:size-plus-one",
-    "code": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size + 1:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n"
+    "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size + 1:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n"
   },
   {
     "name": "c01-guided-in-batches:variant:one-empty-batch",
-    "code": "def in_batches(items, size):\n    if len(items) == 0:\n        yield [None]\n        return\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n"
+    "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    if len(items) == 0:\n        yield [None]\n        return\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n"
+  },
+  {
+    "name": "c01-guided-in-batches:variant:no-size-check",
+    "code": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n"
   },
   {
     "name": "c01-ticket-unique-routes:reference",
@@ -245,7 +253,7 @@
   },
   {
     "name": "c01-ticket-parse-weight:reference",
-    "code": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        return float(text.strip())\n    except ValueError:\n        return None\n"
+    "code": "import math\n\n\ndef parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        value = float(text.strip())\n    except ValueError:\n        return None\n    if not math.isfinite(value):\n        return None\n    return value\n"
   },
   {
     "name": "c01-ticket-parse-weight:starter",
@@ -260,8 +268,32 @@
     "code": "def parse_weight(text):\n    try:\n        return float(text)\n    except Exception:\n        return None\n"
   },
   {
+    "name": "c01-ticket-parse-weight:variant:returns-non-finite",
+    "code": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        return float(text.strip())\n    except ValueError:\n        return None\n"
+  },
+  {
     "name": "c01-ticket-parse-weight:variant:whole-numbers-only",
     "code": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        return float(int(text.strip()))\n    except ValueError:\n        return None\n"
+  },
+  {
+    "name": "c01-ticket-save-lines:reference",
+    "code": "def save_and_reload(path, lines):\n    with open(path, \"w\") as handle:\n        for line in lines:\n            handle.write(line + \"\\n\")\n    with open(path) as handle:\n        return [line.rstrip(\"\\n\") for line in handle]\n"
+  },
+  {
+    "name": "c01-ticket-save-lines:starter",
+    "code": "def save_and_reload(path, lines):\n    pass\n"
+  },
+  {
+    "name": "c01-ticket-save-lines:variant:no-line-break",
+    "code": "def save_and_reload(path, lines):\n    with open(path, \"w\") as handle:\n        for line in lines:\n            handle.write(line)\n    with open(path) as handle:\n        return [line.rstrip(\"\\n\") for line in handle]\n"
+  },
+  {
+    "name": "c01-ticket-save-lines:variant:keeps-line-breaks",
+    "code": "def save_and_reload(path, lines):\n    with open(path, \"w\") as handle:\n        for line in lines:\n            handle.write(line + \"\\n\")\n    with open(path) as handle:\n        return [line for line in handle]\n"
+  },
+  {
+    "name": "c01-ticket-save-lines:variant:blank-for-no-notes",
+    "code": "def save_and_reload(path, lines):\n    with open(path, \"w\") as handle:\n        for line in lines or [\"\"]:\n            handle.write(line + \"\\n\")\n    with open(path) as handle:\n        return [line.rstrip(\"\\n\") for line in handle]\n"
   },
   {
     "name": "c01-fix-with-extra:reference",

@@ -1,0 +1,37 @@
+{
+  "graded": [
+    {
+      "id": "c01-guided-format-label",
+      "status": "pass",
+      "passed": 6,
+      "total": 6,
+      "failed": [],
+      "error": null
+    },
+    {
+      "id": "c01-guided-in-batches",
+      "status": "pass",
+      "passed": 7,
+      "total": 7,
+      "failed": [],
+      "error": null
+    },
+    {
+      "id": "c01-ticket-parse-weight",
+      "status": "pass",
+      "passed": 9,
+      "total": 9,
+      "failed": [],
+      "error": null
+    },
+    {
+      "id": "c01-ticket-save-lines",
+      "status": "pass",
+      "passed": 5,
+      "total": 5,
+      "failed": [],
+      "error": null
+    }
+  ],
+  "missing": []
+}

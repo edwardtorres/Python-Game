@@ -1,0 +1,67 @@
+[
+  {
+    "id": "c01-guided-in-batches",
+    "title": "Guided: send parcels in batches",
+    "ticket": {
+      "from": "Hana, Outbound",
+      "subject": "Batches of parcels",
+      "body": "Give the parcel list in batches of a given size. Each batch holds 1 to size items, in order. An empty list gives no batches. A size below 1 is a mistake: raise ValueError."
+    },
+    "rules": [
+      "Each batch holds between 1 and size items, and the last batch may be shorter.",
+      "The items keep their order, both between batches and inside each batch.",
+      "An empty input gives no batches.",
+      "A size below 1 raises ValueError, as itertools.batched does."
+    ],
+    "entry": "in_batches",
+    "starter": "def in_batches(items, size):\n    pass\n"
+  },
+  {
+    "id": "c01-ticket-parse-weight",
+    "title": "Ticket: read a weight",
+    "ticket": {
+      "from": "Sam, Loading Bay",
+      "subject": "Scanner weights",
+      "body": "The scanner sends weights as text. Return a float. Return None when the text is not a number, and also for nan and inf, which are not weights. Any other input is a bug, so it must still raise TypeError."
+    },
+    "rules": [
+      "Text such as \" 4.5 \" gives the float 4.5.",
+      "Text that is not a number gives None.",
+      "A value that is not text raises TypeError.",
+      "Text that reads as nan or inf gives None, because it is not a weight."
+    ],
+    "entry": "parse_weight",
+    "starter": "def parse_weight(text):\n    pass\n"
+  },
+  {
+    "id": "c01-guided-format-label",
+    "title": "Guided: format a label",
+    "ticket": {
+      "from": "Priya, Dock Operations",
+      "subject": "Labels for the pallet board",
+      "body": "Each pallet board line reads \"name: count items\". Trim spaces, tabs, and line breaks around the name."
+    },
+    "rules": [
+      "Return the name, then a colon, a space, the count, and the word items.",
+      "Remove whitespace from both ends of the name: spaces, tabs, and line breaks."
+    ],
+    "entry": "format_label",
+    "starter": "def format_label(name, count):\n    pass\n"
+  },
+  {
+    "id": "c01-ticket-save-lines",
+    "title": "Ticket: save and reload the batch notes",
+    "ticket": {
+      "from": "Hana, Outbound",
+      "subject": "Batch notes on disk",
+      "body": "Write each note on its own line to the file at the given path, then read the file back. Use a with block for each open file, so each file is closed before the next step."
+    },
+    "rules": [
+      "Each note is written on its own line, and the file ends with a line break after the last note.",
+      "Reading the file back gives the notes without their line breaks.",
+      "An empty list of notes gives an empty list back."
+    ],
+    "entry": "save_and_reload",
+    "starter": "def save_and_reload(path, lines):\n    pass\n"
+  }
+]
