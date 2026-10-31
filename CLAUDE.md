@@ -27,11 +27,15 @@ npm run check:py310     # static Python 3.10 check on the snippets (3.12+ for th
 npm run check:py310-run # every grading payload and lesson example under this Python, against the engine's output
 ```
 
-Regenerate the Chapter 1 outputs after changing a lesson or a choice item, then the CPython 3.10 export:
+Regenerate the recorded outputs of every chapter after changing a lesson or a choice item, then the CPython 3.10 export:
 
 ```bash
-UPDATE_CONTENT=1 npx vitest run src/content/chapter1.test.ts
+UPDATE_CONTENT=1 npx vitest run src/content/chapters.test.ts
 UPDATE_PY310_CASES=1 npx vitest run src/content/py310-cases.test.ts
+
+# Regrade the recorded blind solves, and regenerate the lesson claims manifest.
+UPDATE_BLIND=1 npx vitest run src/content/blind-solves.test.ts
+UPDATE_CLAIMS=1 npx vitest run src/content/claims.test.ts
 ```
 
 ## Git rules
@@ -71,7 +75,7 @@ Evidence: `spike/engine/RESULTS.md`, with the Chromium and WebKit numbers.
 
 **Notebooks.** A notebook shares one namespace across its cells. Submit runs the imports and definitions from the cells in a fresh namespace. Top-level exploration is ignored, so a `print` in a cell cannot break grading. A cell runs without pandas or matplotlib loaded: the renderer checks `sys.modules` and never imports them, because a cell that never loads them still has to show its value.
 
-## Content rules (Step 2a)
+## Content rules (Steps 2a and 2b)
 
 **Python 3.10.** Lesson and reference code runs on CPython 3.10 and later. A feature newer than 3.10 is allowed only when the lesson labels it with `newerPython` in the lesson text, next to the example. Two checks enforce this:
 
@@ -93,7 +97,13 @@ No Python 3.10 is installed in the development container, so check 2 runs in CI 
 
 **Chapter 1 (Step 2a).** Content lives in `src/content/chapter1/` as typed data: 13 lessons, 15 choice items (10 predict, 5 traceback), 14 graded items (4 guided, 5 tickets, 3 fix, 2 structure), and a boss with four graded parts. Every mistake tag is defined once in `mistakes.ts`.
 
-- Every example and every choice option is run in the engine. The results are recorded in `src/content/generated/chapter1.outputs.json`, and the content check fails if a fresh run differs. The app reads that file and never runs a choice option's code from a table.
+**Chapter 2 (Step 2b).** Content lives in `src/content/chapter2/`: 11 lessons, 13 choice items (8 predict, 5 traceback), 11 graded items (3 guided, 3 tickets, 2 fixes, 3 structure), and a four-part boss. Its blind solves are in `docs/blind-solves/chapter2/`.
+
+**Chapter 3 (Step 2b).** Content lives in `src/content/chapter3/`: 4 lessons, 5 choice items (3 predict, 2 traceback), 4 graded items (2 testing, 2 suite), and a four-part testing boss. Its blind solves are in `docs/blind-solves/chapter3/`.
+
+**Rule tags and testing items.** Each graded case and structure check names the rules it checks (`rules`), and a wrong variant may fail only the cases that name its rule. A testing item grades the learner's tests against mutants: its model suite must kill every mutant with at least two test functions, and its weak suite must leave a visible mutant alive. A testing brief never shows mutants, model suites, or weak suites.
+
+- Every example and every choice option is run in the engine. The results are recorded in `src/content/generated/chapter<N>.outputs.json`, and the content check fails if a fresh run differs. The app reads those files and never runs a choice option's code from a table.
 - A wrong option is the output or error of a variant that a learner's mistake would produce, so its text is computed, not written by hand. Predict options are printed text. Traceback options are the error type and message.
 - Structure items are graded by `ast` checks. A wrong variant matches a learner when it passes and fails the same checks, so the feedback names its mistake.
 - Chapter 1 has seven "If you know JavaScript" notes. Each cites verbatim quotes from MDN and the Python docs, read from the docs-snapshots branch. A note is added only with a quote the docs-quotes job can verify.
@@ -129,8 +139,8 @@ These apply to every graded item. Tests enforce them: `src/challenges/samples.te
 ## Testing
 
 - **Unit (Vitest):** the grader running under Pyodide in Node (`src/engine/python.test.ts`), challenge coverage and reference checks (`src/challenges/samples.test.ts`), the engine controller with a fake worker and fake timers (`src/engine/client.test.ts`), generators with same-seed tests, the curriculum graph, save migrations, and progress rules.
-- **Content (Vitest):** `src/content/chapter1.test.ts` runs every Chapter 1 example, option, and reference in Pyodide. It checks the coverage rule, the mistake tags, the hints, the skeleton starters, and the recorded outputs.
-- **End-to-end (Playwright):** ticket flows, the notebook, the chart task, a buffer stop, a forced restart (`?forceInterruptFailure=1`), memory recycling (`?recycleThresholdBytes=`), the load timeout, the production CSP on the preview server, and Chapter 1 (`e2e/chapter1.spec.ts`: a lesson, both kinds of choice item, a ticket, a fix, and the boss, at 390 px and 1280 px, by tap only, with axe). Chromium and WebKit run in CI. Chromium also runs locally.
+- **Content (Vitest):** `src/content/chapters.test.ts` runs every chapter's examples, options, and graded references in Pyodide. It checks the counts, the coverage and rule rules, the testing items, the mistake tags, the hints, the skeleton starters, and the recorded outputs. `blind-solves.test.ts` regrades the recorded blind solves.
+- **End-to-end (Playwright):** ticket flows, the notebook, the chart task, a buffer stop, a forced restart (`?forceInterruptFailure=1`), memory recycling (`?recycleThresholdBytes=`), the load timeout, the production CSP on the preview server, and Chapters 1 to 3 (`e2e/chapter1.spec.ts`, `e2e/chapter2.spec.ts`, `e2e/chapter3.spec.ts`, built on `e2e/chapter-flows.ts`: a lesson, predict and traceback items, tickets, a testing item, a suite fix, and the boss, at 390 px and 1280 px, by tap only, with axe). Chromium and WebKit run in CI. Chromium also runs locally.
 - **Spike (not required):** `engine-spike` (the harness fails its job on any bad check) and `webkit-interrupt-diagnosis` (50 WebKit contexts, classified by stage) under `.github/workflows/`.
 - **CI jobs (`ci.yml`):** `checks` (types, lint, unit tests, script tests, the static 3.10 check, build and hook scan), `docs-quotes` (verbatim quotes), `py310` (every payload under CPython 3.10), and `e2e` (Chromium and WebKit, dev and production preview).
 

@@ -109,7 +109,7 @@ export const LESSONS: Lesson[] = [
         examples: [
           { id: 'c03-cases-1', code: 'def in_batches(items, size):\n    if size < 1:\n        raise ValueError("size must be at least 1")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n\n\nfor size in (1, 3, 4):\n    print(size, list(in_batches([1, 2, 3], size)))\n' },
         ],
-        commonMistakes: ['BOUNDARY_UNTESTED', 'SIZE_BELOW_ONE_UNTESTED'],
+        commonMistakes: ['BOUNDARY_UNTESTED', 'SIZE_BELOW_ONE_UNTESTED', 'NAN_UNTESTED'],
       },
       {
         id: 'cases-empty',

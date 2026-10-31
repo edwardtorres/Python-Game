@@ -67,7 +67,7 @@ export function ChoiceView({ item, output, progress, engine, engineStatus, onPro
         <h1 className="text-2xl font-semibold text-slate-900">{item.title}</h1>
       </header>
 
-      <pre className="overflow-x-auto rounded-md bg-slate-900 p-4 text-sm text-slate-100" aria-label="Code">
+      <pre tabIndex={0} className="overflow-x-auto rounded-md bg-slate-900 p-4 text-sm text-slate-100" aria-label="Code">
         <code>{item.code}</code>
       </pre>
 

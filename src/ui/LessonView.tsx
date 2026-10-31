@@ -83,7 +83,7 @@ function ExampleBlock({ example, engine, engineStatus }: { example: Example; eng
         {engineStatus === 'starting' && <span className="text-sm text-slate-600">Starting Python…</span>}
       </div>
       {output !== null && (
-        <pre aria-live="polite" aria-label="Output" className="overflow-x-auto rounded-md bg-slate-100 p-3 text-sm text-slate-900 whitespace-pre-wrap break-words">
+        <pre tabIndex={0} aria-live="polite" aria-label="Output" className="overflow-x-auto rounded-md bg-slate-100 p-3 text-sm text-slate-900 whitespace-pre-wrap break-words">
           {output}
         </pre>
       )}
