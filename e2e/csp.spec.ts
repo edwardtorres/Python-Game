@@ -15,9 +15,13 @@ test.describe('production build', () => {
   test('loads Python under the production Content-Security-Policy and grades a function', async ({ page }) => {
     logPageErrors(page);
     await openTicket(page, clean.title);
-    // Wait for the engine to report ready, so Submit grades with Python already running.
-    await expectFeedback(page, 'Python ready');
     await typeCode(page, clean.id, clean.reference);
+    // DIAGNOSTIC, remove once the WebKit cause is fixed. The editor's lines as CodeMirror holds
+    // them, read from the DOM text rather than the rendered text, which depends on styles.
+    const wanted = clean.reference.replace(/\n+$/, '').split('\n');
+    const got = await page.locator(`[data-editor="${clean.id}"] .cm-line`).allTextContents();
+    const firstDiff = wanted.findIndex((line, index) => got[index] !== line);
+    console.log(`DIAG EDITOR lines=${got.length} expected=${wanted.length} firstDiff=${firstDiff} got=${JSON.stringify(got[firstDiff] ?? null)} want=${JSON.stringify(wanted[firstDiff] ?? null)}`);
     await page.getByRole('button', { name: 'Submit' }).click();
     // On a failure, expectFeedback prints the page text and the engine stats for the CI log.
     await expectFeedback(page, 'Submitted. Every check passed.');

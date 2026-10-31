@@ -33,13 +33,14 @@ export async function setCell(page: Page, challengeId: string, index: number, co
   );
 }
 
-// Waits for a feedback line. On failure it prints the page's main text, the engine
-// stats, and any console or page errors, so a CI failure says what the page showed.
+// Waits for a feedback line. On failure it prints the page's text (the whole body, so the
+// engine status line is included), the engine stats, and any console or page errors, so a
+// CI failure says what the page showed.
 export async function expectFeedback(page: Page, text: string | RegExp, timeout = 120_000): Promise<void> {
   try {
     await expect(page.getByText(text)).toBeVisible({ timeout });
   } catch (error) {
-    const main = await page.locator('main').innerText().catch(() => '<no main element>');
+    const main = await page.locator('body').innerText().catch(() => '<no body element>');
     const stats = await page
       .evaluate(() => (window as unknown as { __LARKSPUR_TEST__?: { status(): unknown } }).__LARKSPUR_TEST__?.status() ?? null)
       .catch((reason: unknown) => `status unavailable: ${String(reason)}`);
