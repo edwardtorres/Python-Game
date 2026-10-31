@@ -1,0 +1,59 @@
+name: docs-snapshot
+
+# Fetches the pages in docs/snapshot-urls.txt and commits their visible text to the
+# docs-snapshots branch. Quotes are read from those snapshots with git, never from memory.
+# The docs-quotes job in ci.yml still checks every quote against the live pages.
+
+on:
+  push:
+    branches: [claude/busy-wright-rooppm, main]
+    paths:
+      - docs/snapshot-urls.txt
+      - scripts/snapshot-docs.mjs
+      - scripts/lib/quotes.mjs
+      - .github/workflows/docs-snapshot.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: docs-snapshot
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    name: fetch docs pages and publish snapshots
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Fetch every listed page (fails if any page is missing or unreachable)
+        run: node scripts/snapshot-docs.mjs snapshot-out
+
+      - name: Publish the snapshots to the docs-snapshots branch
+        run: |
+          set -euo pipefail
+          git config user.name "Edward Torres"
+          git config user.email "12915571+edwardtorres@users.noreply.github.com"
+          git fetch --no-tags origin '+refs/heads/docs-snapshots:refs/remotes/origin/docs-snapshots' || true
+          if git rev-parse --verify -q refs/remotes/origin/docs-snapshots >/dev/null; then
+            git worktree add -B docs-snapshots ../snapshots origin/docs-snapshots
+          else
+            git worktree add --orphan -b docs-snapshots ../snapshots
+          fi
+          cd ../snapshots
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -r "$GITHUB_WORKSPACE/snapshot-out/." .
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No page changed since the last snapshot."
+          else
+            git commit -m "Snapshot docs $(date -u +%Y-%m-%d)"
+            git push origin HEAD:refs/heads/docs-snapshots
+          fi

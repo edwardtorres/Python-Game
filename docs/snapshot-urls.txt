@@ -1,0 +1,50 @@
+# Pages the docs-snapshot workflow fetches. One URL per line. Lines starting with # are notes.
+# Each page is converted to plain text with the quote checker's visibleText(), so a quote
+# copied from a snapshot matches the live page the same way the docs-quotes job checks it.
+
+# Python (stable 3.x docs)
+https://docs.python.org/3/tutorial/introduction.html
+https://docs.python.org/3/tutorial/controlflow.html
+https://docs.python.org/3/tutorial/datastructures.html
+https://docs.python.org/3/tutorial/inputoutput.html
+https://docs.python.org/3/tutorial/errors.html
+https://docs.python.org/3/tutorial/modules.html
+https://docs.python.org/3/tutorial/classes.html
+https://docs.python.org/3/library/stdtypes.html
+https://docs.python.org/3/library/functions.html
+https://docs.python.org/3/library/io.html
+https://docs.python.org/3/library/itertools.html
+https://docs.python.org/3/library/math.html
+https://docs.python.org/3/library/heapq.html
+https://docs.python.org/3/library/collections.html
+https://docs.python.org/3/library/dataclasses.html
+https://docs.python.org/3/library/typing.html
+https://docs.python.org/3/reference/expressions.html
+https://docs.python.org/3/reference/compound_stmts.html
+https://docs.python.org/3/glossary.html
+
+# Python community wiki (Big-O reference for Chapter 2)
+https://wiki.python.org/moin/TimeComplexity
+
+# pytest (Chapter 3)
+https://docs.pytest.org/en/stable/how-to/assert.html
+
+# Data libraries (later chapters; fetched now so the pipeline covers every listed host)
+https://numpy.org/doc/stable/user/basics.broadcasting.html
+https://pandas.pydata.org/docs/user_guide/groupby.html
+https://matplotlib.org/stable/users/explain/quick_start.html
+https://docs.scipy.org/doc/scipy/reference/stats.html
+https://scikit-learn.org/stable/modules/cross_validation.html
+https://requests.readthedocs.io/en/latest/user/quickstart/
+
+# MDN (JavaScript notes)
+https://developer.mozilla.org/en-US/docs/Glossary/Truthy
+https://developer.mozilla.org/en-US/docs/Glossary/Falsy
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Grammar_and_types
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Equality
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Strict_equality
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
