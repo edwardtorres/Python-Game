@@ -1,0 +1,284 @@
+[
+  {
+    "lesson": "c01-foundations/types",
+    "sections": [
+      {
+        "id": "types-conversions",
+        "docClaim": false,
+        "quotes": []
+      },
+      {
+        "id": "types-division",
+        "docClaim": true,
+        "quotes": [
+          "py-division"
+        ]
+      }
+    ],
+    "jsNotes": [
+      {
+        "id": "js-truthiness",
+        "quotes": [
+          "js-truthy",
+          "js-falsy-list",
+          "py-truthiness"
+        ]
+      },
+      {
+        "id": "js-division",
+        "quotes": [
+          "js-number",
+          "py-division"
+        ]
+      }
+    ]
+  },
+  {
+    "lesson": "c01-foundations/strings-fstrings",
+    "sections": [
+      {
+        "id": "strings-fstrings",
+        "docClaim": false,
+        "quotes": []
+      },
+      {
+        "id": "strings-immutable",
+        "docClaim": true,
+        "quotes": [
+          "py-immutable-str"
+        ]
+      }
+    ],
+    "jsNotes": []
+  },
+  {
+    "lesson": "c01-foundations/lists",
+    "sections": [
+      {
+        "id": "lists-basics",
+        "docClaim": false,
+        "quotes": []
+      },
+      {
+        "id": "lists-copy",
+        "docClaim": true,
+        "quotes": [
+          "py-list-copy"
+        ]
+      }
+    ],
+    "jsNotes": [
+      {
+        "id": "js-copy",
+        "quotes": [
+          "js-slice-copy",
+          "py-list-copy"
+        ]
+      }
+    ]
+  },
+  {
+    "lesson": "c01-foundations/dicts",
+    "sections": [
+      {
+        "id": "dicts-lookup",
+        "docClaim": true,
+        "quotes": [
+          "py-get"
+        ]
+      },
+      {
+        "id": "dicts-counting",
+        "docClaim": true,
+        "quotes": [
+          "py-dict-insertion",
+          "py-dict-37"
+        ]
+      }
+    ],
+    "jsNotes": [
+      {
+        "id": "js-key-order",
+        "quotes": [
+          "js-keys-order",
+          "py-dict-insertion"
+        ]
+      }
+    ]
+  },
+  {
+    "lesson": "c01-foundations/sets",
+    "sections": [
+      {
+        "id": "sets-unique",
+        "docClaim": true,
+        "quotes": [
+          "py-sets"
+        ]
+      }
+    ],
+    "jsNotes": []
+  },
+  {
+    "lesson": "c01-foundations/tuples",
+    "sections": [
+      {
+        "id": "tuples-basics",
+        "docClaim": true,
+        "quotes": [
+          "py-tuple-one"
+        ]
+      }
+    ],
+    "jsNotes": []
+  },
+  {
+    "lesson": "c01-foundations/control-flow",
+    "sections": [
+      {
+        "id": "control-if",
+        "docClaim": true,
+        "quotes": [
+          "py-identity"
+        ]
+      },
+      {
+        "id": "control-range",
+        "docClaim": true,
+        "quotes": [
+          "py-range-end"
+        ]
+      }
+    ],
+    "jsNotes": [
+      {
+        "id": "js-identity",
+        "quotes": [
+          "js-identity",
+          "py-identity"
+        ]
+      }
+    ]
+  },
+  {
+    "lesson": "c01-foundations/functions-params",
+    "sections": [
+      {
+        "id": "functions-params",
+        "docClaim": true,
+        "quotes": [
+          "py-args",
+          "py-kwargs"
+        ]
+      },
+      {
+        "id": "functions-scope",
+        "docClaim": true,
+        "quotes": [
+          "py-default-once"
+        ]
+      }
+    ],
+    "jsNotes": [
+      {
+        "id": "js-default",
+        "quotes": [
+          "js-default",
+          "py-default-once"
+        ]
+      },
+      {
+        "id": "js-scope",
+        "quotes": [
+          "js-block-scope"
+        ]
+      }
+    ]
+  },
+  {
+    "lesson": "c01-foundations/comprehensions",
+    "sections": [
+      {
+        "id": "comprehensions-build",
+        "docClaim": true,
+        "quotes": [
+          "py-comprehension"
+        ]
+      }
+    ],
+    "jsNotes": []
+  },
+  {
+    "lesson": "c01-foundations/exceptions",
+    "sections": [
+      {
+        "id": "exceptions-catch",
+        "docClaim": false,
+        "quotes": []
+      },
+      {
+        "id": "exceptions-broad",
+        "docClaim": true,
+        "quotes": [
+          "py-except-wildcard"
+        ]
+      }
+    ],
+    "jsNotes": []
+  },
+  {
+    "lesson": "c01-foundations/with-blocks",
+    "sections": [
+      {
+        "id": "with-close",
+        "docClaim": true,
+        "quotes": [
+          "py-with"
+        ]
+      }
+    ],
+    "jsNotes": []
+  },
+  {
+    "lesson": "c01-foundations/modules",
+    "sections": [
+      {
+        "id": "modules-import",
+        "docClaim": true,
+        "quotes": [
+          "py-import-from"
+        ]
+      },
+      {
+        "id": "modules-top-level",
+        "docClaim": true,
+        "quotes": [
+          "py-module-run"
+        ]
+      }
+    ],
+    "jsNotes": []
+  },
+  {
+    "lesson": "c01-foundations/iterators-generators",
+    "sections": [
+      {
+        "id": "iterators-next",
+        "docClaim": true,
+        "quotes": [
+          "py-next",
+          "py-next-raise"
+        ]
+      },
+      {
+        "id": "generators-yield",
+        "docClaim": true,
+        "quotes": [
+          "py-generator",
+          "py-stopiteration"
+        ]
+      }
+    ],
+    "jsNotes": []
+  }
+]

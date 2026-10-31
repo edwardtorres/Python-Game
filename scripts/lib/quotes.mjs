@@ -85,3 +85,33 @@ export async function checkEntries(entries, { fetchImpl, delays, sleep } = {}) {
   }
   return results;
 }
+
+// Checks the lesson claims against the quote file. Every section with a doc-dependent claim and
+// every JavaScript note must cite quotes, and every cited id must exist. An empty quote file
+// while lessons exist is a failure, because the lessons then cite nothing.
+export function validateClaims(claims, quotes) {
+  const problems = [];
+  if (!Array.isArray(claims)) return ['docs/lesson-claims.json must be an array'];
+  const quoteIds = new Set(Array.isArray(quotes) ? quotes.map((entry) => entry.id) : []);
+  const sectionCount = claims.reduce((total, lesson) => total + lesson.sections.length, 0);
+  if (sectionCount > 0 && quoteIds.size === 0) {
+    problems.push('docs/quotes.json is empty, but the lessons exist: every doc-dependent claim needs a quote');
+  }
+  for (const lesson of claims) {
+    for (const section of lesson.sections) {
+      const where = `${lesson.lesson} / ${section.id}`;
+      if (section.docClaim && section.quotes.length === 0) problems.push(`${where}: a doc-dependent claim has no quote`);
+      for (const id of section.quotes) {
+        if (!quoteIds.has(id)) problems.push(`${where}: quote ${id} is not in docs/quotes.json`);
+      }
+    }
+    for (const note of lesson.jsNotes) {
+      const where = `${lesson.lesson} / ${note.id}`;
+      if (note.quotes.length === 0) problems.push(`${where}: a JavaScript note has no quote`);
+      for (const id of note.quotes) {
+        if (!quoteIds.has(id)) problems.push(`${where}: quote ${id} is not in docs/quotes.json`);
+      }
+    }
+  }
+  return problems;
+}

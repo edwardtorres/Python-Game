@@ -8,10 +8,16 @@ export const LESSONS_A: Lesson[] = [
     number: 1,
     title: 'Types and conversions',
     competency: 'types',
+    jsNotes: [
+      { id: 'js-truthiness', text: 'In JavaScript, every value is truthy except the falsy values that the MDN glossary lists. An empty array is not on that list, so an empty array is truthy there. In Python, an empty list is false.', quotes: ['js-truthy', 'js-falsy-list', 'py-truthiness'] },
+      { id: 'js-division', text: 'JavaScript has one number type, a 64-bit floating-point value, so 6 / 2 and 7 / 2 are both plain numbers. Python 3 has int and float, and / always gives a float.', quotes: ['js-number', 'py-division'] },
+    ],
     intro: 'Every value has a type. Conversions turn one type into another, and division has its own rule.',
     sections: [
       {
         id: 'types-conversions',
+        docClaim: false,
+        quotes: [],
         title: 'Numbers, text, and conversions',
         paragraphs: [
           'int() reads a whole number from text, float() reads a decimal number, and str() turns a value into text.',
@@ -24,6 +30,8 @@ export const LESSONS_A: Lesson[] = [
       },
       {
         id: 'types-division',
+        docClaim: true,
+        quotes: ['py-division'],
         title: 'Division gives a float',
         paragraphs: [
           '/ always gives a float, even when the answer is whole. // gives the floor, and it is an int when both numbers are ints.',
@@ -39,10 +47,13 @@ export const LESSONS_A: Lesson[] = [
     number: 2,
     title: 'Strings and f-strings',
     competency: 'strings-fstrings',
+    jsNotes: [],
     intro: 'Strings hold text. An f-string puts values into text, and a format spec controls how a number looks.',
     sections: [
       {
         id: 'strings-fstrings',
+        docClaim: false,
+        quotes: [],
         title: 'f-strings and format specs',
         paragraphs: [
           'Put an f before the quotes, then write a name or expression in braces. Add :.2f after a number to show two decimal places.',
@@ -54,6 +65,8 @@ export const LESSONS_A: Lesson[] = [
       },
       {
         id: 'strings-immutable',
+        docClaim: true,
+        quotes: ['py-immutable-str'],
         title: 'Strings do not change in place',
         paragraphs: [
           'Methods such as upper() and strip() return a new string. The original string is not changed, so store the result or return it.',
@@ -68,10 +81,15 @@ export const LESSONS_A: Lesson[] = [
     number: 3,
     title: 'Lists',
     competency: 'lists',
+    jsNotes: [
+      { id: 'js-copy', text: 'In JavaScript, slice() returns a shallow copy of an array, which plays the role that list.copy() plays in Python.', quotes: ['js-slice-copy', 'py-list-copy'] },
+    ],
     intro: 'A list is an ordered, changeable collection. Two names can refer to one list, so copies need care.',
     sections: [
       {
         id: 'lists-basics',
+        docClaim: false,
+        quotes: [],
         title: 'Indexing, slicing, and append',
         paragraphs: [
           'Positions start at 0. A negative index counts from the end, and a slice a:b takes items from a up to but not including b.',
@@ -82,6 +100,8 @@ export const LESSONS_A: Lesson[] = [
       },
       {
         id: 'lists-copy',
+        docClaim: true,
+        quotes: ['py-list-copy'],
         title: 'Two names, one list',
         paragraphs: [
           'Assigning a list to a new name copies the reference, so both names change together. list.copy() or a slice makes a new list.',
@@ -96,10 +116,15 @@ export const LESSONS_A: Lesson[] = [
     number: 4,
     title: 'Dictionaries',
     competency: 'dicts',
+    jsNotes: [
+      { id: 'js-key-order', text: 'In JavaScript, Object.keys() returns keys in the same order as a for...in loop. Python dicts keep insertion order, as the first example in the counting section shows.', quotes: ['js-keys-order', 'py-dict-insertion'] },
+    ],
     intro: 'A dict maps keys to values. Reading a missing key needs a plan: either handle the error or give a default.',
     sections: [
       {
         id: 'dicts-lookup',
+        docClaim: true,
+        quotes: ['py-get'],
         title: 'Reading a key, and reading a missing key',
         paragraphs: [
           'd[key] returns the value, and raises KeyError when the key is missing. d.get(key, default) returns the default instead.',
@@ -111,6 +136,8 @@ export const LESSONS_A: Lesson[] = [
       },
       {
         id: 'dicts-counting',
+        docClaim: true,
+        quotes: ['py-dict-insertion', 'py-dict-37'],
         title: 'Counting with a dict',
         paragraphs: [
           'A dict remembers the order its keys were added. Counting into a dict with get() is a common pattern.',
@@ -128,10 +155,13 @@ export const LESSONS_A: Lesson[] = [
     number: 5,
     title: 'Sets',
     competency: 'sets',
+    jsNotes: [],
     intro: 'A set holds each value once. Use it to remove duplicates, and sort the result when the order matters.',
     sections: [
       {
         id: 'sets-unique',
+        docClaim: true,
+        quotes: ['py-sets'],
         title: 'Removing duplicates',
         paragraphs: [
           'set(items) keeps one copy of each value. The printed order of a set is not something to rely on, so sort it when you need an order.',
@@ -146,10 +176,13 @@ export const LESSONS_A: Lesson[] = [
     number: 6,
     title: 'Tuples',
     competency: 'tuples',
+    jsNotes: [],
     intro: 'A tuple is an ordered collection that cannot change. A one-item tuple needs a comma.',
     sections: [
       {
         id: 'tuples-basics',
+        docClaim: true,
+        quotes: ['py-tuple-one'],
         title: 'Fixed pairs and one-item tuples',
         paragraphs: [
           'A tuple keeps its items in order and cannot be changed after it is made. It is a good fit for a fixed pair such as a dock and a count.',
@@ -165,10 +198,15 @@ export const LESSONS_A: Lesson[] = [
     number: 7,
     title: 'Control flow',
     competency: 'control-flow',
+    jsNotes: [
+      { id: 'js-identity', text: 'For objects, == in JavaScript returns true only when both operands reference the same object. The is test in Python has the same meaning for objects.', quotes: ['js-identity', 'py-identity'] },
+    ],
     intro: 'if, elif, and else choose a branch. for loops repeat over items, and range() makes numbers to loop over.',
     sections: [
       {
         id: 'control-if',
+        docClaim: true,
+        quotes: ['py-identity'],
         title: 'Branches, and checking for None',
         paragraphs: [
           'The first branch whose test is true runs, and the rest are skipped. Test for None with is, and compare values with ==.',
@@ -180,6 +218,8 @@ export const LESSONS_A: Lesson[] = [
       },
       {
         id: 'control-range',
+        docClaim: true,
+        quotes: ['py-range-end'],
         title: 'Loops and range()',
         paragraphs: [
           'range(a, b) gives a, a+1, and so on up to b-1. range(n) starts at 0 and stops before n.',

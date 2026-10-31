@@ -17,6 +17,18 @@ export interface Section {
   examples: Example[];
   // Mistake tags (see mistakes.ts) that this section warns about.
   commonMistakes: string[];
+  // True when a claim in this section needs a documentation source. Such a section must cite
+  // at least one quote id from docs/quotes.json. The docs-quotes job enforces this.
+  docClaim: boolean;
+  quotes: string[];
+}
+
+// An "If you know JavaScript" note. Each note cites at least one quote id, from the Python
+// docs or MDN, because the JavaScript side of the note is a documentation claim.
+export interface JsNote {
+  id: string;
+  text: string;
+  quotes: string[];
 }
 
 export interface Lesson {
@@ -26,6 +38,7 @@ export interface Lesson {
   competency: string;
   intro: string;
   sections: Section[];
+  jsNotes: JsNote[];
 }
 
 // A wrong answer for a choice item. Its code is run, and its output or error is the

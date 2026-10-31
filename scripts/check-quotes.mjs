@@ -4,13 +4,16 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { checkEntries, validateEntries } from './lib/quotes.mjs';
+import { checkEntries, validateClaims, validateEntries } from './lib/quotes.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const file = path.join(root, 'docs', 'quotes.json');
 const entries = JSON.parse(fs.readFileSync(file, 'utf8'));
 
 const problems = validateEntries(entries);
+// The claims manifest is written from the lesson content (src/content/claims.test.ts).
+const claims = JSON.parse(fs.readFileSync(path.join(root, 'docs', 'lesson-claims.json'), 'utf8'));
+problems.push(...validateClaims(claims, entries));
 if (problems.length > 0) {
   console.error(`check-quotes: ${problems.join('; ')}`);
   process.exit(1);

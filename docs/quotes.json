@@ -1,1 +1,188 @@
-[]
+[
+  {
+    "id": "py-dict-insertion",
+    "source": "Python documentation: Built-in Types, dict",
+    "url": "https://docs.python.org/3/library/stdtypes.html",
+    "quote": "Dictionaries preserve insertion order."
+  },
+  {
+    "id": "py-dict-37",
+    "source": "Python documentation: Built-in Types, dict",
+    "url": "https://docs.python.org/3/library/stdtypes.html",
+    "quote": "Changed in version 3.7: Dictionary order is guaranteed to be insertion order."
+  },
+  {
+    "id": "py-get",
+    "source": "Python documentation: Built-in Types, dict",
+    "url": "https://docs.python.org/3/library/stdtypes.html",
+    "quote": "Return the value for key if key is in the dictionary, else default"
+  },
+  {
+    "id": "py-division",
+    "source": "Python tutorial: An Informal Introduction to Python",
+    "url": "https://docs.python.org/3/tutorial/introduction.html",
+    "quote": "Division ( / ) always returns a float."
+  },
+  {
+    "id": "py-default-once",
+    "source": "Python tutorial: More Control Flow Tools",
+    "url": "https://docs.python.org/3/tutorial/controlflow.html",
+    "quote": "Important warning: The default value is evaluated only once."
+  },
+  {
+    "id": "py-range-end",
+    "source": "Python tutorial: More Control Flow Tools",
+    "url": "https://docs.python.org/3/tutorial/controlflow.html",
+    "quote": "The given end point is never part of the generated sequence;"
+  },
+  {
+    "id": "py-identity",
+    "source": "Python reference: Expressions, identity comparisons",
+    "url": "https://docs.python.org/3/reference/expressions.html",
+    "quote": "The operators is and is not test for an object’s identity: x is y is true if and only if x and y are the same object."
+  },
+  {
+    "id": "py-truthiness",
+    "source": "Python documentation: Built-in Types, truth value testing",
+    "url": "https://docs.python.org/3/library/stdtypes.html",
+    "quote": "By default, an object is considered true unless its class defines either a __bool__() method that returns False or a __len__() method that returns zero, when called with the object."
+  },
+  {
+    "id": "py-immutable-str",
+    "source": "Python documentation: Built-in Types, str",
+    "url": "https://docs.python.org/3/library/stdtypes.html",
+    "quote": "Strings are immutable sequences of Unicode code points."
+  },
+  {
+    "id": "py-list-copy",
+    "source": "Python tutorial: Data Structures, list methods",
+    "url": "https://docs.python.org/3/tutorial/datastructures.html",
+    "quote": "Return a shallow copy of the list."
+  },
+  {
+    "id": "py-sets",
+    "source": "Python tutorial: Data Structures, sets",
+    "url": "https://docs.python.org/3/tutorial/datastructures.html",
+    "quote": "A set is an unordered collection with no duplicate elements."
+  },
+  {
+    "id": "py-tuple-one",
+    "source": "Python tutorial: Data Structures, tuples",
+    "url": "https://docs.python.org/3/tutorial/datastructures.html",
+    "quote": "a tuple with one item is constructed by following a value with a comma (it is not sufficient to enclose a single value in parentheses)."
+  },
+  {
+    "id": "py-comprehension",
+    "source": "Python tutorial: Data Structures, list comprehensions",
+    "url": "https://docs.python.org/3/tutorial/datastructures.html",
+    "quote": "List comprehensions provide a concise way to create lists."
+  },
+  {
+    "id": "py-args",
+    "source": "Python reference: Calls, arguments",
+    "url": "https://docs.python.org/3/reference/expressions.html",
+    "quote": "that formal parameter receives a tuple containing the excess positional arguments"
+  },
+  {
+    "id": "py-kwargs",
+    "source": "Python reference: Calls, arguments",
+    "url": "https://docs.python.org/3/reference/expressions.html",
+    "quote": "that formal parameter receives a dictionary containing the excess keyword arguments"
+  },
+  {
+    "id": "py-with",
+    "source": "Python tutorial: Input and Output, reading and writing files",
+    "url": "https://docs.python.org/3/tutorial/inputoutput.html",
+    "quote": "The advantage is that the file is properly closed after its suite finishes, even if an exception is raised at some point."
+  },
+  {
+    "id": "py-except-wildcard",
+    "source": "Python tutorial: Errors and Exceptions",
+    "url": "https://docs.python.org/3/tutorial/errors.html",
+    "quote": "Exception can be used as a wildcard that catches (almost) everything."
+  },
+  {
+    "id": "py-import-from",
+    "source": "Python tutorial: Modules",
+    "url": "https://docs.python.org/3/tutorial/modules.html",
+    "quote": "There is a variant of the import statement that imports names from a module directly into the importing module’s namespace."
+  },
+  {
+    "id": "py-module-run",
+    "source": "Python tutorial: Modules",
+    "url": "https://docs.python.org/3/tutorial/modules.html",
+    "quote": "They are executed only the first time the module name is encountered in an import statement."
+  },
+  {
+    "id": "py-next",
+    "source": "Python documentation: Built-in Functions, next",
+    "url": "https://docs.python.org/3/library/functions.html",
+    "quote": "Retrieve the next item from the iterator by calling its __next__() method."
+  },
+  {
+    "id": "py-next-raise",
+    "source": "Python documentation: Built-in Functions, next",
+    "url": "https://docs.python.org/3/library/functions.html",
+    "quote": "otherwise StopIteration is raised"
+  },
+  {
+    "id": "py-stopiteration",
+    "source": "Python documentation: Built-in Types, iterator types",
+    "url": "https://docs.python.org/3/library/stdtypes.html",
+    "quote": "Once an iterator’s __next__() method raises StopIteration"
+  },
+  {
+    "id": "py-generator",
+    "source": "Python glossary: generator function",
+    "url": "https://docs.python.org/3/glossary.html",
+    "quote": "A function which returns a generator object."
+  },
+  {
+    "id": "js-truthy",
+    "source": "MDN: Truthy (glossary)",
+    "url": "https://developer.mozilla.org/en-US/docs/Glossary/Truthy",
+    "quote": "All values are truthy unless they are defined as falsy"
+  },
+  {
+    "id": "js-falsy-list",
+    "source": "MDN: Truthy (glossary)",
+    "url": "https://developer.mozilla.org/en-US/docs/Glossary/Truthy",
+    "quote": "That is, all values are truthy except false , 0 , -0 , 0n , \"\" , null , undefined , NaN , and document.all ."
+  },
+  {
+    "id": "js-number",
+    "source": "MDN: Number",
+    "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+    "quote": "The JavaScript Number type is a double-precision 64-bit binary format IEEE 754 value, like double in Java or C#."
+  },
+  {
+    "id": "js-default",
+    "source": "MDN: Default parameters",
+    "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters",
+    "quote": "Because the default parameter is evaluated when the function is called, not when the function is defined"
+  },
+  {
+    "id": "js-identity",
+    "source": "MDN: Equality comparisons and sameness",
+    "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Equality",
+    "quote": "Object: return true only if both operands reference the same object."
+  },
+  {
+    "id": "js-keys-order",
+    "source": "MDN: Object.keys()",
+    "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys",
+    "quote": "The order of the array returned by Object.keys() is the same as that provided by a for...in loop."
+  },
+  {
+    "id": "js-slice-copy",
+    "source": "MDN: Array.prototype.slice()",
+    "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice",
+    "quote": "The slice() method of Array instances returns a shallow copy of a portion of an array"
+  },
+  {
+    "id": "js-block-scope",
+    "source": "MDN: JavaScript data types and structures (scope)",
+    "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Grammar_and_types",
+    "quote": "Block scope: The scope created with a pair of curly braces"
+  }
+]

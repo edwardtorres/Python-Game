@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { checkEntries, containsQuote, decodeEntities, fetchWithRetry, validateEntries, visibleText } from './quotes.mjs';
+import { checkEntries, containsQuote, decodeEntities, fetchWithRetry, validateClaims, validateEntries, visibleText } from './quotes.mjs';
 
 const PAGE = `<html><head><style>p { color: red }</style><script>var x = "not visible";</script></head>
 <body><h1>Functions</h1><p>Use <code>len()</code> to count &amp; compare items.</p>
@@ -75,4 +75,36 @@ test('entries are validated', () => {
   assert.ok(problems.some((problem) => problem.includes('https')));
   assert.ok(problems.some((problem) => problem.includes('quote is required')));
   assert.ok(problems.some((problem) => problem.includes('duplicate id')));
+});
+
+const QUOTES = [{ id: 'py-division', source: 'Python tutorial', url: 'https://docs.python.org/3/tutorial/introduction.html', quote: 'Division ( / ) always returns a float.' }];
+
+function lesson(sections, jsNotes = []) {
+  return { lesson: 'c01-foundations/types', sections, jsNotes };
+}
+
+test('a clean claims file has no problems', () => {
+  const claims = [lesson([{ id: 'types-division', docClaim: true, quotes: ['py-division'] }], [{ id: 'js-division', quotes: ['py-division'] }])];
+  assert.deepEqual(validateClaims(claims, QUOTES), []);
+});
+
+test('an empty quote file fails when lessons exist', () => {
+  const problems = validateClaims([lesson([{ id: 'types-division', docClaim: false, quotes: [] }])], []);
+  assert.ok(problems.some((problem) => problem.includes('docs/quotes.json is empty')));
+});
+
+test('a doc-dependent section without a quote fails, and a section without a doc claim may have none', () => {
+  const failing = validateClaims([lesson([{ id: 'types-division', docClaim: true, quotes: [] }])], QUOTES);
+  assert.ok(failing.some((problem) => problem.includes('has no quote')));
+  assert.deepEqual(validateClaims([lesson([{ id: 'types-conversions', docClaim: false, quotes: [] }])], QUOTES), []);
+});
+
+test('a JavaScript note without a quote fails', () => {
+  const problems = validateClaims([lesson([], [{ id: 'js-truthiness', quotes: [] }])], QUOTES);
+  assert.ok(problems.some((problem) => problem.includes('JavaScript note has no quote')));
+});
+
+test('a cited quote id that is not in the quote file fails', () => {
+  const problems = validateClaims([lesson([{ id: 'types-division', docClaim: true, quotes: ['py-missing'] }])], QUOTES);
+  assert.ok(problems.some((problem) => problem.includes('py-missing is not in docs/quotes.json')));
 });

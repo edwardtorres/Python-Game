@@ -3,6 +3,41 @@ import type { EngineStatus, PythonEngine } from '../engine/client';
 import type { Example, Lesson, Section } from '../content/chapter1/types';
 import { MISTAKES, type MistakeTag } from '../content/chapter1/mistakes';
 import { CodeEditor } from './CodeEditor';
+import quotesJson from '../../docs/quotes.json';
+
+interface Quote {
+  id: string;
+  source: string;
+  url: string;
+  quote: string;
+}
+
+const QUOTES = quotesJson as Quote[];
+
+// The quotes a section or a JavaScript note cites, shown as the source text and a link.
+function Citations({ ids }: { ids: string[] }) {
+  if (ids.length === 0) return null;
+  return (
+    <ul className="space-y-2 text-sm text-slate-800">
+      {ids.map((id) => {
+        const entry = QUOTES.find((candidate) => candidate.id === id);
+        if (entry === undefined) return null;
+        return (
+          <li key={id}>
+            <blockquote className="border-l-4 border-slate-300 pl-3">
+              <p>{entry.quote}</p>
+              <cite className="text-xs not-italic text-slate-600">
+                <a href={entry.url} className="underline">
+                  {entry.source}
+                </a>
+              </cite>
+            </blockquote>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
 
 interface LessonViewProps {
   lesson: Lesson;
@@ -67,6 +102,12 @@ function SectionBlock({ section, engine, engineStatus }: { section: Section; eng
           {paragraph}
         </p>
       ))}
+      {section.quotes.length > 0 && (
+        <div className="space-y-2">
+          <h3 className="text-sm font-semibold text-slate-700">Source</h3>
+          <Citations ids={section.quotes} />
+        </div>
+      )}
       {section.examples.map((example, index) => (
         <div key={example.id} className="space-y-2">
           <h3 className="text-sm font-semibold text-slate-700">Example {index + 1}</h3>
@@ -113,6 +154,19 @@ export function LessonView({ lesson, read, engine, engineStatus, onToggleRead }:
       {lesson.sections.map((section) => (
         <SectionBlock key={section.id} section={section} engine={engine} engineStatus={engineStatus} />
       ))}
+      {lesson.jsNotes.length > 0 && (
+        <section aria-labelledby="js-notes" className="space-y-4 rounded-md border border-sky-200 bg-sky-50 p-4">
+          <h2 id="js-notes" className="text-lg font-semibold text-sky-950">
+            If you know JavaScript
+          </h2>
+          {lesson.jsNotes.map((note) => (
+            <div key={note.id} className="space-y-2">
+              <p className="text-sm leading-6 text-slate-900">{note.text}</p>
+              <Citations ids={note.quotes} />
+            </div>
+          ))}
+        </section>
+      )}
     </article>
   );
 }
