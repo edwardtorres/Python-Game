@@ -10,21 +10,35 @@ async function typeCode(page: import('@playwright/test').Page, id: string, code:
   await page.keyboard.insertText(code);
 }
 
+// A refused style means the production policy blocks CodeMirror's injected theme, so the editor is unstyled.
+const STYLE_REFUSAL = /Refused to apply a stylesheet|violates the following Content Security Policy/;
+
 // These run against the production build (the preview server), with the production CSP.
 test.describe('production build', () => {
   test('loads Python under the production Content-Security-Policy and grades a function', async ({ page }) => {
     logPageErrors(page);
+    const refusals: string[] = [];
+    page.on('console', (message) => {
+      if (STYLE_REFUSAL.test(message.text())) refusals.push(message.text());
+    });
     await openTicket(page, clean.title);
     await typeCode(page, clean.id, clean.reference);
-    // DIAGNOSTIC, remove once the WebKit cause is fixed. The editor's lines as CodeMirror holds
-    // them, read from the DOM text rather than the rendered text, which depends on styles.
-    const wanted = clean.reference.replace(/\n+$/, '').split('\n');
-    const got = await page.locator(`[data-editor="${clean.id}"] .cm-line`).allTextContents();
-    const firstDiff = wanted.findIndex((line, index) => got[index] !== line);
-    console.log(`DIAG EDITOR lines=${got.length} expected=${wanted.length} firstDiff=${firstDiff} got=${JSON.stringify(got[firstDiff] ?? null)} want=${JSON.stringify(wanted[firstDiff] ?? null)}`);
     await page.getByRole('button', { name: 'Submit' }).click();
     // On a failure, expectFeedback prints the page text and the engine stats for the CI log.
     await expectFeedback(page, 'Submitted. Every check passed.');
+    // The production policy must not refuse the editor's injected style. A refusal names the hash to add.
+    expect(refusals).toEqual([]);
+  });
+
+  test('repeats the grading flow five times, to check it does not depend on timing', async ({ page }) => {
+    // TEMPORARY, for the WebKit timing diagnosis. Remove once the cause is fixed.
+    for (let run = 1; run <= 5; run += 1) {
+      await openTicket(page, clean.title);
+      await typeCode(page, clean.id, clean.reference);
+      await page.getByRole('button', { name: 'Submit' }).click();
+      await expectFeedback(page, 'Submitted. Every check passed.');
+      console.log(`REPEAT run ${run} passed`);
+    }
   });
 
   test('a policy without wasm-unsafe-eval fails at once with a clear message', async ({ page }) => {

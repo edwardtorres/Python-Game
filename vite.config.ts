@@ -15,8 +15,11 @@ const ISOLATION_HEADERS = {
 
 // The production policy. 'wasm-unsafe-eval' lets Pyodide compile WebAssembly
 // without allowing eval(). Dev serving skips it because Vite injects inline scripts.
+// Styles allow 'unsafe-inline': CodeMirror sets inline style attributes on its gutter, and their
+// values change with the document, so no hash can list them. Scripts stay strict. A hash in
+// style-src would switch 'unsafe-inline' off in browsers that support hashes, so none is listed.
 const PRODUCTION_CSP =
-  "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data: blob:; " +
+  "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; " +
   "font-src 'self'; connect-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'";
 
 function productionCsp(): Plugin {
