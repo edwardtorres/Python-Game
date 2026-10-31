@@ -1,38 +1,16 @@
-import AxeBuilder from '@axe-core/playwright';
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { CHAPTER1_BOSS, CHAPTER1_GRADED } from '../src/content/chapter1/index';
 import { logPageErrors, setCode } from './helpers';
+import { expectAccessible, expectNoSidewaysScroll, lastLine, SUBMITTED, VIEWPORTS } from './chapter-flows';
 
 // Chapter 1 at a 390 px phone and a 1280 px desktop. Every interaction is a tap, so the
 // browser is a touch device (hasTouch). Each main view runs axe and a sideways-scroll check.
 const CHAPTER = '/#/chapter/c01-foundations';
-const VIEWPORTS = [
-  { name: '390 px phone', width: 390, height: 844 },
-  { name: '1280 px desktop', width: 1280, height: 800 },
-];
-const SUBMITTED = 'Submitted. Every check passed.';
-
-// The last line differs between a broken starter and the reference, so waiting for it
-// shows that the editor holds the code under test.
-function lastLine(code: string): string {
-  return code.trim().split('\n').pop() ?? '';
-}
 
 function spec(id: string) {
   const found = [...CHAPTER1_GRADED, ...CHAPTER1_BOSS].find((candidate) => candidate.id === id);
   if (found === undefined) throw new Error(`no spec ${id}`);
   return found;
-}
-
-async function expectAccessible(page: Page) {
-  const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
-  const serious = results.violations.filter((violation) => violation.impact === 'serious' || violation.impact === 'critical');
-  expect(serious, JSON.stringify(serious.map((violation) => violation.id))).toEqual([]);
-}
-
-async function expectNoSidewaysScroll(page: Page) {
-  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
-  expect(overflow).toBeLessThanOrEqual(0);
 }
 
 for (const viewport of VIEWPORTS) {

@@ -1,0 +1,122 @@
+{
+  "graded": [
+    {
+      "solution": "G5/c03-suite-fix-dock-count.py",
+      "id": "c03-suite-fix-dock-count",
+      "kind": "suite",
+      "status": "pass",
+      "passed": 5,
+      "total": 5,
+      "mutantsKilled": 0,
+      "mutants": 0
+    },
+    {
+      "solution": "G5/c03-suite-fix-median.py",
+      "id": "c03-suite-fix-median",
+      "kind": "suite",
+      "status": "pass",
+      "passed": 7,
+      "total": 7,
+      "mutantsKilled": 0,
+      "mutants": 0
+    },
+    {
+      "solution": "G5/c03-testing-in-batches.py",
+      "id": "c03-testing-in-batches",
+      "kind": "testing",
+      "status": "pass",
+      "passed": 5,
+      "total": 5,
+      "mutantsKilled": 4,
+      "mutants": 4
+    },
+    {
+      "solution": "G5/c03-testing-parse-weight.py",
+      "id": "c03-testing-parse-weight",
+      "kind": "testing",
+      "status": "pass",
+      "passed": 5,
+      "total": 5,
+      "mutantsKilled": 4,
+      "mutants": 4
+    },
+    {
+      "solution": "G6/c03-boss-test-clean-lines.py",
+      "id": "c03-boss-test-clean-lines",
+      "kind": "testing",
+      "status": "pass",
+      "passed": 4,
+      "total": 4,
+      "mutantsKilled": 3,
+      "mutants": 3
+    },
+    {
+      "solution": "G6/c03-boss-test-count-words.py",
+      "id": "c03-boss-test-count-words",
+      "kind": "testing",
+      "status": "pass",
+      "passed": 4,
+      "total": 4,
+      "mutantsKilled": 3,
+      "mutants": 3
+    },
+    {
+      "solution": "G6/c03-boss-test-report-lines.py",
+      "id": "c03-boss-test-report-lines",
+      "kind": "testing",
+      "status": "pass",
+      "passed": 3,
+      "total": 3,
+      "mutantsKilled": 2,
+      "mutants": 2
+    },
+    {
+      "solution": "G6/c03-boss-test-top-words.py",
+      "id": "c03-boss-test-top-words",
+      "kind": "testing",
+      "status": "pass",
+      "passed": 4,
+      "total": 4,
+      "mutantsKilled": 3,
+      "mutants": 3
+    }
+  ],
+  "choices": [
+    {
+      "id": "c03-predict-assert-message",
+      "key": "A",
+      "picked": "A",
+      "agrees": true
+    },
+    {
+      "id": "c03-predict-float-tolerance",
+      "key": "A",
+      "picked": "A",
+      "agrees": true
+    },
+    {
+      "id": "c03-predict-test-runner",
+      "key": "B",
+      "picked": "B",
+      "agrees": true
+    },
+    {
+      "id": "c03-traceback-test-without-function",
+      "key": "A",
+      "picked": "A",
+      "agrees": true
+    },
+    {
+      "id": "c03-traceback-assert-message",
+      "key": "A",
+      "picked": "A",
+      "agrees": true
+    }
+  ],
+  "summary": {
+    "graded_solutions_passing": 8,
+    "graded_solutions": 8,
+    "choices_agreeing": 5,
+    "choices": 5
+  }
+}

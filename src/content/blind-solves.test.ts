@@ -26,6 +26,10 @@ const RECORDS: Record[] = [
     root: 'docs/blind-solves/chapter2',
     dirs: ['solutions/G1', 'solutions/G2', 'solutions/G3', 'solutions/G4', 'solutions/G4-r2'],
     mustPass: () => true,
+  },  {
+    root: 'docs/blind-solves/chapter3',
+    dirs: ['solutions/G5', 'solutions/G6'],
+    mustPass: () => true,
   },
 ];
 

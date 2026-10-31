@@ -1,0 +1,7 @@
+{
+  "c03-predict-assert-message": "A",
+  "c03-predict-float-tolerance": "A",
+  "c03-predict-test-runner": "B",
+  "c03-traceback-test-without-function": "A",
+  "c03-traceback-assert-message": "A"
+}

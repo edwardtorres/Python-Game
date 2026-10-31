@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { PythonEngine, EngineStatus } from '../engine/client';
 import { EngineError, isKeyboardInterrupt } from '../engine/errors';
 import type { GradeResult } from '../engine/types';
@@ -30,17 +30,25 @@ export function ChallengeView({ spec, progress, engine, engineStatus, onProgress
   const setupCount = spec.setupCell === undefined ? 0 : 1;
   const visibleDatasets = useMemo(() => visibleDatasetsOf(spec), [spec]);
 
+  // The latest onProgress. The callback changes identity on every render, so the first-visit effect
+  // reads it through this ref instead of listing it as a dependency.
+  const onProgressRef = useRef(onProgress);
+  useEffect(() => {
+    onProgressRef.current = onProgress;
+  });
+
   // First visit: fill in the starter (or the notebook cells). Later edits are the learner's.
   useEffect(() => {
     // Only an empty cell or editor is filled. The check runs on the latest state, so code
     // the learner (or the test bridge) set before this effect ran is never overwritten.
+    const update = onProgressRef.current;
     if (spec.notebook) {
-      onProgress((current) => (current.cells.length === 0 ? { ...current, cells: [spec.setupCell ?? '', spec.starter] } : current));
+      update((current) => (current.cells.length === 0 ? { ...current, cells: [spec.setupCell ?? '', spec.starter] } : current));
     } else {
-      onProgress((current) => (current.lastCode === '' ? { ...current, lastCode: spec.starter } : current));
+      update((current) => (current.lastCode === '' ? { ...current, lastCode: spec.starter } : current));
     }
-    // Runs once per challenge; the learner's later edits must not be overwritten.
-  }, [spec.id]); // eslint-disable-line react-hooks/exhaustive-deps
+    // Runs once per challenge, because the spec object is fixed for a challenge. Later edits are kept.
+  }, [spec]);
 
   const learnerCode = (): string => {
     if (!spec.notebook) return progress.lastCode;
@@ -192,7 +200,7 @@ export function ChallengeView({ spec, progress, engine, engineStatus, onProgress
           progress.solutionRevealed ? (
             <div className="space-y-2">
               <p className="text-sm text-amber-900">Solution shown. Viewing it gives reduced credit and does not count toward mastery.</p>
-              <pre tabIndex={0} aria-label="Solution code" className="overflow-x-auto whitespace-pre rounded-md bg-white p-3 font-mono text-sm">{spec.reference}</pre>
+              <pre tabIndex={0} aria-label="Solution code" className="overflow-x-auto whitespace-pre rounded-md bg-white p-3 font-mono text-sm">{spec.kind === 'testing' ? spec.modelTests ?? '' : spec.reference}</pre>
             </div>
           ) : (
             <button type="button" className="min-h-11 rounded-md border border-amber-300 bg-amber-50 px-4 py-2 text-sm font-medium text-amber-900 hover:bg-amber-100" onClick={() => onProgress(revealSolution)}>

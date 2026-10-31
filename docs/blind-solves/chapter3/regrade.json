@@ -1,0 +1,58 @@
+[
+  {
+    "solution": "solutions/G5/c03-suite-fix-dock-count.py",
+    "id": "c03-suite-fix-dock-count",
+    "status": "pass",
+    "passed": 5,
+    "total": 5
+  },
+  {
+    "solution": "solutions/G5/c03-suite-fix-median.py",
+    "id": "c03-suite-fix-median",
+    "status": "pass",
+    "passed": 7,
+    "total": 7
+  },
+  {
+    "solution": "solutions/G5/c03-testing-in-batches.py",
+    "id": "c03-testing-in-batches",
+    "status": "pass",
+    "passed": 5,
+    "total": 5
+  },
+  {
+    "solution": "solutions/G5/c03-testing-parse-weight.py",
+    "id": "c03-testing-parse-weight",
+    "status": "pass",
+    "passed": 5,
+    "total": 5
+  },
+  {
+    "solution": "solutions/G6/c03-boss-test-clean-lines.py",
+    "id": "c03-boss-test-clean-lines",
+    "status": "pass",
+    "passed": 4,
+    "total": 4
+  },
+  {
+    "solution": "solutions/G6/c03-boss-test-count-words.py",
+    "id": "c03-boss-test-count-words",
+    "status": "pass",
+    "passed": 4,
+    "total": 4
+  },
+  {
+    "solution": "solutions/G6/c03-boss-test-report-lines.py",
+    "id": "c03-boss-test-report-lines",
+    "status": "pass",
+    "passed": 3,
+    "total": 3
+  },
+  {
+    "solution": "solutions/G6/c03-boss-test-top-words.py",
+    "id": "c03-boss-test-top-words",
+    "status": "pass",
+    "passed": 4,
+    "total": 4
+  }
+]
