@@ -9,10 +9,15 @@ so the explanation for that mistake can be shown.
 """
 
 import ast
+import contextlib
 import copy
 import io
 import json
 import math
+import os
+import shutil
+import sys
+import time
 import traceback
 import types
 
@@ -27,6 +32,13 @@ CLIP = 220
 HIDDEN_NOTE = "Did not match on a hidden case."
 # NaN has its own summary. None would collide with a real None when variants are matched.
 NAN_SENTINEL = "<nan>"
+# Efficiency cases: each timed call repeats TIMING_REPEATS times and keeps the fastest. A call
+# over TIMING_BUDGET seconds is a timeout. A call slower than SPEED_FACTOR times the reference's
+# time fails.
+TIMING_BUDGET = 1.0
+TIMING_REPEATS = 2
+SPEED_FACTOR = 50
+SLOW_NOTE = "Too slow on a hidden case."
 
 
 def _clip(text):
@@ -65,13 +77,14 @@ def _load(code, filename, extra=None, definitions_only=False):
     return namespace, None
 
 
-def _call(fn, args, kwargs, filename):
+def _call(fn, args, kwargs, filename, consume=True):
     runtime.seed_everything()
     try:
         value = fn(*copy.deepcopy(args), **copy.deepcopy(kwargs))
         # A generator compares by its items. A generator that was already used gives [].
+        # An eager case does not consume it, so a function that only fails once it runs is not caught.
         if isinstance(value, types.GeneratorType):
-            value = list(value)
+            value = list(value) if consume else "<an unconsumed generator>"
         return {"ok": True, "value": value}
     except Exception as exc:
         return {"ok": False, "error": _error_info(exc, filename)}
@@ -223,8 +236,62 @@ def _function_problem(got, want, rules):
     return f"expected {_clip(repr(want['value']))}, got {_clip(repr(got['value']))}"
 
 
+def _timed_call(fn, make_args, size, filename, budget):
+    """Times fn on fresh arguments, built outside the timer. A call that takes longer than the budget
+    is a timeout. The call runs to completion first: a trace would charge a learner's loop for tracing."""
+    seconds = []
+    value = None
+    for _ in range(TIMING_REPEATS):
+        args = make_args(size)
+        started = time.perf_counter()
+        try:
+            value = fn(*args)
+        except Exception as exc:
+            return {"ok": False, "error": _error_info(exc, filename)}
+        seconds.append(time.perf_counter() - started)
+        if budget is not None and seconds[-1] > budget:
+            return {"ok": False, "timeout": True, "error": {"type": "TimeBudget", "message": f"ran past the {budget:g} second budget", "line": None}}
+    return {"ok": True, "value": value, "seconds": min(seconds)}
+
+
+def _timing_context(payload):
+    spec = payload.get("timing")
+    if spec is None:
+        return None
+    namespace, error = _load(spec["setup"], "<timing setup>")
+    if error is not None:
+        raise RuntimeError(error["message"])
+    return {"make_args": namespace["make_args"], "budget": spec.get("budget", TIMING_BUDGET)}
+
+
+def _timed_problem(got, want, rules):
+    if got.get("timeout"):
+        return f"ran past the {TIMING_BUDGET:g} second budget"
+    problem = _function_problem(got, want, rules)
+    if problem is not None or "seconds" not in want:
+        return problem
+    if got["seconds"] > want["seconds"] * SPEED_FACTOR:
+        return f"took {got['seconds'] * 1000:.1f} ms, and the reference took {want['seconds'] * 1000:.2f} ms; the limit is {SPEED_FACTOR} times that"
+    return None
+
+
+def _verdict(outcome, want):
+    """How a timed outcome compares with the reference. Untimed outcomes have no verdict."""
+    if outcome.get("timeout"):
+        return "timeout"
+    if "seconds" not in outcome or "seconds" not in want:
+        return ""
+    return "slow" if outcome["seconds"] > want["seconds"] * SPEED_FACTOR else "fast"
+
+
+def _signature(kind, outcomes, expected):
+    return [_summary(kind, outcome) + _verdict(outcome, want) for outcome, want in zip(outcomes, expected)]
+
+
 def _compare(kind, got, want, rules):
     if kind == "function":
+        if "seconds" in got or got.get("timeout"):
+            return _timed_problem(got, want, rules)
         return _function_problem(got, want, rules)
     if not got["ok"]:
         return f"raised {got['error']['type']}: {got['error']['message']}"
@@ -238,6 +305,8 @@ def _public(problem, case, got):
         return ""
     if case.get("visibility", "visible") == "visible":
         return _clip(problem)
+    if got.get("timeout"):
+        return SLOW_NOTE
     if not got["ok"]:
         return f"raised {got['error']['type']} on a hidden case"
     return HIDDEN_NOTE
@@ -266,9 +335,13 @@ def _summary(kind, outcome):
     return json.dumps(outcome["description"], sort_keys=True)
 
 
-def _run_one(kind, fn, case, datasets, filename):
+def _run_one(kind, fn, case, datasets, filename, timing=None):
     if kind == "function":
-        return _call(fn, case.get("args", []), case.get("kwargs", {}), filename)
+        if case.get("timing") is not None:
+            # The reference is timed without a budget. A learner's or a variant's call is held to the budget.
+            budget = None if filename == REFERENCE else timing["budget"]
+            return _timed_call(fn, timing["make_args"], case["timing"]["size"], filename, budget)
+        return _call(fn, case.get("args", []), case.get("kwargs", {}), filename, consume=not case.get("eager", False))
     frame = _read_csv(datasets, case["dataset"])
     if kind == "pandas":
         return _call(fn, [frame], {}, filename)
@@ -292,7 +365,14 @@ def _execute(kind, code, filename, payload, cases, datasets):
     fn = namespace.get(payload["entry"])
     if not callable(fn):
         return None, {"type": "NameError", "message": f"define a function named {payload['entry']}", "line": None}
-    return [_run_one(kind, fn, case, datasets, filename) for case in cases], None
+    timing = _timing_context(payload)
+    return [_run_one(kind, fn, case, datasets, filename, timing) for case in cases], None
+
+
+def _check_outcomes(code, checks, filename):
+    """(passed, message) for each structure check, read from the code with ast."""
+    tree = ast.parse(code, filename=filename)
+    return [_structure_check(tree, check) for check in checks]
 
 
 def _grade_cases(payload, datasets):
@@ -319,13 +399,26 @@ def _grade_cases(payload, datasets):
                 "message": _public(problem, case, got),
             }
         )
+    # Structure checks, when a task has them, are graded with the cases: the learner's code is read with ast.
+    checks = payload.get("checks", [])
+    learner_checks = _check_outcomes(payload["learner"], checks, LEARNER) if checks else []
+    results += [
+        {"id": f"check-{index}", "label": check["label"], "visibility": "visible", "ok": ok, "message": "" if ok else _clip(message)}
+        for index, (check, (ok, message)) in enumerate(zip(checks, learner_checks))
+    ]
     passed = all(result["ok"] for result in results)
     matched = []
     if not passed:
-        learner_signature = [_summary(kind, outcome) for outcome in outputs]
+        learner_signature = _signature(kind, outputs, expected) + [ok for ok, _ in learner_checks]
         for variant in payload.get("variants", []):
             variant_outputs, variant_error = _execute(kind, variant["code"], VARIANT, payload, cases, datasets)
-            if variant_error is None and [_summary(kind, outcome) for outcome in variant_outputs] == learner_signature:
+            if variant_error is not None:
+                continue
+            try:
+                variant_checks = [ok for ok, _ in _check_outcomes(variant["code"], checks, VARIANT)] if checks else []
+            except SyntaxError:
+                continue
+            if _signature(kind, variant_outputs, expected) + variant_checks == learner_signature:
                 matched.append({"variantId": variant["id"], **variant["mistake"]})
     return {
         "status": "pass" if passed else "fail",
@@ -337,25 +430,77 @@ def _grade_cases(payload, datasets):
     }
 
 
-def _run_suite(impl_code, impl_name, tests_code, tests_name, names=None):
-    """Runs tests against an implementation. Returns (test name, failure) pairs, where a
-    failure is None or (exception type, message). Without names, every test_ function runs."""
-    namespace = runtime.new_namespace("__tests__")
-    exec(compile(impl_code, impl_name, "exec"), namespace)
-    exec(compile(tests_code, tests_name, "exec"), namespace)
-    if names is None:
-        names = [name for name in namespace if name.startswith("test_") and callable(namespace[name])]
-    outcomes = []
-    for name in names:
+class _SuiteRecorder:
+    """Records each test's outcome for _run_suite. A failure while the test file is imported is a collection error."""
+
+    def __init__(self):
+        self.outcomes = {}
+        self.collect_errors = []
+
+    def pytest_collectreport(self, report):
+        if report.failed:
+            self.collect_errors.append(str(report.longrepr))
+
+    def pytest_runtest_setup(self, item):
         runtime.seed_everything()
-        try:
-            namespace[name]()
-            outcomes.append((name, None))
-        except AssertionError as exc:
-            outcomes.append((name, ("AssertionError", _clip(exc))))
-        except Exception as exc:
-            outcomes.append((name, (type(exc).__name__, _clip(exc))))
-    return outcomes
+
+    def pytest_runtest_logreport(self, report):
+        if report.when == "call" or (report.when == "setup" and report.failed):
+            name = report.nodeid.rsplit("::", 1)[-1]
+            self.outcomes[name] = None if report.passed else _report_failure(report)
+
+
+def _report_failure(report):
+    # pytest prints the failing line as the first "E" line of the report, e.g. "E   assert 4 == 5".
+    lines = [line[1:].strip() for line in str(report.longrepr).splitlines() if line.startswith("E ")]
+    message = lines[0] if lines else ""
+    if message.startswith("assert "):
+        return ("AssertionError", message)
+    error_type, separator, text = message.partition(": ")
+    return (error_type.strip() or "Error", text if separator else "")
+
+
+_suite_runs = [0]
+
+
+def _run_suite(impl_code, impl_name, tests_code, tests_name, names=None):
+    """Runs tests against an implementation under pytest. Returns (test name, failure) pairs, where a
+    failure is None or (exception type, message). Without names, every test in the file runs."""
+    import pytest
+
+    # Compile first, so a syntax error names the file it came from.
+    compile(impl_code, impl_name, "exec")
+    compile(tests_code, tests_name, "exec")
+    _suite_runs[0] += 1
+    run = _suite_runs[0]
+    folder = os.path.join(runtime.WORK_ROOT, f"suite-{run}")
+    module = f"suite_impl_{run}"
+    os.makedirs(folder, exist_ok=True)
+    with open(os.path.join(folder, f"{module}.py"), "w", encoding="utf-8") as handle:
+        handle.write(impl_code)
+    # The implementation's names join the test module's globals, so each test calls them directly.
+    header = f"import {module} as _implementation\nglobals().update({{name: value for name, value in vars(_implementation).items() if not name.startswith('__')}})\n\n\n"
+    test_file = os.path.join(folder, f"test_suite_{run}.py")
+    with open(test_file, "w", encoding="utf-8") as handle:
+        handle.write(header + tests_code)
+    config = os.path.join(folder, "pytest.ini")
+    with open(config, "w", encoding="utf-8") as handle:
+        handle.write("[pytest]\n")
+    recorder = _SuiteRecorder()
+    sys.path.insert(0, folder)
+    try:
+        with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+            # The terminal reporter stays on: pytest builds its assertion explanations through it.
+            pytest.main(["-q", "-p", "no:cacheprovider", "-c", config, "--rootdir", folder, test_file], plugins=[recorder])
+    finally:
+        sys.path.remove(folder)
+        sys.modules.pop(module, None)
+        shutil.rmtree(folder, ignore_errors=True)
+    if recorder.collect_errors:
+        raise RuntimeError(_clip(recorder.collect_errors[0]))
+    if names is None:
+        names = list(recorder.outcomes)
+    return [(name, recorder.outcomes.get(name, ("TestNotRun", "the test did not run"))) for name in names]
 
 
 def _failure_text(failure):
@@ -506,6 +651,13 @@ def _resolve(tree, dotted):
     return node
 
 
+def _decorator_name(node):
+    """The last name of a decorator, so @dataclass and @dataclasses.dataclass(frozen=True) both give dataclass."""
+    target = node.func if isinstance(node, ast.Call) else node
+    dotted = _dotted(target)
+    return dotted.rsplit(".", 1)[-1] if dotted else None
+
+
 def _literal(node):
     if isinstance(node, ast.Constant):
         return node.value
@@ -610,6 +762,12 @@ def _structure_check(tree, check):
     if kind == "forbids_calls":
         ok = not any(isinstance(node, ast.Call) and _dotted(node.func) == check["name"] for node in ast.walk(scope))
         return ok, f"do not call {check['name']} here"
+    if kind == "decorated_with":
+        ok = isinstance(scope, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)) and any(_decorator_name(decorator) == check["name"] for decorator in scope.decorator_list)
+        return ok, f"decorate {within} with @{check['name']}"
+    if kind == "subclass_of":
+        ok = isinstance(scope, ast.ClassDef) and any(_dotted(base) == check["name"] for base in scope.bases)
+        return ok, f"make {within} a subclass of {check['name']}"
     if kind == "annotated_in":
         if not isinstance(scope, (ast.FunctionDef, ast.AsyncFunctionDef)):
             return False, f"define {within} as a function first"

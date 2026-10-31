@@ -15,6 +15,10 @@ export interface Ticket {
   body: string;
 }
 
+export interface TimingSpec {
+  setup: string;
+}
+
 export interface ChallengeSpec {
   id: string;
   chapterId: string;
@@ -40,6 +44,8 @@ export interface ChallengeSpec {
   competencies: string[];
   datasets: DatasetSpec[];
   cases: GradeCase[];
+  // Efficiency tasks: Python that defines make_args(size), which builds the arguments of a timed case.
+  timing?: TimingSpec;
   rulesForGrader: Record<string, unknown>;
   reference: string;
   variants: WrongVariant[];

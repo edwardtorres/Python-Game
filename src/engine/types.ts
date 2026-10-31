@@ -23,6 +23,11 @@ export interface FunctionCase {
   visibility: Visibility;
   args?: unknown[];
   kwargs?: Record<string, unknown>;
+  // An efficiency case: the entry is called on the arguments make_args(size) builds, and timed.
+  timing?: { size: number };
+  // An eager case does not consume a generator the call returns, so a function that raises only
+  // when its batches are used does not pass it.
+  eager?: boolean;
   // Indexes into the task's rules that this case checks. A wrong variant may fail only cases that name its rule.
   rules?: number[];
 }
@@ -49,6 +54,10 @@ export interface GradePayload {
   cases: GradeCase[];
   variants: WrongVariant[];
   requires: string[];
+  // Efficiency tasks: the setup source that defines make_args(size).
+  timing?: { setup: string; budget?: number };
+  // Structure checks graded alongside the cases, for class tasks that check behaviour and shape.
+  checks?: StructureCheck[];
   // Notebook submissions: keep imports and definitions, ignore top-level exploration.
   definitions_only?: boolean;
 }
@@ -62,6 +71,8 @@ export interface StructureCheck {
     | 'calls'
     | 'forbids_calls'
     | 'annotated_in'
+    | 'decorated_with'
+    | 'subclass_of'
     | 'calls_method'
     | 'forbids_method'
     | 'calls_symbol'

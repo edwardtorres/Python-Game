@@ -11,7 +11,7 @@ beforeAll(async () => {
     loadModule: async () => (await import('pyodide')) as never,
   });
   await runtime.init();
-  await runtime.loadPackages(['pandas', 'matplotlib', 'scikit-learn']);
+  await runtime.loadPackages(['pandas', 'matplotlib', 'scikit-learn', 'pytest']);
 }, 300_000);
 
 const DATASETS = {};

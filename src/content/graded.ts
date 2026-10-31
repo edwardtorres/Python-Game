@@ -1,7 +1,7 @@
 // Helpers for graded items, shared by every chapter. A function item is graded by its cases, and
 // each case names the rules it checks. A wrong variant breaks one rule, and its mistake names the
 // tag that the feedback shows.
-import type { ChallengeSpec, Ticket } from '../challenges/types';
+import type { ChallengeSpec, Ticket, TimingSpec } from '../challenges/types';
 import type { FunctionCase, StructureCheck, WrongVariant } from '../engine/types';
 import { MISTAKES, type MistakeTag } from './mistakes';
 
@@ -11,6 +11,12 @@ export type Variant = [id: string, code: string, tag: MistakeTag, rule: number];
 // A case that names the rules it checks. A wrong variant may fail only the cases that name its rule.
 export function fn(id: string, label: string, visibility: 'visible' | 'hidden', args: unknown[], rules: number[], kwargs?: Record<string, unknown>): FunctionCase {
   return kwargs === undefined ? { id, label, visibility, args, rules } : { id, label, visibility, args, rules, kwargs };
+}
+
+// An efficiency case: the entry is timed on the arguments make_args(size) builds. Use it with a
+// visible and a hidden case, so the rule that names it is checked on two cases.
+export function timed(id: string, label: string, visibility: 'visible' | 'hidden', size: number, rules: number[]): FunctionCase {
+  return { id, label, visibility, args: [], rules, timing: { size } };
 }
 
 export interface GradedItem {
@@ -28,6 +34,10 @@ export interface GradedItem {
   hints: [string, string, string];
   // Structure tasks are graded by ast checks instead of cases.
   structure?: StructureCheck[];
+  // Efficiency tasks: the source that defines make_args(size), which builds the timed arguments.
+  timing?: TimingSpec;
+  // Behaviour and shape: these ast checks are graded with the cases, on the same learner code.
+  checks?: StructureCheck[];
 }
 
 function toWrong(variants: Variant[]): { wrong: WrongVariant[]; rules: Record<string, number> } {
@@ -59,6 +69,8 @@ export function functionSpec(chapterId: string, item: GradedItem): ChallengeSpec
     variants: wrong,
     variantRule: rules,
     hints: item.hints,
+    ...(item.timing === undefined ? {} : { timing: item.timing }),
+    ...(item.checks === undefined ? {} : { structureChecks: item.checks }),
   };
   return item.structure === undefined ? base : { ...base, kind: 'structure', structureChecks: item.structure };
 }

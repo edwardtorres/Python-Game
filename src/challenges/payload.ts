@@ -20,12 +20,12 @@ export function buildGradeRequest(spec: ChallengeSpec, learner: string, mode: Gr
     return { payload: { kind, learner, checks: spec.structureChecks ?? [], requires: [], variants: spec.variants }, datasets: {} };
   }
   if (kind === 'testing') {
-    // The learner's tests run against the correct implementation and each mutant.
-    return { payload: { kind, entry: spec.entry, learner, reference: spec.reference, scope, mutants: spec.mutants ?? [], requires: [] }, datasets: {} };
+    // The learner's tests run against the correct implementation and each mutant, under pytest.
+    return { payload: { kind, entry: spec.entry, learner, reference: spec.reference, scope, mutants: spec.mutants ?? [], requires: ['pytest'] }, datasets: {} };
   }
   if (kind === 'suite') {
-    // The learner's implementation runs against the owner's tests, one case per test function.
-    return { payload: { kind, learner, tests: spec.ownerTests ?? '', scope, cases: spec.cases, variants: spec.variants, requires: [] }, datasets: {} };
+    // The learner's implementation runs against the owner's tests under pytest, one case per test function.
+    return { payload: { kind, learner, tests: spec.ownerTests ?? '', scope, cases: spec.cases, variants: spec.variants, requires: ['pytest'] }, datasets: {} };
   }
   const requires = kind === 'function' ? [] : kind === 'chart' ? ['pandas', 'matplotlib'] : ['pandas'];
   const payload: GradePayload = {
@@ -39,6 +39,8 @@ export function buildGradeRequest(spec: ChallengeSpec, learner: string, mode: Gr
       variants: spec.variants,
       requires,
       definitions_only: spec.notebook,
+      ...(spec.timing === undefined ? {} : { timing: spec.timing }),
+      ...(spec.structureChecks === undefined ? {} : { checks: spec.structureChecks }),
   };
   return { payload, datasets: buildDatasets(spec.datasets, scope) };
 }

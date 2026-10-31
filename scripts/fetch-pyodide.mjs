@@ -14,6 +14,9 @@ const TARBALL = `pyodide-${VERSION}.tar.bz2`;
 const TARBALL_URL = `https://github.com/pyodide/pyodide/releases/download/${VERSION}/${TARBALL}`;
 const TARBALL_SHA256 = '192b5864e6e6d30ab074861af800cb8b4acb0998ef0f9342c3367448aeb86645';
 const PACKAGES = ['numpy', 'pandas', 'matplotlib', 'scikit-learn'];
+// Chapter 3's testing items run under real pytest. Only testing items load these packages, and each
+// wheel is checked against its lock-file SHA-256 when it is copied.
+const TESTING_PACKAGES = ['pytest'];
 const CORE_FILES = ['pyodide.mjs', 'pyodide.asm.mjs', 'pyodide.asm.wasm', 'python_stdlib.zip', 'pyodide-lock.json'];
 // seaborn is not in the 314.0.7 release. It is a pure-Python wheel, vendored from PyPI
 // and checked by SHA-256. Only chapter 8 may load it, after pandas and matplotlib.
@@ -22,7 +25,7 @@ const SEABORN = {
   url: 'https://files.pythonhosted.org/packages/83/11/00d3c3dfc25ad54e731d91449895a79e4bf2384dc3ac01809010ba88f6d5/seaborn-0.13.2-py3-none-any.whl',
   sha256: '636f8336facf092165e27924f223d3c62ca560b1f2bb5dff7ab7fad265361987',
 };
-const MARKER_VALUE = `${VERSION} seaborn ${SEABORN.file}`;
+const MARKER_VALUE = `${VERSION} seaborn ${SEABORN.file} testing ${TESTING_PACKAGES.join(',')}`;
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const cacheDir = path.join(root, '.cache', 'pyodide');
@@ -91,15 +94,26 @@ async function main() {
   const lock = JSON.parse(fs.readFileSync(path.join(release, 'pyodide-lock.json'), 'utf8'));
 
   const wheelNames = closure(lock, PACKAGES).map((name) => lock.packages[name].file_name);
+  const testingNames = closure(lock, TESTING_PACKAGES);
   fs.rmSync(outDir, { recursive: true, force: true });
   fs.mkdirSync(outDir, { recursive: true });
   for (const file of [...CORE_FILES, ...wheelNames]) {
     fs.copyFileSync(path.join(release, file), path.join(outDir, file));
   }
+  for (const name of testingNames) {
+    const entry = lock.packages[name];
+    const copied = path.join(outDir, entry.file_name);
+    fs.copyFileSync(path.join(release, entry.file_name), copied);
+    const actual = sha256(copied);
+    if (actual !== entry.sha256) {
+      fs.rmSync(copied);
+      throw new Error(`SHA-256 mismatch for ${entry.file_name}: lock ${entry.sha256}, got ${actual}`);
+    }
+  }
   const seaborn = await ensureSeaborn();
   fs.copyFileSync(seaborn, path.join(outDir, SEABORN.file));
   fs.writeFileSync(marker, `${MARKER_VALUE}\n`);
-  console.log(`Pyodide ${VERSION}: copied ${CORE_FILES.length + wheelNames.length + 1} files to public/pyodide`);
+  console.log(`Pyodide ${VERSION}: copied ${CORE_FILES.length + wheelNames.length + testingNames.length + 1} files to public/pyodide`);
 }
 
 await main();
