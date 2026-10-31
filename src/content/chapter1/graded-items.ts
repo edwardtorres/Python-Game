@@ -4,7 +4,7 @@
 //
 // Coverage: every stated rule has a wrong variant that breaks exactly that rule, and each
 // variant is caught by at least two cases, with at least one variant failing a visible case.
-// The grader's own tests (src/content/chapter1.test.ts) check this for every item.
+// The content checks (src/content/chapters.test.ts) check this for every item.
 import type { ChallengeSpec, Ticket } from '../../challenges/types';
 import type { FunctionCase, StructureCheck, WrongVariant } from '../../engine/types';
 import { MISTAKES, type MistakeTag } from '../mistakes';

@@ -114,7 +114,7 @@ for (const viewport of VIEWPORTS) {
 
     test('completes the boss, one part at a time', async ({ page }) => {
       logPageErrors(page);
-      await page.goto('/#/boss');
+      await page.goto('/#/boss/c01-foundations');
       await expect(page.getByRole('heading', { level: 1, name: 'The weekly word report' })).toBeVisible();
       await expectAccessible(page);
       await expectNoSidewaysScroll(page);

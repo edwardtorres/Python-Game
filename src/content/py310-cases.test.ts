@@ -1,6 +1,6 @@
-// Exports the sample grading payloads and the engine's verdicts for them. CI runs the same
-// payloads under CPython 3.10 (scripts/py310/run-cases.py) and compares verdicts.
-// Set UPDATE_PY310_CASES=1 to rewrite the committed files after changing a challenge.
+// Exports the sample and chapter grading payloads and the engine's verdicts for them, with the
+// lesson and option code. CI runs the same code under CPython 3.10 (scripts/py310/run-cases.py) and
+// compares verdicts. Set UPDATE_PY310_CASES=1 to rewrite the committed files after changing content.
 import fs from 'node:fs';
 import path from 'node:path';
 import { beforeAll, expect, it } from 'vitest';
@@ -8,13 +8,14 @@ import { PyRuntime } from '../engine/runtime';
 import { CHALLENGES } from '../challenges/registry';
 import { buildGradeRequest } from '../challenges/payload';
 import type { ChallengeSpec } from '../challenges/types';
-import { CHAPTER1_BOSS, CHAPTER1_CHOICE, CHAPTER1_GRADED, CHAPTER1_LESSONS } from './chapter1/index';
-import type { ChapterOutputs } from './chapter1/generate';
+import { CHAPTERS } from './chapters';
+import { outputsPath } from './generate';
+import type { ChapterOutputs } from './output-types';
+import type { Chapter } from './types';
 
 const CASES_FILE = path.resolve('scripts/py310/cases.json');
 const SNIPPETS_FILE = path.resolve('scripts/py310/snippets.json');
 const EXAMPLES_FILE = path.resolve('scripts/py310/examples.json');
-const OUTPUTS_FILE = path.resolve('src/content/generated/chapter1.outputs.json');
 let runtime: PyRuntime;
 
 interface LearnerCase {
@@ -39,9 +40,9 @@ interface Example {
   expected: string;
 }
 
-function buildExamples(outputs: ChapterOutputs): Example[] {
+function buildExamples(chapter: Chapter, outputs: ChapterOutputs): Example[] {
   const examples: Example[] = [];
-  for (const lesson of CHAPTER1_LESSONS) {
+  for (const lesson of chapter.lessons) {
     for (const section of lesson.sections) {
       for (const example of section.examples) {
         const recorded = outputs.examples[example.id];
@@ -49,7 +50,7 @@ function buildExamples(outputs: ChapterOutputs): Example[] {
       }
     }
   }
-  for (const item of CHAPTER1_CHOICE) {
+  for (const item of chapter.choice) {
     const recorded = outputs.choice[item.id];
     for (const option of recorded?.options ?? []) {
       const code = option.id === 'true' ? item.code : item.variants.find((variant) => variant.id === option.id)?.code ?? '';
@@ -67,8 +68,8 @@ function buildExamples(outputs: ChapterOutputs): Example[] {
 function build(): { cases: unknown[]; snippets: unknown[]; examples: Example[] } {
   const cases: unknown[] = [];
   const snippets: unknown[] = [];
-  const outputs = JSON.parse(fs.readFileSync(OUTPUTS_FILE, 'utf8')) as ChapterOutputs;
-  for (const spec of [...CHALLENGES, ...CHAPTER1_GRADED, ...CHAPTER1_BOSS]) {
+  const graded = CHAPTERS.flatMap((chapter) => [...chapter.graded, ...chapter.boss]);
+  for (const spec of [...CHALLENGES, ...graded]) {
     for (const item of learnerCases(spec)) {
       const { payload, datasets } = buildGradeRequest(spec, item.learner, 'submit');
       const result = runtime.grade(JSON.stringify(payload), JSON.stringify(datasets));
@@ -87,16 +88,19 @@ function build(): { cases: unknown[]; snippets: unknown[]; examples: Example[] }
       snippets.push({ name: item.name, code: item.learner });
     }
   }
-  for (const lesson of CHAPTER1_LESSONS) {
-    for (const section of lesson.sections) {
-      for (const example of section.examples) snippets.push({ name: `example:${example.id}`, code: example.code });
+  for (const chapter of CHAPTERS) {
+    for (const lesson of chapter.lessons) {
+      for (const section of lesson.sections) {
+        for (const example of section.examples) snippets.push({ name: `example:${example.id}`, code: example.code });
+      }
+    }
+    for (const item of chapter.choice) {
+      snippets.push({ name: `choice:${item.id}`, code: item.code });
+      for (const variant of item.variants) snippets.push({ name: `choice:${item.id}:${variant.id}`, code: variant.code });
     }
   }
-  for (const item of CHAPTER1_CHOICE) {
-    snippets.push({ name: `choice:${item.id}`, code: item.code });
-    for (const variant of item.variants) snippets.push({ name: `choice:${item.id}:${variant.id}`, code: variant.code });
-  }
-  return { cases, snippets, examples: buildExamples(outputs) };
+  const examples = CHAPTERS.flatMap((chapter) => buildExamples(chapter, JSON.parse(fs.readFileSync(outputsPath(chapter), 'utf8')) as ChapterOutputs));
+  return { cases, snippets, examples };
 }
 
 beforeAll(async () => {

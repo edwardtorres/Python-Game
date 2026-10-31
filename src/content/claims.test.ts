@@ -4,12 +4,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { CHAPTER1_LESSONS } from './chapter1/index';
+import { CHAPTERS } from './chapters';
 
 const MANIFEST = path.resolve('docs/lesson-claims.json');
 const QUOTES = path.resolve('docs/quotes.json');
 
-const claims = CHAPTER1_LESSONS.map((lesson) => ({
+const claims = CHAPTERS.flatMap((chapter) => chapter.lessons).map((lesson) => ({
   lesson: lesson.id,
   sections: lesson.sections.map((section) => ({ id: section.id, docClaim: section.docClaim, quotes: section.quotes })),
   jsNotes: lesson.jsNotes.map((note) => ({ id: note.id, quotes: note.quotes })),

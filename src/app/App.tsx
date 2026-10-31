@@ -2,11 +2,8 @@ import { type ReactNode, useCallback, useEffect, useMemo, useState } from 'react
 import { createBrowserEngine } from '../engine/browserEngine';
 import type { EngineStatus } from '../engine/client';
 import { CHALLENGES, getChallenge } from '../challenges/registry';
-import type { ChallengeSpec } from '../challenges/types';
 import { CURRICULUM } from '../curriculum/data';
-import { CHAPTER1_BOSS, CHAPTER1_CHOICE, CHAPTER1_GRADED, CHAPTER1_ID, CHAPTER1_LESSONS } from '../content/chapter1/index';
-import type { ChapterOutputs } from '../content/output-types';
-import outputsJson from '../content/generated/chapter1.outputs.json';
+import { CHAPTERS, chapterOf, findChapter, findChoice, findLesson, findTicket } from '../content/chapters';
 import { browserStorage, createSaveStore } from '../save/store';
 import { type ChallengeProgress, type ChapterProgress, type ChoiceProgress, type SaveV2, emptyChapter, emptyChoice, emptyProgress } from '../save/schema';
 import { installTestBridge, readTestHooks } from '../dev/testHooks';
@@ -16,7 +13,7 @@ import { ChapterPage } from '../ui/ChapterPage';
 import { ChoiceView } from '../ui/ChoiceView';
 import { LessonView } from '../ui/LessonView';
 import { Sidebar } from '../ui/Sidebar';
-import { type Route, CHAPTER1_HREF, useRoute } from '../ui/routes';
+import { type Route, chapterHref, useRoute } from '../ui/routes';
 
 const STATUS_LABEL: Record<EngineStatus, string> = {
   idle: 'Python not started',
@@ -25,12 +22,6 @@ const STATUS_LABEL: Record<EngineStatus, string> = {
   running: 'Running…',
   error: 'Python unavailable',
 };
-
-const OUTPUTS = outputsJson as ChapterOutputs;
-
-function chapterSpec(id: string): ChallengeSpec | undefined {
-  return [...CHAPTER1_GRADED, ...CHAPTER1_BOSS].find((spec) => spec.id === id);
-}
 
 export function App() {
   const hooks = useMemo(() => readTestHooks(window.location.search), []);
@@ -60,8 +51,8 @@ export function App() {
   }, []);
 
   const onChoiceProgress = useCallback(
-    (itemId: string, change: (current: ChoiceProgress) => ChoiceProgress) => {
-      onChapterProgress(CHAPTER1_ID, (chapter) => ({
+    (chapterId: string, itemId: string, change: (current: ChoiceProgress) => ChoiceProgress) => {
+      onChapterProgress(chapterId, (chapter) => ({
         ...chapter,
         choice: { ...chapter.choice, [itemId]: change(chapter.choice[itemId] ?? emptyChoice()) },
       }));
@@ -92,25 +83,27 @@ export function App() {
     });
   }, [engine, engineStatus, onProgress]);
 
-  const chapter = save.chapters[CHAPTER1_ID] ?? emptyChapter();
   const progressById = save.challenges;
 
   function renderRoute(current: Route): ReactNode {
     if (current.kind === 'chapter') {
-      return <ChapterPage lessonsRead={chapter.lessonsRead} choice={chapter.choice} challenges={progressById} />;
+      const chapter = findChapter(current.id);
+      if (chapter === undefined) return <p>There is no chapter with that name. Go back to the tickets.</p>;
+      return <ChapterPage chapter={chapter} progress={save.chapters[chapter.id] ?? emptyChapter()} challenges={progressById} />;
     }
     if (current.kind === 'lesson') {
-      const lesson = CHAPTER1_LESSONS.find((candidate) => candidate.id === current.id);
-      if (lesson === undefined) return <p>There is no lesson with that name. Go back to the chapter.</p>;
-      const read = chapter.lessonsRead.includes(lesson.id);
+      const found = findLesson(current.id);
+      if (found === undefined) return <p>There is no lesson with that name. Go back to the chapter.</p>;
+      const { chapter, item: lesson } = found;
+      const chapterProgress = save.chapters[chapter.id] ?? emptyChapter();
       return (
         <LessonView
           lesson={lesson}
-          read={read}
+          read={chapterProgress.lessonsRead.includes(lesson.id)}
           engine={engine}
           engineStatus={engineStatus}
           onToggleRead={(nowRead) =>
-            onChapterProgress(CHAPTER1_ID, (state) => ({
+            onChapterProgress(chapter.id, (state) => ({
               ...state,
               lessonsRead: nowRead ? [...state.lessonsRead.filter((id) => id !== lesson.id), lesson.id] : state.lessonsRead.filter((id) => id !== lesson.id),
             }))
@@ -119,24 +112,27 @@ export function App() {
       );
     }
     if (current.kind === 'choice') {
-      const item = CHAPTER1_CHOICE.find((candidate) => candidate.id === current.id);
-      const output = item === undefined ? undefined : OUTPUTS.choice[item.id];
-      if (item === undefined || output === undefined) return <p>There is no practice item with that name.</p>;
+      const found = findChoice(current.id);
+      if (found === undefined) return <p>There is no practice item with that name.</p>;
+      const { chapter, item } = found;
+      const output = chapter.outputs.choice[item.id];
+      if (output === undefined) return <p>There is no recorded output for that practice item.</p>;
       return (
         <ChoiceView
           key={item.id}
           item={item}
           output={output}
-          progress={chapter.choice[item.id] ?? emptyChoice()}
+          progress={save.chapters[chapter.id]?.choice[item.id] ?? emptyChoice()}
           engine={engine}
           engineStatus={engineStatus}
-          onProgress={(change) => onChoiceProgress(item.id, change)}
+          onProgress={(change) => onChoiceProgress(chapter.id, item.id, change)}
         />
       );
     }
     if (current.kind === 'ticket') {
-      const spec = chapterSpec(current.id);
-      if (spec === undefined) return <p>There is no ticket with that name.</p>;
+      const found = findTicket(current.id);
+      if (found === undefined) return <p>There is no ticket with that name.</p>;
+      const spec = found.item;
       return (
         <ChallengeView
           key={spec.id}
@@ -150,15 +146,16 @@ export function App() {
       );
     }
     if (current.kind === 'boss') {
-      return (
-        <BossView parts={CHAPTER1_BOSS} challenges={progressById} engine={engine} engineStatus={engineStatus} onProgress={onProgress} onGlobalNotice={setGlobalNotice} />
-      );
+      const chapter = findChapter(current.id);
+      if (chapter === undefined) return <p>There is no boss with that name.</p>;
+      return <BossView chapter={chapter} challenges={progressById} engine={engine} engineStatus={engineStatus} onProgress={onProgress} onGlobalNotice={setGlobalNotice} />;
     }
     return null;
   }
 
   const spec = getChallenge(selectedId);
   const onTickets = route.kind === 'tickets';
+  const activeChapterId = route.kind === 'tickets' ? undefined : route.kind === 'chapter' || route.kind === 'boss' ? route.id : chapterOf(route.id)?.id;
 
   return (
     <div className="min-h-screen">
@@ -172,9 +169,16 @@ export function App() {
             <a href="#/" aria-current={onTickets ? 'page' : undefined} className="flex min-h-11 items-center rounded-md px-3 text-slate-800 hover:bg-slate-100">
               Tickets
             </a>
-            <a href={CHAPTER1_HREF} aria-current={route.kind !== 'tickets' ? 'page' : undefined} className="flex min-h-11 items-center rounded-md px-3 text-slate-800 hover:bg-slate-100">
-              Chapter 1
-            </a>
+            {CHAPTERS.map((chapter) => (
+              <a
+                key={chapter.id}
+                href={chapterHref(chapter.id)}
+                aria-current={chapter.id === activeChapterId ? 'page' : undefined}
+                className="flex min-h-11 items-center rounded-md px-3 text-slate-800 hover:bg-slate-100"
+              >
+                Chapter {chapter.number}
+              </a>
+            ))}
           </nav>
           <p role="status" aria-live="polite" className="rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-700">
             {STATUS_LABEL[engineStatus]}

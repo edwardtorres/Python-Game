@@ -1,14 +1,18 @@
-// Runs every Chapter 1 example and choice option in the engine and returns what the
-// interpreter printed or raised. Only tests use this (it needs node:crypto). The app reads
-// the recorded result from generated/chapter1.outputs.json.
+// Runs every example and choice option of a chapter in the engine and returns what the
+// interpreter printed or raised. Only tests use this (it needs node:crypto and node:path). The
+// app reads each chapter's recorded result from generated/chapter<N>.outputs.json.
 import { createHash } from 'node:crypto';
-import type { PyRuntime } from '../../engine/runtime';
-import type { CellResult } from '../../engine/types';
-import { CHAPTER1_CHOICE, CHAPTER1_LESSONS } from './index';
-import type { ChoiceItem } from '../types';
-import type { ChapterOutputs, ChoiceOutput, ExampleOutput, OptionOutput } from '../output-types';
+import path from 'node:path';
+import type { PyRuntime } from '../engine/runtime';
+import type { CellResult } from '../engine/types';
+import type { Chapter, ChoiceItem } from './types';
+import type { ChapterOutputs, ChoiceOutput, ExampleOutput, OptionOutput } from './output-types';
 
-export type { ChapterOutputs, ChoiceOutput, ExampleOutput, OptionOutput } from '../output-types';
+export type { ChapterOutputs, ChoiceOutput, ExampleOutput, OptionOutput } from './output-types';
+
+export function outputsPath(chapter: Chapter): string {
+  return path.resolve(`src/content/generated/chapter${chapter.number}.outputs.json`);
+}
 
 export function codeHash(code: string): string {
   return createHash('sha256').update(code).digest('hex').slice(0, 16);
@@ -48,9 +52,9 @@ export function buildChoice(runtime: PyRuntime, item: ChoiceItem): ChoiceOutput 
   return { codeHash: codeHash(item.code), answer: ANSWER, options: rotate(options, item.code) };
 }
 
-export function buildOutputs(runtime: PyRuntime): ChapterOutputs {
+export function buildOutputs(runtime: PyRuntime, chapter: Chapter): ChapterOutputs {
   const examples: Record<string, ExampleOutput> = {};
-  for (const lesson of CHAPTER1_LESSONS) {
+  for (const lesson of chapter.lessons) {
     for (const section of lesson.sections) {
       for (const example of section.examples) {
         const result = runSnippet(runtime, example.id, example.code);
@@ -59,7 +63,7 @@ export function buildOutputs(runtime: PyRuntime): ChapterOutputs {
     }
   }
   const choice: Record<string, ChoiceOutput> = {};
-  for (const item of CHAPTER1_CHOICE) choice[item.id] = buildChoice(runtime, item);
+  for (const item of chapter.choice) choice[item.id] = buildChoice(runtime, item);
   return { examples, choice };
 }
 

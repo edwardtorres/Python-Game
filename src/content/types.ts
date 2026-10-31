@@ -1,7 +1,9 @@
 // Content types shared by every chapter, as typed data. Lessons teach with runnable examples.
 // Choice items (predict and traceback) take their answers from running code, never from a table.
 // Graded items reuse the grader through ChallengeSpec.
+import type { ChallengeSpec } from '../challenges/types';
 import type { Mistake } from '../engine/types';
+import type { ChapterOutputs } from './output-types';
 
 export interface Example {
   id: string;
@@ -72,3 +74,24 @@ export interface TracebackItem {
 }
 
 export type ChoiceItem = PredictItem | TracebackItem;
+
+// A chapter's content and wording. The recorded outputs are added by the registry (chapters.ts),
+// so content modules never import the generated JSON.
+export interface ChapterInfo {
+  id: string;
+  number: number;
+  title: string;
+  intro: string;
+  bossTitle: string;
+  bossIntro: string;
+  lessons: Lesson[];
+  choice: ChoiceItem[];
+  graded: ChallengeSpec[];
+  boss: ChallengeSpec[];
+}
+
+// A chapter as the app reads it: its content, plus the outputs recorded for its examples and
+// practice items.
+export interface Chapter extends ChapterInfo {
+  outputs: ChapterOutputs;
+}

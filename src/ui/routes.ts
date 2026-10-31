@@ -1,5 +1,6 @@
-// Hash routes. The tickets view stays at the root, and the chapter pages use #/chapter, #/lesson,
-// #/choice, #/ticket, and #/boss. Ids can contain slashes (lesson ids do), so the id is the rest.
+// Hash routes. The tickets view stays at the root. Chapter pages use #/chapter/<id>, and the
+// lesson, practice, ticket, and boss pages use their own ids. Ids can contain slashes (lesson ids
+// do), so the id is the rest of the path.
 import { useEffect, useState } from 'react';
 
 export type Route =
@@ -8,9 +9,15 @@ export type Route =
   | { kind: 'lesson'; id: string }
   | { kind: 'choice'; id: string }
   | { kind: 'ticket'; id: string }
-  | { kind: 'boss' };
+  | { kind: 'boss'; id: string };
 
-export const CHAPTER1_HREF = '#/chapter/c01-foundations';
+export function chapterHref(id: string): string {
+  return `#/chapter/${id}`;
+}
+
+export function bossHref(id: string): string {
+  return `#/boss/${id}`;
+}
 
 export function parseRoute(hash: string): Route {
   const [kind = '', ...rest] = hash.replace(/^#\/?/, '').split('/');
@@ -19,7 +26,7 @@ export function parseRoute(hash: string): Route {
   if (kind === 'lesson' && id !== '') return { kind: 'lesson', id };
   if (kind === 'choice' && id !== '') return { kind: 'choice', id };
   if (kind === 'ticket' && id !== '') return { kind: 'ticket', id };
-  if (kind === 'boss') return { kind: 'boss' };
+  if (kind === 'boss' && id !== '') return { kind: 'boss', id };
   return { kind: 'tickets' };
 }
 

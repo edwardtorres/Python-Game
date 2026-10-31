@@ -1,10 +1,10 @@
-import type { ChallengeSpec } from '../challenges/types';
 import type { EngineStatus, PythonEngine } from '../engine/client';
+import type { Chapter } from '../content/types';
 import { type ChallengeProgress, emptyProgress } from '../save/schema';
 import { ChallengeView } from './ChallengeView';
 
 interface BossViewProps {
-  parts: readonly ChallengeSpec[];
+  chapter: Chapter;
   challenges: Record<string, ChallengeProgress | undefined>;
   engine: PythonEngine;
   engineStatus: EngineStatus;
@@ -14,16 +14,15 @@ interface BossViewProps {
 
 // The boss runs its four parts in order. Each part is graded on its own. The next part
 // opens once the one before it has passed.
-export function BossView({ parts, challenges, engine, engineStatus, onProgress, onGlobalNotice }: BossViewProps) {
+export function BossView({ chapter, challenges, engine, engineStatus, onProgress, onGlobalNotice }: BossViewProps) {
+  const parts = chapter.boss;
   const current = parts.findIndex((part) => challenges[part.id]?.status !== 'passed');
   return (
     <article className="space-y-6">
       <header className="space-y-2">
-        <p className="text-xs font-semibold uppercase tracking-wide text-indigo-700">Chapter 1 boss</p>
-        <h1 className="text-2xl font-semibold text-slate-900">The weekly word report</h1>
-        <p className="text-sm leading-6 text-slate-800">
-          Four parts, in order: clean the lines, count the words, rank the top words, and format the report. Each part is checked on its own.
-        </p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-indigo-700">Chapter {chapter.number} boss</p>
+        <h1 className="text-2xl font-semibold text-slate-900">{chapter.bossTitle}</h1>
+        <p className="text-sm leading-6 text-slate-800">{chapter.bossIntro}</p>
       </header>
       {parts.map((part, index) => {
         const status = challenges[part.id]?.status === 'passed' ? 'Passed' : index === current ? 'Current part' : 'Locked until the part before it passes';

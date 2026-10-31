@@ -1,15 +1,15 @@
-import type { ChallengeSpec } from '../challenges/types';
-import { CHAPTER1_BOSS, CHAPTER1_CHOICE, CHAPTER1_GRADED, CHAPTER1_LESSONS } from '../content/chapter1/index';
-import type { ChallengeProgress, ChoiceProgress } from '../save/schema';
+import type { Chapter } from '../content/types';
+import type { ChallengeProgress, ChapterProgress } from '../save/schema';
+import { bossHref } from './routes';
 
 interface ChapterPageProps {
-  lessonsRead: string[];
-  choice: Record<string, ChoiceProgress | undefined>;
+  chapter: Chapter;
+  progress: ChapterProgress;
   challenges: Record<string, ChallengeProgress | undefined>;
 }
 
-function bossPassed(challenges: Record<string, ChallengeProgress | undefined>): boolean {
-  return CHAPTER1_BOSS.every((part) => challenges[part.id]?.status === 'passed');
+function bossPassed(chapter: Chapter, challenges: Record<string, ChallengeProgress | undefined>): boolean {
+  return chapter.boss.every((part) => challenges[part.id]?.status === 'passed');
 }
 
 function statusLabel(status: 'passed' | 'attempted' | 'not-started' | undefined): string {
@@ -29,21 +29,20 @@ function ItemLink({ href, title, status }: { href: string; title: string; status
   );
 }
 
-export function ChapterPage({ lessonsRead, choice, challenges }: ChapterPageProps) {
-  const itemsDone = CHAPTER1_CHOICE.filter((item) => choice[item.id]?.status === 'passed').length + CHAPTER1_GRADED.filter((spec: ChallengeSpec) => challenges[spec.id]?.status === 'passed').length + (bossPassed(challenges) ? 1 : 0);
-  const itemsTotal = CHAPTER1_CHOICE.length + CHAPTER1_GRADED.length + 1;
-  const bossCount = CHAPTER1_BOSS.filter((part) => challenges[part.id]?.status === 'passed').length;
+export function ChapterPage({ chapter, progress, challenges }: ChapterPageProps) {
+  const bossDone = bossPassed(chapter, challenges);
+  const itemsDone = chapter.choice.filter((item) => progress.choice[item.id]?.status === 'passed').length + chapter.graded.filter((spec) => challenges[spec.id]?.status === 'passed').length + (bossDone ? 1 : 0);
+  const itemsTotal = chapter.choice.length + chapter.graded.length + 1;
+  const bossCount = chapter.boss.filter((part) => challenges[part.id]?.status === 'passed').length;
 
   return (
     <article className="space-y-8">
       <header className="space-y-2">
-        <p className="text-xs font-semibold uppercase tracking-wide text-indigo-700">Chapter 1</p>
-        <h1 className="text-2xl font-semibold text-slate-900">Foundations refresh</h1>
-        <p className="text-sm leading-6 text-slate-800">
-          Thirteen short lessons, then practice items and a boss. Each lesson has examples you can edit and run. Your progress is saved in this browser.
-        </p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-indigo-700">Chapter {chapter.number}</p>
+        <h1 className="text-2xl font-semibold text-slate-900">{chapter.title}</h1>
+        <p className="text-sm leading-6 text-slate-800">{chapter.intro}</p>
         <p role="status" className="text-sm text-slate-700">
-          Lessons read: {lessonsRead.length} of {CHAPTER1_LESSONS.length}. Items passed: {itemsDone} of {itemsTotal}. Boss parts passed: {bossCount} of {CHAPTER1_BOSS.length}.
+          Lessons read: {progress.lessonsRead.length} of {chapter.lessons.length}. Items passed: {itemsDone} of {itemsTotal}. Boss parts passed: {bossCount} of {chapter.boss.length}.
         </p>
       </header>
 
@@ -52,12 +51,12 @@ export function ChapterPage({ lessonsRead, choice, challenges }: ChapterPageProp
           Lessons
         </h2>
         <ul className="space-y-2">
-          {CHAPTER1_LESSONS.map((lesson) => (
+          {chapter.lessons.map((lesson) => (
             <ItemLink
               key={lesson.id}
               href={`#/lesson/${lesson.id}`}
               title={`${lesson.number}. ${lesson.title}`}
-              status={lessonsRead.includes(lesson.id) ? 'Read' : 'New'}
+              status={progress.lessonsRead.includes(lesson.id) ? 'Read' : 'New'}
             />
           ))}
         </ul>
@@ -68,8 +67,8 @@ export function ChapterPage({ lessonsRead, choice, challenges }: ChapterPageProp
           Practice: predict and read tracebacks
         </h2>
         <ul className="space-y-2">
-          {CHAPTER1_CHOICE.map((item) => (
-            <ItemLink key={item.id} href={`#/choice/${item.id}`} title={item.title} status={statusLabel(choice[item.id]?.status)} />
+          {chapter.choice.map((item) => (
+            <ItemLink key={item.id} href={`#/choice/${item.id}`} title={item.title} status={statusLabel(progress.choice[item.id]?.status)} />
           ))}
         </ul>
       </section>
@@ -79,7 +78,7 @@ export function ChapterPage({ lessonsRead, choice, challenges }: ChapterPageProp
           Tickets: write, fix, and structure
         </h2>
         <ul className="space-y-2">
-          {CHAPTER1_GRADED.map((spec) => (
+          {chapter.graded.map((spec) => (
             <ItemLink key={spec.id} href={`#/ticket/${spec.id}`} title={spec.title} status={statusLabel(challenges[spec.id]?.status)} />
           ))}
         </ul>
@@ -90,7 +89,7 @@ export function ChapterPage({ lessonsRead, choice, challenges }: ChapterPageProp
           Boss
         </h2>
         <ul className="space-y-2">
-          <ItemLink href="#/boss" title="The weekly word report (four parts)" status={bossPassed(challenges) ? 'Passed' : `${bossCount} of 4`} />
+          <ItemLink href={bossHref(chapter.id)} title={`${chapter.bossTitle} (${chapter.boss.length} parts)`} status={bossDone ? 'Passed' : `${bossCount} of ${chapter.boss.length}`} />
         </ul>
       </section>
 
