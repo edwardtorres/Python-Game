@@ -59,6 +59,8 @@ Evidence: `spike/engine/RESULTS.md`, with the Chromium and WebKit numbers.
 
 **Cache rule (from the WebKit failure in CI).** A `304 Not Modified` reply to a revalidation does not carry these headers, and WebKit then refuses the worker script on its second load. The dev and preview servers send `Cache-Control: no-store` on every response, so nothing is revalidated. The deployed host must do the same for the worker script and the Pyodide files, or send the three headers on `304` responses too. `e2e/workers.spec.ts` checks that a second and third worker start in the production build.
 
+**Deploy step: isolation headers on every response.** COOP `same-origin`, COEP `require-corp`, and CORP `same-origin` must be present on every response, including `304 Not Modified`. The deploy step verifies this on the live host, not only in the dev and preview servers: it requests the worker script and each Pyodide file, sends a conditional request that gets a `304`, and fails the deploy if any of the three headers is missing from either reply.
+
 **Content-Security-Policy.** The production policy includes `script-src 'self' 'wasm-unsafe-eval'` and `worker-src 'self'`. Without `'wasm-unsafe-eval'`, Python cannot start, and a worker waiting for it would hang silently. The page therefore checks WebAssembly itself before starting a worker, and shows a clear error if it is blocked.
 
 **Start-up and package timeouts.** The engine has 30 seconds to start and 60 seconds to load packages. Past either limit, the worker is terminated and the learner sees a specific message.
@@ -86,13 +88,15 @@ No Python 3.10 is installed in the development container, so check 2 runs in CI 
 - A missing page (404 or 410) fails the job, because the source has moved or the citation is wrong.
 - A network error is retried three times (2, 4, and 8 seconds). If it still fails, it is a warning, and the job passes.
 - Quotes drafted in a session with no network access are verified only in CI. The audit records which quotes CI has checked.
+- When the docs hosts are blocked from the session, quotes are read from the `docs-snapshots` branch, not from memory. The `docs-snapshot` workflow fetches each page in `docs/snapshot-urls.txt`, converts it with the quote checker's `visibleText`, and commits the text with the URL and fetch time. The `docs-quotes` job still checks every quote against the live pages in CI.
+- Lesson claims that need a doc source are flagged `docClaim` in the chapter content. Each flagged section and each JavaScript note must cite quote ids. `docs/lesson-claims.json` lists them, `src/content/claims.test.ts` keeps it current (regenerate with `UPDATE_CLAIMS=1`), and the `docs-quotes` job fails when a claim has no quote, a cited id is missing, or the quote file is empty while lessons exist.
 
-**Chapter 1 (Step 2a).** Content lives in `src/content/chapter1/` as typed data: 13 lessons, 15 choice items (10 predict, 5 traceback), 13 graded items (4 guided, 4 tickets, 3 fix, 2 structure), and a boss with four graded parts. Every mistake tag is defined once in `mistakes.ts`.
+**Chapter 1 (Step 2a).** Content lives in `src/content/chapter1/` as typed data: 13 lessons, 15 choice items (10 predict, 5 traceback), 14 graded items (4 guided, 5 tickets, 3 fix, 2 structure), and a boss with four graded parts. Every mistake tag is defined once in `mistakes.ts`.
 
 - Every example and every choice option is run in the engine. The results are recorded in `src/content/generated/chapter1.outputs.json`, and the content check fails if a fresh run differs. The app reads that file and never runs a choice option's code from a table.
 - A wrong option is the output or error of a variant that a learner's mistake would produce, so its text is computed, not written by hand. Predict options are printed text. Traceback options are the error type and message.
 - Structure items are graded by `ast` checks. A wrong variant matches a learner when it passes and fails the same checks, so the feedback names its mistake.
-- Chapter 1 has no JavaScript notes yet. Each one needs a verbatim quote from MDN or the Python docs, and the search excerpts available in Step 2a were paraphrases. Add a note only with a quote the docs-quotes job can verify.
+- Chapter 1 has seven "If you know JavaScript" notes. Each cites verbatim quotes from MDN and the Python docs, read from the docs-snapshots branch. A note is added only with a quote the docs-quotes job can verify.
 - Blind-solve records are in `docs/blind-solves/`. Each solver saw only a brief, never the reference, the hidden cases, or the answer key.
 
 ## Grading rules
