@@ -237,7 +237,7 @@
     "id": "py-heap-root",
     "source": "Python documentation: heapq",
     "url": "https://docs.python.org/3/library/heapq.html",
-    "quote": "The interesting property of a min-heap is that its smallest element is always the root, heap[0]."
+    "quote": "The interesting property of a heap is that a[0] is always its smallest element"
   },
   {
     "id": "py-sort-stable",
