@@ -30,17 +30,6 @@ test.describe('production build', () => {
     expect(refusals).toEqual([]);
   });
 
-  test('repeats the grading flow five times, to check it does not depend on timing', async ({ page }) => {
-    // TEMPORARY, for the WebKit timing diagnosis. Remove once the cause is fixed.
-    for (let run = 1; run <= 5; run += 1) {
-      await openTicket(page, clean.title);
-      await typeCode(page, clean.id, clean.reference);
-      await page.getByRole('button', { name: 'Submit' }).click();
-      await expectFeedback(page, 'Submitted. Every check passed.');
-      console.log(`REPEAT run ${run} passed`);
-    }
-  });
-
   test('a policy without wasm-unsafe-eval fails at once with a clear message', async ({ page }) => {
     await page.route('**/', async (route) => {
       const response = await route.fetch();

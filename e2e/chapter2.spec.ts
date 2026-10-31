@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { CHAPTER2_BOSS, CHAPTER2_GRADED } from '../src/content/chapter2/index';
-import { logPageErrors } from './helpers';
+import { logPageErrors, setCode } from './helpers';
 import { answerChoiceItem, bossOneByOne, expectAccessible, expectNoSidewaysScroll, findItem, recordedOutput, ticketWrongThenRight, VIEWPORTS } from './chapter-flows';
 
 // Chapter 2 at a 390 px phone and a 1280 px desktop. Every interaction is a tap.
@@ -46,6 +46,33 @@ for (const viewport of VIEWPORTS) {
       const wrong = ticket.variants.find((variant) => variant.id === 'pop-zero');
       if (wrong === undefined) throw new Error('no wrong variant pop-zero');
       await ticketWrongThenRight(page, CHAPTER, /Structure: serve the queue from the front/, ticket, wrong.code, wrong.mistake.title, ticket.reference);
+    });
+
+    test('completes a class ticket after one wrong attempt that shows its mistake', async ({ page }) => {
+      const ticket = findItem(CHAPTER2_GRADED, 'c02-class-version-dunders');
+      const wrong = ticket.variants.find((variant) => variant.id === 'no-lt');
+      if (wrong === undefined) throw new Error('no wrong variant no-lt');
+      await ticketWrongThenRight(page, CHAPTER, /Class: versions with __repr__ and __lt__/, ticket, wrong.code, wrong.mistake.title, ticket.reference);
+    });
+
+    test('an efficiency ticket: the slow version runs past its budget and names its mistake, then the fast one passes', async ({ page }) => {
+      const ticket = findItem(CHAPTER2_GRADED, 'c02-eff-job-queue');
+      const slow = ticket.variants.find((variant) => variant.id === 'list-front-pop');
+      if (slow === undefined) throw new Error('no slow variant list-front-pop');
+      logPageErrors(page);
+      await page.goto(CHAPTER);
+      await page.getByRole('link', { name: /Efficiency: work through a job queue/ }).tap();
+      await expect(page.getByRole('heading', { level: 1, name: ticket.title })).toBeVisible();
+      await setCode(page, ticket.id, slow.code);
+      await page.getByRole('button', { name: 'Submit' }).tap();
+      // The slow version's timed cases run past the budget, and the feedback says so before the mistake.
+      await expect(page.getByText(/ran past the 1 second budget/)).toBeVisible({ timeout: 180_000 });
+      await expect(page.getByText(`Likely mistake: ${slow.mistake.title}`)).toBeVisible({ timeout: 180_000 });
+      await expectAccessible(page);
+      await expectNoSidewaysScroll(page);
+      await setCode(page, ticket.id, ticket.reference);
+      await page.getByRole('button', { name: 'Submit' }).tap();
+      await expect(page.getByText(/Submitted\. Every check passed\./)).toBeVisible({ timeout: 180_000 });
     });
 
     test('completes the boss, one part at a time', async ({ page }) => {
