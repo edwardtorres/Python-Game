@@ -61,6 +61,8 @@ The first CI run for the Chapter 2 record (`c314a1f`) failed in two jobs. Both a
 
 CI for the code commit `00a0e1d` (run `41161186691`): **pending when this audit was written.** The status is recorded at the end of this section once the run finishes.
 
+The diagnostic commit `4d3f7b4` (run `41162712628`) changes only `e2e/csp.spec.ts`. The test now waits for "Python ready" before it types, and on a failure it logs the page text, the engine stats, and the console and worker messages. The WebKit log of that run is the source for the cause of the timeout. Until it finishes, the cause is unknown.
+
 ## Engine and grader results (Steps 1 to 3)
 
 - Structure checks: `annotated_in`, `calls_method`, `forbids_method`, `calls_symbol`, and `recurses_in` each have a pass test and a fail test in `src/engine/python.test.ts`, and `defines` and `within` have a class and method test. 36 engine tests pass in all.
@@ -169,4 +171,4 @@ Local results on the current tree:
 
 Push status: the code commit `00a0e1d` is pushed to `origin/claude/busy-wright-rooppm`. `main` is at `7c22dcf`, and it moves only after CI passes in both browsers for the commit that carries this audit.
 
-**CI status:** pending. Recorded here once the run finishes.
+**CI status:** pending for `4d3f7b4` (run `41162712628`), which was in progress when this file was produced. Recorded here once the run finishes.
