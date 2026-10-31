@@ -28633,5 +28633,2879 @@
         "pairs-returned"
       ]
     }
+  },
+  {
+    "name": "c03-testing-in-batches:model",
+    "payload": {
+      "kind": "testing",
+      "entry": "in_batches",
+      "learner": "def test_batch_sizes():\n    assert list(in_batches([1, 2, 3, 4, 5], 2)) == [[1, 2], [3, 4], [5]]\n\n\ndef test_order_inside_batches():\n    assert list(in_batches([\"a\", \"b\", \"c\", \"d\"], 2)) == [[\"a\", \"b\"], [\"c\", \"d\"]]\n\n\ndef test_empty_input():\n    assert list(in_batches([], 3)) == []\n\n\ndef test_empty_input_any_size():\n    assert list(in_batches([], 1)) == []\n\n\ndef test_size_below_one():\n    try:\n        list(in_batches([1, 2], 0))\n    except ValueError:\n        return\n    assert False, \"a size below 1 must raise ValueError\"\n\n\ndef test_size_below_one_with_no_items():\n    try:\n        list(in_batches([], 0))\n    except ValueError:\n        return\n    assert False, \"a size below 1 must raise ValueError, even with no items\"\n",
+      "reference": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+      "scope": "all",
+      "mutants": [
+        {
+          "id": "reversed-inside",
+          "label": "Reverses the items inside each batch",
+          "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.insert(0, item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "mistake": {
+            "tag": "INSERT_AT_FRONT",
+            "title": "Adding at the front puts the item first",
+            "explanation": "append() adds at the end, and insert(0, x) puts x first. Check where the rule wants the new item."
+          },
+          "visibility": "visible"
+        },
+        {
+          "id": "size-plus-one",
+          "label": "Makes each batch one item too big",
+          "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size + 1:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "mistake": {
+            "tag": "OFF_BY_ONE_RANGE",
+            "title": "range() stops before its end",
+            "explanation": "range(a, b) stops before b, and range(n) starts at 0. Off-by-one loops skip the first or last item."
+          },
+          "visibility": "visible"
+        },
+        {
+          "id": "one-empty-batch",
+          "label": "Yields one empty batch for an empty input",
+          "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    if len(items) == 0:\n        yield [None]\n        return\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "mistake": {
+            "tag": "EMPTY_IS_NONE",
+            "title": "An empty total is 0, not None",
+            "explanation": "Returning None for an empty input changes the answer type. Let the loop run zero times and return the starting value."
+          },
+          "visibility": "hidden"
+        },
+        {
+          "id": "no-size-check",
+          "label": "Accepts a size below 1 without an error",
+          "code": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "mistake": {
+            "tag": "UNCHECKED_ARGUMENT",
+            "title": "A size or count must be checked before use",
+            "explanation": "Without a check, a size of zero or less quietly gives a wrong answer. Raise ValueError for a value the function cannot use, as itertools.batched does."
+          },
+          "visibility": "hidden"
+        }
+      ],
+      "requires": []
+    },
+    "datasets": {},
+    "expected": {
+      "status": "pass",
+      "passed": 5,
+      "total": 5,
+      "cases": [
+        [
+          "correct",
+          true
+        ],
+        [
+          "reversed-inside",
+          true
+        ],
+        [
+          "size-plus-one",
+          true
+        ],
+        [
+          "hidden-2",
+          true
+        ],
+        [
+          "hidden-3",
+          true
+        ]
+      ],
+      "matched": []
+    }
+  },
+  {
+    "name": "c03-testing-in-batches:weak",
+    "payload": {
+      "kind": "testing",
+      "entry": "in_batches",
+      "learner": "def test_batch_count():\n    assert len(list(in_batches([1, 2, 3, 4, 5], 2))) == 3\n",
+      "reference": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+      "scope": "all",
+      "mutants": [
+        {
+          "id": "reversed-inside",
+          "label": "Reverses the items inside each batch",
+          "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.insert(0, item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "mistake": {
+            "tag": "INSERT_AT_FRONT",
+            "title": "Adding at the front puts the item first",
+            "explanation": "append() adds at the end, and insert(0, x) puts x first. Check where the rule wants the new item."
+          },
+          "visibility": "visible"
+        },
+        {
+          "id": "size-plus-one",
+          "label": "Makes each batch one item too big",
+          "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size + 1:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "mistake": {
+            "tag": "OFF_BY_ONE_RANGE",
+            "title": "range() stops before its end",
+            "explanation": "range(a, b) stops before b, and range(n) starts at 0. Off-by-one loops skip the first or last item."
+          },
+          "visibility": "visible"
+        },
+        {
+          "id": "one-empty-batch",
+          "label": "Yields one empty batch for an empty input",
+          "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    if len(items) == 0:\n        yield [None]\n        return\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "mistake": {
+            "tag": "EMPTY_IS_NONE",
+            "title": "An empty total is 0, not None",
+            "explanation": "Returning None for an empty input changes the answer type. Let the loop run zero times and return the starting value."
+          },
+          "visibility": "hidden"
+        },
+        {
+          "id": "no-size-check",
+          "label": "Accepts a size below 1 without an error",
+          "code": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "mistake": {
+            "tag": "UNCHECKED_ARGUMENT",
+            "title": "A size or count must be checked before use",
+            "explanation": "Without a check, a size of zero or less quietly gives a wrong answer. Raise ValueError for a value the function cannot use, as itertools.batched does."
+          },
+          "visibility": "hidden"
+        }
+      ],
+      "requires": []
+    },
+    "datasets": {},
+    "expected": {
+      "status": "fail",
+      "passed": 2,
+      "total": 5,
+      "cases": [
+        [
+          "correct",
+          true
+        ],
+        [
+          "reversed-inside",
+          false
+        ],
+        [
+          "size-plus-one",
+          true
+        ],
+        [
+          "hidden-2",
+          false
+        ],
+        [
+          "hidden-3",
+          false
+        ]
+      ],
+      "matched": [
+        "reversed-inside",
+        "one-empty-batch",
+        "no-size-check"
+      ]
+    }
+  },
+  {
+    "name": "c03-testing-in-batches:starter",
+    "payload": {
+      "kind": "testing",
+      "entry": "in_batches",
+      "learner": "def test_example():\n    pass\n",
+      "reference": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+      "scope": "all",
+      "mutants": [
+        {
+          "id": "reversed-inside",
+          "label": "Reverses the items inside each batch",
+          "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.insert(0, item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "mistake": {
+            "tag": "INSERT_AT_FRONT",
+            "title": "Adding at the front puts the item first",
+            "explanation": "append() adds at the end, and insert(0, x) puts x first. Check where the rule wants the new item."
+          },
+          "visibility": "visible"
+        },
+        {
+          "id": "size-plus-one",
+          "label": "Makes each batch one item too big",
+          "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size + 1:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "mistake": {
+            "tag": "OFF_BY_ONE_RANGE",
+            "title": "range() stops before its end",
+            "explanation": "range(a, b) stops before b, and range(n) starts at 0. Off-by-one loops skip the first or last item."
+          },
+          "visibility": "visible"
+        },
+        {
+          "id": "one-empty-batch",
+          "label": "Yields one empty batch for an empty input",
+          "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    if len(items) == 0:\n        yield [None]\n        return\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "mistake": {
+            "tag": "EMPTY_IS_NONE",
+            "title": "An empty total is 0, not None",
+            "explanation": "Returning None for an empty input changes the answer type. Let the loop run zero times and return the starting value."
+          },
+          "visibility": "hidden"
+        },
+        {
+          "id": "no-size-check",
+          "label": "Accepts a size below 1 without an error",
+          "code": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "mistake": {
+            "tag": "UNCHECKED_ARGUMENT",
+            "title": "A size or count must be checked before use",
+            "explanation": "Without a check, a size of zero or less quietly gives a wrong answer. Raise ValueError for a value the function cannot use, as itertools.batched does."
+          },
+          "visibility": "hidden"
+        }
+      ],
+      "requires": []
+    },
+    "datasets": {},
+    "expected": {
+      "status": "fail",
+      "passed": 1,
+      "total": 5,
+      "cases": [
+        [
+          "correct",
+          true
+        ],
+        [
+          "reversed-inside",
+          false
+        ],
+        [
+          "size-plus-one",
+          false
+        ],
+        [
+          "hidden-2",
+          false
+        ],
+        [
+          "hidden-3",
+          false
+        ]
+      ],
+      "matched": [
+        "reversed-inside",
+        "size-plus-one",
+        "one-empty-batch",
+        "no-size-check"
+      ]
+    }
+  },
+  {
+    "name": "c03-testing-parse-weight:model",
+    "payload": {
+      "kind": "testing",
+      "entry": "parse_weight",
+      "learner": "def test_decimal_text():\n    assert parse_weight(\" 4.5 \") == 4.5\n\n\ndef test_decimal_text_again():\n    assert parse_weight(\"2.75\") == 2.75\n\n\ndef test_letters_give_none():\n    assert parse_weight(\"abc\") is None\n\n\ndef test_empty_text_gives_none():\n    assert parse_weight(\"\") is None\n\n\ndef test_number_value_raises():\n    try:\n        parse_weight(12)\n    except TypeError:\n        return\n    assert False, \"a value that is not text must raise TypeError\"\n\n\ndef test_none_value_raises():\n    try:\n        parse_weight(None)\n    except TypeError:\n        return\n    assert False, \"None is not text, so it must raise TypeError\"\n\n\ndef test_nan_gives_none():\n    assert parse_weight(\"nan\") is None\n\n\ndef test_inf_gives_none():\n    assert parse_weight(\"inf\") is None\n",
+      "reference": "import math\n\n\ndef parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        value = float(text.strip())\n    except ValueError:\n        return None\n    if not math.isfinite(value):\n        return None\n    return value\n",
+      "scope": "all",
+      "mutants": [
+        {
+          "id": "whole-numbers-only",
+          "label": "Rejects decimal weights",
+          "code": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        return float(int(text.strip()))\n    except ValueError:\n        return None\n",
+          "mistake": {
+            "tag": "INT_FROM_TEXT",
+            "title": "int() cannot read a decimal point",
+            "explanation": "int(\"12.5\") raises ValueError. Use float() for decimal text, then convert with int() if you need a whole number."
+          },
+          "visibility": "visible"
+        },
+        {
+          "id": "no-fallback",
+          "label": "Raises instead of returning None for text",
+          "code": "import math\n\ndef parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    value = float(text.strip())\n    return value if math.isfinite(value) else None\n",
+          "mistake": {
+            "tag": "NO_FALLBACK",
+            "title": "Expected failures need a fallback",
+            "explanation": "When the rule says to return None for bad text, catch the ValueError that float() raises for it. Let other errors through."
+          },
+          "visibility": "visible"
+        },
+        {
+          "id": "catches-everything",
+          "label": "Returns None for a value that is not text",
+          "code": "import math\n\ndef parse_weight(text):\n    try:\n        value = float(text)\n    except Exception:\n        return None\n    return value if math.isfinite(value) else None\n",
+          "mistake": {
+            "tag": "EXCEPTION_TOO_BROAD",
+            "title": "A broad except hides other bugs",
+            "explanation": "except Exception catches every ordinary error, including ones you did not expect. Catch the error you mean, such as ValueError."
+          },
+          "visibility": "hidden"
+        },
+        {
+          "id": "returns-non-finite",
+          "label": "Returns nan and inf as numbers",
+          "code": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        return float(text.strip())\n    except ValueError:\n        return None\n",
+          "mistake": {
+            "tag": "NON_FINITE_FLOAT",
+            "title": "float() reads nan and inf",
+            "explanation": "float(\"nan\") and float(\"inf\") are valid floats. They are not weights, so the ticket says to return None for them."
+          },
+          "visibility": "hidden"
+        }
+      ],
+      "requires": []
+    },
+    "datasets": {},
+    "expected": {
+      "status": "pass",
+      "passed": 5,
+      "total": 5,
+      "cases": [
+        [
+          "correct",
+          true
+        ],
+        [
+          "whole-numbers-only",
+          true
+        ],
+        [
+          "no-fallback",
+          true
+        ],
+        [
+          "hidden-2",
+          true
+        ],
+        [
+          "hidden-3",
+          true
+        ]
+      ],
+      "matched": []
+    }
+  },
+  {
+    "name": "c03-testing-parse-weight:weak",
+    "payload": {
+      "kind": "testing",
+      "entry": "parse_weight",
+      "learner": "def test_decimal_text():\n    assert parse_weight(\" 4.5 \") == 4.5\n",
+      "reference": "import math\n\n\ndef parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        value = float(text.strip())\n    except ValueError:\n        return None\n    if not math.isfinite(value):\n        return None\n    return value\n",
+      "scope": "all",
+      "mutants": [
+        {
+          "id": "whole-numbers-only",
+          "label": "Rejects decimal weights",
+          "code": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        return float(int(text.strip()))\n    except ValueError:\n        return None\n",
+          "mistake": {
+            "tag": "INT_FROM_TEXT",
+            "title": "int() cannot read a decimal point",
+            "explanation": "int(\"12.5\") raises ValueError. Use float() for decimal text, then convert with int() if you need a whole number."
+          },
+          "visibility": "visible"
+        },
+        {
+          "id": "no-fallback",
+          "label": "Raises instead of returning None for text",
+          "code": "import math\n\ndef parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    value = float(text.strip())\n    return value if math.isfinite(value) else None\n",
+          "mistake": {
+            "tag": "NO_FALLBACK",
+            "title": "Expected failures need a fallback",
+            "explanation": "When the rule says to return None for bad text, catch the ValueError that float() raises for it. Let other errors through."
+          },
+          "visibility": "visible"
+        },
+        {
+          "id": "catches-everything",
+          "label": "Returns None for a value that is not text",
+          "code": "import math\n\ndef parse_weight(text):\n    try:\n        value = float(text)\n    except Exception:\n        return None\n    return value if math.isfinite(value) else None\n",
+          "mistake": {
+            "tag": "EXCEPTION_TOO_BROAD",
+            "title": "A broad except hides other bugs",
+            "explanation": "except Exception catches every ordinary error, including ones you did not expect. Catch the error you mean, such as ValueError."
+          },
+          "visibility": "hidden"
+        },
+        {
+          "id": "returns-non-finite",
+          "label": "Returns nan and inf as numbers",
+          "code": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        return float(text.strip())\n    except ValueError:\n        return None\n",
+          "mistake": {
+            "tag": "NON_FINITE_FLOAT",
+            "title": "float() reads nan and inf",
+            "explanation": "float(\"nan\") and float(\"inf\") are valid floats. They are not weights, so the ticket says to return None for them."
+          },
+          "visibility": "hidden"
+        }
+      ],
+      "requires": []
+    },
+    "datasets": {},
+    "expected": {
+      "status": "fail",
+      "passed": 2,
+      "total": 5,
+      "cases": [
+        [
+          "correct",
+          true
+        ],
+        [
+          "whole-numbers-only",
+          true
+        ],
+        [
+          "no-fallback",
+          false
+        ],
+        [
+          "hidden-2",
+          false
+        ],
+        [
+          "hidden-3",
+          false
+        ]
+      ],
+      "matched": [
+        "no-fallback",
+        "catches-everything",
+        "returns-non-finite"
+      ]
+    }
+  },
+  {
+    "name": "c03-testing-parse-weight:starter",
+    "payload": {
+      "kind": "testing",
+      "entry": "parse_weight",
+      "learner": "def test_example():\n    pass\n",
+      "reference": "import math\n\n\ndef parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        value = float(text.strip())\n    except ValueError:\n        return None\n    if not math.isfinite(value):\n        return None\n    return value\n",
+      "scope": "all",
+      "mutants": [
+        {
+          "id": "whole-numbers-only",
+          "label": "Rejects decimal weights",
+          "code": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        return float(int(text.strip()))\n    except ValueError:\n        return None\n",
+          "mistake": {
+            "tag": "INT_FROM_TEXT",
+            "title": "int() cannot read a decimal point",
+            "explanation": "int(\"12.5\") raises ValueError. Use float() for decimal text, then convert with int() if you need a whole number."
+          },
+          "visibility": "visible"
+        },
+        {
+          "id": "no-fallback",
+          "label": "Raises instead of returning None for text",
+          "code": "import math\n\ndef parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    value = float(text.strip())\n    return value if math.isfinite(value) else None\n",
+          "mistake": {
+            "tag": "NO_FALLBACK",
+            "title": "Expected failures need a fallback",
+            "explanation": "When the rule says to return None for bad text, catch the ValueError that float() raises for it. Let other errors through."
+          },
+          "visibility": "visible"
+        },
+        {
+          "id": "catches-everything",
+          "label": "Returns None for a value that is not text",
+          "code": "import math\n\ndef parse_weight(text):\n    try:\n        value = float(text)\n    except Exception:\n        return None\n    return value if math.isfinite(value) else None\n",
+          "mistake": {
+            "tag": "EXCEPTION_TOO_BROAD",
+            "title": "A broad except hides other bugs",
+            "explanation": "except Exception catches every ordinary error, including ones you did not expect. Catch the error you mean, such as ValueError."
+          },
+          "visibility": "hidden"
+        },
+        {
+          "id": "returns-non-finite",
+          "label": "Returns nan and inf as numbers",
+          "code": "def parse_weight(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    try:\n        return float(text.strip())\n    except ValueError:\n        return None\n",
+          "mistake": {
+            "tag": "NON_FINITE_FLOAT",
+            "title": "float() reads nan and inf",
+            "explanation": "float(\"nan\") and float(\"inf\") are valid floats. They are not weights, so the ticket says to return None for them."
+          },
+          "visibility": "hidden"
+        }
+      ],
+      "requires": []
+    },
+    "datasets": {},
+    "expected": {
+      "status": "fail",
+      "passed": 1,
+      "total": 5,
+      "cases": [
+        [
+          "correct",
+          true
+        ],
+        [
+          "whole-numbers-only",
+          false
+        ],
+        [
+          "no-fallback",
+          false
+        ],
+        [
+          "hidden-2",
+          false
+        ],
+        [
+          "hidden-3",
+          false
+        ]
+      ],
+      "matched": [
+        "whole-numbers-only",
+        "no-fallback",
+        "catches-everything",
+        "returns-non-finite"
+      ]
+    }
+  },
+  {
+    "name": "c03-suite-fix-dock-count:reference",
+    "payload": {
+      "kind": "suite",
+      "learner": "def count_docks(log):\n    return len(set(log))\n",
+      "tests": "def test_repeats_count_once():\n    assert count_docks([\"Dock 1\", \"Dock 2\", \"Dock 1\"]) == 2\n\n\ndef test_empty_log():\n    assert count_docks([]) == 0\n\n\ndef test_empty_tuple():\n    assert count_docks(()) == 0\n\n\ndef test_names_are_exact():\n    assert count_docks([\"Dock 1\", \"dock 1\"]) == 2\n\n\ndef test_mixed_log():\n    assert count_docks([\"a\", \"b\", \"a\", \"c\", \"b\", \"a\", \"B\"]) == 4\n",
+      "scope": "all",
+      "cases": [
+        {
+          "id": "test_repeats_count_once",
+          "label": "Repeated names count once",
+          "visibility": "visible",
+          "args": [],
+          "rules": [
+            0
+          ]
+        },
+        {
+          "id": "test_empty_log",
+          "label": "An empty log has no docks",
+          "visibility": "visible",
+          "args": [],
+          "rules": [
+            1
+          ]
+        },
+        {
+          "id": "test_empty_tuple",
+          "label": "An empty tuple has no docks",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            1
+          ]
+        },
+        {
+          "id": "test_names_are_exact",
+          "label": "Names that differ in case are different docks",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            2
+          ]
+        },
+        {
+          "id": "test_mixed_log",
+          "label": "A mixed log",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            0,
+            2
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "counts-lines",
+          "code": "def count_docks(log):\n    return len(log)\n",
+          "mistake": {
+            "tag": "DUPLICATES_KEPT",
+            "title": "Repeats are kept in the output",
+            "explanation": "The rule says each item appears once. Keep a set of the items already seen and skip the repeats."
+          }
+        },
+        {
+          "id": "lowercase-names",
+          "code": "def count_docks(log):\n    return len(set(name.lower() for name in log))\n",
+          "mistake": {
+            "tag": "CASE_SENSITIVE_KEYS",
+            "title": "Words that differ only by case are different keys",
+            "explanation": "Dock and dock are different dict keys. Lower the words first when the rule says counting ignores case."
+          }
+        },
+        {
+          "id": "none-when-empty",
+          "code": "def count_docks(log):\n    if not log:\n        return None\n    return len(set(log))\n",
+          "mistake": {
+            "tag": "EMPTY_NOT_NONE",
+            "title": "An empty input gives an empty list, not None",
+            "explanation": "Returning None for an empty input changes the answer type. Return an empty list when there is nothing to report."
+          }
+        }
+      ],
+      "requires": []
+    },
+    "datasets": {},
+    "expected": {
+      "status": "pass",
+      "passed": 5,
+      "total": 5,
+      "cases": [
+        [
+          "test_repeats_count_once",
+          true
+        ],
+        [
+          "test_empty_log",
+          true
+        ],
+        [
+          "test_empty_tuple",
+          true
+        ],
+        [
+          "test_names_are_exact",
+          true
+        ],
+        [
+          "test_mixed_log",
+          true
+        ]
+      ],
+      "matched": []
+    }
+  },
+  {
+    "name": "c03-suite-fix-dock-count:starter",
+    "payload": {
+      "kind": "suite",
+      "learner": "def count_docks(log):\n    return len(log)\n",
+      "tests": "def test_repeats_count_once():\n    assert count_docks([\"Dock 1\", \"Dock 2\", \"Dock 1\"]) == 2\n\n\ndef test_empty_log():\n    assert count_docks([]) == 0\n\n\ndef test_empty_tuple():\n    assert count_docks(()) == 0\n\n\ndef test_names_are_exact():\n    assert count_docks([\"Dock 1\", \"dock 1\"]) == 2\n\n\ndef test_mixed_log():\n    assert count_docks([\"a\", \"b\", \"a\", \"c\", \"b\", \"a\", \"B\"]) == 4\n",
+      "scope": "all",
+      "cases": [
+        {
+          "id": "test_repeats_count_once",
+          "label": "Repeated names count once",
+          "visibility": "visible",
+          "args": [],
+          "rules": [
+            0
+          ]
+        },
+        {
+          "id": "test_empty_log",
+          "label": "An empty log has no docks",
+          "visibility": "visible",
+          "args": [],
+          "rules": [
+            1
+          ]
+        },
+        {
+          "id": "test_empty_tuple",
+          "label": "An empty tuple has no docks",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            1
+          ]
+        },
+        {
+          "id": "test_names_are_exact",
+          "label": "Names that differ in case are different docks",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            2
+          ]
+        },
+        {
+          "id": "test_mixed_log",
+          "label": "A mixed log",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            0,
+            2
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "counts-lines",
+          "code": "def count_docks(log):\n    return len(log)\n",
+          "mistake": {
+            "tag": "DUPLICATES_KEPT",
+            "title": "Repeats are kept in the output",
+            "explanation": "The rule says each item appears once. Keep a set of the items already seen and skip the repeats."
+          }
+        },
+        {
+          "id": "lowercase-names",
+          "code": "def count_docks(log):\n    return len(set(name.lower() for name in log))\n",
+          "mistake": {
+            "tag": "CASE_SENSITIVE_KEYS",
+            "title": "Words that differ only by case are different keys",
+            "explanation": "Dock and dock are different dict keys. Lower the words first when the rule says counting ignores case."
+          }
+        },
+        {
+          "id": "none-when-empty",
+          "code": "def count_docks(log):\n    if not log:\n        return None\n    return len(set(log))\n",
+          "mistake": {
+            "tag": "EMPTY_NOT_NONE",
+            "title": "An empty input gives an empty list, not None",
+            "explanation": "Returning None for an empty input changes the answer type. Return an empty list when there is nothing to report."
+          }
+        }
+      ],
+      "requires": []
+    },
+    "datasets": {},
+    "expected": {
+      "status": "fail",
+      "passed": 3,
+      "total": 5,
+      "cases": [
+        [
+          "test_repeats_count_once",
+          false
+        ],
+        [
+          "test_empty_log",
+          true
+        ],
+        [
+          "test_empty_tuple",
+          true
+        ],
+        [
+          "test_names_are_exact",
+          true
+        ],
+        [
+          "test_mixed_log",
+          false
+        ]
+      ],
+      "matched": [
+        "counts-lines"
+      ]
+    }
+  },
+  {
+    "name": "c03-suite-fix-dock-count:variant:counts-lines",
+    "payload": {
+      "kind": "suite",
+      "learner": "def count_docks(log):\n    return len(log)\n",
+      "tests": "def test_repeats_count_once():\n    assert count_docks([\"Dock 1\", \"Dock 2\", \"Dock 1\"]) == 2\n\n\ndef test_empty_log():\n    assert count_docks([]) == 0\n\n\ndef test_empty_tuple():\n    assert count_docks(()) == 0\n\n\ndef test_names_are_exact():\n    assert count_docks([\"Dock 1\", \"dock 1\"]) == 2\n\n\ndef test_mixed_log():\n    assert count_docks([\"a\", \"b\", \"a\", \"c\", \"b\", \"a\", \"B\"]) == 4\n",
+      "scope": "all",
+      "cases": [
+        {
+          "id": "test_repeats_count_once",
+          "label": "Repeated names count once",
+          "visibility": "visible",
+          "args": [],
+          "rules": [
+            0
+          ]
+        },
+        {
+          "id": "test_empty_log",
+          "label": "An empty log has no docks",
+          "visibility": "visible",
+          "args": [],
+          "rules": [
+            1
+          ]
+        },
+        {
+          "id": "test_empty_tuple",
+          "label": "An empty tuple has no docks",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            1
+          ]
+        },
+        {
+          "id": "test_names_are_exact",
+          "label": "Names that differ in case are different docks",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            2
+          ]
+        },
+        {
+          "id": "test_mixed_log",
+          "label": "A mixed log",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            0,
+            2
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "counts-lines",
+          "code": "def count_docks(log):\n    return len(log)\n",
+          "mistake": {
+            "tag": "DUPLICATES_KEPT",
+            "title": "Repeats are kept in the output",
+            "explanation": "The rule says each item appears once. Keep a set of the items already seen and skip the repeats."
+          }
+        },
+        {
+          "id": "lowercase-names",
+          "code": "def count_docks(log):\n    return len(set(name.lower() for name in log))\n",
+          "mistake": {
+            "tag": "CASE_SENSITIVE_KEYS",
+            "title": "Words that differ only by case are different keys",
+            "explanation": "Dock and dock are different dict keys. Lower the words first when the rule says counting ignores case."
+          }
+        },
+        {
+          "id": "none-when-empty",
+          "code": "def count_docks(log):\n    if not log:\n        return None\n    return len(set(log))\n",
+          "mistake": {
+            "tag": "EMPTY_NOT_NONE",
+            "title": "An empty input gives an empty list, not None",
+            "explanation": "Returning None for an empty input changes the answer type. Return an empty list when there is nothing to report."
+          }
+        }
+      ],
+      "requires": []
+    },
+    "datasets": {},
+    "expected": {
+      "status": "fail",
+      "passed": 3,
+      "total": 5,
+      "cases": [
+        [
+          "test_repeats_count_once",
+          false
+        ],
+        [
+          "test_empty_log",
+          true
+        ],
+        [
+          "test_empty_tuple",
+          true
+        ],
+        [
+          "test_names_are_exact",
+          true
+        ],
+        [
+          "test_mixed_log",
+          false
+        ]
+      ],
+      "matched": [
+        "counts-lines"
+      ]
+    }
+  },
+  {
+    "name": "c03-suite-fix-dock-count:variant:lowercase-names",
+    "payload": {
+      "kind": "suite",
+      "learner": "def count_docks(log):\n    return len(set(name.lower() for name in log))\n",
+      "tests": "def test_repeats_count_once():\n    assert count_docks([\"Dock 1\", \"Dock 2\", \"Dock 1\"]) == 2\n\n\ndef test_empty_log():\n    assert count_docks([]) == 0\n\n\ndef test_empty_tuple():\n    assert count_docks(()) == 0\n\n\ndef test_names_are_exact():\n    assert count_docks([\"Dock 1\", \"dock 1\"]) == 2\n\n\ndef test_mixed_log():\n    assert count_docks([\"a\", \"b\", \"a\", \"c\", \"b\", \"a\", \"B\"]) == 4\n",
+      "scope": "all",
+      "cases": [
+        {
+          "id": "test_repeats_count_once",
+          "label": "Repeated names count once",
+          "visibility": "visible",
+          "args": [],
+          "rules": [
+            0
+          ]
+        },
+        {
+          "id": "test_empty_log",
+          "label": "An empty log has no docks",
+          "visibility": "visible",
+          "args": [],
+          "rules": [
+            1
+          ]
+        },
+        {
+          "id": "test_empty_tuple",
+          "label": "An empty tuple has no docks",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            1
+          ]
+        },
+        {
+          "id": "test_names_are_exact",
+          "label": "Names that differ in case are different docks",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            2
+          ]
+        },
+        {
+          "id": "test_mixed_log",
+          "label": "A mixed log",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            0,
+            2
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "counts-lines",
+          "code": "def count_docks(log):\n    return len(log)\n",
+          "mistake": {
+            "tag": "DUPLICATES_KEPT",
+            "title": "Repeats are kept in the output",
+            "explanation": "The rule says each item appears once. Keep a set of the items already seen and skip the repeats."
+          }
+        },
+        {
+          "id": "lowercase-names",
+          "code": "def count_docks(log):\n    return len(set(name.lower() for name in log))\n",
+          "mistake": {
+            "tag": "CASE_SENSITIVE_KEYS",
+            "title": "Words that differ only by case are different keys",
+            "explanation": "Dock and dock are different dict keys. Lower the words first when the rule says counting ignores case."
+          }
+        },
+        {
+          "id": "none-when-empty",
+          "code": "def count_docks(log):\n    if not log:\n        return None\n    return len(set(log))\n",
+          "mistake": {
+            "tag": "EMPTY_NOT_NONE",
+            "title": "An empty input gives an empty list, not None",
+            "explanation": "Returning None for an empty input changes the answer type. Return an empty list when there is nothing to report."
+          }
+        }
+      ],
+      "requires": []
+    },
+    "datasets": {},
+    "expected": {
+      "status": "fail",
+      "passed": 3,
+      "total": 5,
+      "cases": [
+        [
+          "test_repeats_count_once",
+          true
+        ],
+        [
+          "test_empty_log",
+          true
+        ],
+        [
+          "test_empty_tuple",
+          true
+        ],
+        [
+          "test_names_are_exact",
+          false
+        ],
+        [
+          "test_mixed_log",
+          false
+        ]
+      ],
+      "matched": [
+        "lowercase-names"
+      ]
+    }
+  },
+  {
+    "name": "c03-suite-fix-dock-count:variant:none-when-empty",
+    "payload": {
+      "kind": "suite",
+      "learner": "def count_docks(log):\n    if not log:\n        return None\n    return len(set(log))\n",
+      "tests": "def test_repeats_count_once():\n    assert count_docks([\"Dock 1\", \"Dock 2\", \"Dock 1\"]) == 2\n\n\ndef test_empty_log():\n    assert count_docks([]) == 0\n\n\ndef test_empty_tuple():\n    assert count_docks(()) == 0\n\n\ndef test_names_are_exact():\n    assert count_docks([\"Dock 1\", \"dock 1\"]) == 2\n\n\ndef test_mixed_log():\n    assert count_docks([\"a\", \"b\", \"a\", \"c\", \"b\", \"a\", \"B\"]) == 4\n",
+      "scope": "all",
+      "cases": [
+        {
+          "id": "test_repeats_count_once",
+          "label": "Repeated names count once",
+          "visibility": "visible",
+          "args": [],
+          "rules": [
+            0
+          ]
+        },
+        {
+          "id": "test_empty_log",
+          "label": "An empty log has no docks",
+          "visibility": "visible",
+          "args": [],
+          "rules": [
+            1
+          ]
+        },
+        {
+          "id": "test_empty_tuple",
+          "label": "An empty tuple has no docks",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            1
+          ]
+        },
+        {
+          "id": "test_names_are_exact",
+          "label": "Names that differ in case are different docks",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            2
+          ]
+        },
+        {
+          "id": "test_mixed_log",
+          "label": "A mixed log",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            0,
+            2
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "counts-lines",
+          "code": "def count_docks(log):\n    return len(log)\n",
+          "mistake": {
+            "tag": "DUPLICATES_KEPT",
+            "title": "Repeats are kept in the output",
+            "explanation": "The rule says each item appears once. Keep a set of the items already seen and skip the repeats."
+          }
+        },
+        {
+          "id": "lowercase-names",
+          "code": "def count_docks(log):\n    return len(set(name.lower() for name in log))\n",
+          "mistake": {
+            "tag": "CASE_SENSITIVE_KEYS",
+            "title": "Words that differ only by case are different keys",
+            "explanation": "Dock and dock are different dict keys. Lower the words first when the rule says counting ignores case."
+          }
+        },
+        {
+          "id": "none-when-empty",
+          "code": "def count_docks(log):\n    if not log:\n        return None\n    return len(set(log))\n",
+          "mistake": {
+            "tag": "EMPTY_NOT_NONE",
+            "title": "An empty input gives an empty list, not None",
+            "explanation": "Returning None for an empty input changes the answer type. Return an empty list when there is nothing to report."
+          }
+        }
+      ],
+      "requires": []
+    },
+    "datasets": {},
+    "expected": {
+      "status": "fail",
+      "passed": 3,
+      "total": 5,
+      "cases": [
+        [
+          "test_repeats_count_once",
+          true
+        ],
+        [
+          "test_empty_log",
+          false
+        ],
+        [
+          "test_empty_tuple",
+          false
+        ],
+        [
+          "test_names_are_exact",
+          true
+        ],
+        [
+          "test_mixed_log",
+          true
+        ]
+      ],
+      "matched": [
+        "none-when-empty"
+      ]
+    }
+  },
+  {
+    "name": "c03-suite-fix-median:reference",
+    "payload": {
+      "kind": "suite",
+      "learner": "def median(values):\n    if not values:\n        raise ValueError(\"median needs at least one value\")\n    ordered = sorted(values)\n    middle = len(ordered) // 2\n    if len(ordered) % 2 == 1:\n        return ordered[middle]\n    return (ordered[middle - 1] + ordered[middle]) / 2\n",
+      "tests": "def test_odd_count():\n    assert median([3, 1, 2]) == 2\n\n\ndef test_even_count():\n    assert median([4, 1, 3, 2]) == 2.5\n\n\ndef test_two_values():\n    assert median([10, 20]) == 15\n\n\ndef test_unsorted_input():\n    assert median([9, 1, 2]) == 2\n\n\ndef test_skewed_values():\n    assert median([1, 1, 10]) == 1\n\n\ndef test_empty_raises():\n    try:\n        median([])\n    except ValueError:\n        return\n    assert False, \"an empty list must raise ValueError\"\n\n\ndef test_empty_again():\n    try:\n        median([])\n    except ValueError:\n        return\n    assert False, \"an empty list must raise ValueError, again\"\n",
+      "scope": "all",
+      "cases": [
+        {
+          "id": "test_odd_count",
+          "label": "An odd count",
+          "visibility": "visible",
+          "args": [],
+          "rules": [
+            0
+          ]
+        },
+        {
+          "id": "test_even_count",
+          "label": "An even count",
+          "visibility": "visible",
+          "args": [],
+          "rules": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "test_two_values",
+          "label": "Two values",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "test_unsorted_input",
+          "label": "Unsorted values",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            0
+          ]
+        },
+        {
+          "id": "test_skewed_values",
+          "label": "One large value",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            0
+          ]
+        },
+        {
+          "id": "test_empty_raises",
+          "label": "An empty list raises ValueError",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            2
+          ]
+        },
+        {
+          "id": "test_empty_again",
+          "label": "An empty list raises ValueError, checked again",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            2
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "lower-middle",
+          "code": "def median(values):\n    if not values:\n        raise ValueError(\"median needs at least one value\")\n    ordered = sorted(values)\n    return ordered[(len(ordered) - 1) // 2]\n",
+          "mistake": {
+            "tag": "OFF_BY_ONE_RANGE",
+            "title": "range() stops before its end",
+            "explanation": "range(a, b) stops before b, and range(n) starts at 0. Off-by-one loops skip the first or last item."
+          }
+        },
+        {
+          "id": "mean",
+          "code": "def median(values):\n    if not values:\n        raise ValueError(\"median needs at least one value\")\n    return sum(values) / len(values)\n",
+          "mistake": {
+            "tag": "MEAN_NOT_MEDIAN",
+            "title": "The mean is not the median",
+            "explanation": "The mean is pulled by large values. The median is the middle value after sorting, and the two middle values are averaged when the count is even."
+          }
+        },
+        {
+          "id": "empty-none",
+          "code": "def median(values):\n    if not values:\n        return None\n    ordered = sorted(values)\n    middle = len(ordered) // 2\n    if len(ordered) % 2 == 1:\n        return ordered[middle]\n    return (ordered[middle - 1] + ordered[middle]) / 2\n",
+          "mistake": {
+            "tag": "EMPTY_NOT_NONE",
+            "title": "An empty input gives an empty list, not None",
+            "explanation": "Returning None for an empty input changes the answer type. Return an empty list when there is nothing to report."
+          }
+        },
+        {
+          "id": "unsorted",
+          "code": "def median(values):\n    if not values:\n        raise ValueError(\"median needs at least one value\")\n    return values[len(values) // 2]\n",
+          "mistake": {
+            "tag": "UNSORTED_OUTPUT",
+            "title": "The rule asks for an order",
+            "explanation": "The rule says the lines or names come in a set order. Sort them before you return or format them."
+          }
+        }
+      ],
+      "requires": []
+    },
+    "datasets": {},
+    "expected": {
+      "status": "pass",
+      "passed": 7,
+      "total": 7,
+      "cases": [
+        [
+          "test_odd_count",
+          true
+        ],
+        [
+          "test_even_count",
+          true
+        ],
+        [
+          "test_two_values",
+          true
+        ],
+        [
+          "test_unsorted_input",
+          true
+        ],
+        [
+          "test_skewed_values",
+          true
+        ],
+        [
+          "test_empty_raises",
+          true
+        ],
+        [
+          "test_empty_again",
+          true
+        ]
+      ],
+      "matched": []
+    }
+  },
+  {
+    "name": "c03-suite-fix-median:starter",
+    "payload": {
+      "kind": "suite",
+      "learner": "def median(values):\n    return sorted(values)[len(values) // 2]\n",
+      "tests": "def test_odd_count():\n    assert median([3, 1, 2]) == 2\n\n\ndef test_even_count():\n    assert median([4, 1, 3, 2]) == 2.5\n\n\ndef test_two_values():\n    assert median([10, 20]) == 15\n\n\ndef test_unsorted_input():\n    assert median([9, 1, 2]) == 2\n\n\ndef test_skewed_values():\n    assert median([1, 1, 10]) == 1\n\n\ndef test_empty_raises():\n    try:\n        median([])\n    except ValueError:\n        return\n    assert False, \"an empty list must raise ValueError\"\n\n\ndef test_empty_again():\n    try:\n        median([])\n    except ValueError:\n        return\n    assert False, \"an empty list must raise ValueError, again\"\n",
+      "scope": "all",
+      "cases": [
+        {
+          "id": "test_odd_count",
+          "label": "An odd count",
+          "visibility": "visible",
+          "args": [],
+          "rules": [
+            0
+          ]
+        },
+        {
+          "id": "test_even_count",
+          "label": "An even count",
+          "visibility": "visible",
+          "args": [],
+          "rules": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "test_two_values",
+          "label": "Two values",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "test_unsorted_input",
+          "label": "Unsorted values",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            0
+          ]
+        },
+        {
+          "id": "test_skewed_values",
+          "label": "One large value",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            0
+          ]
+        },
+        {
+          "id": "test_empty_raises",
+          "label": "An empty list raises ValueError",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            2
+          ]
+        },
+        {
+          "id": "test_empty_again",
+          "label": "An empty list raises ValueError, checked again",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            2
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "lower-middle",
+          "code": "def median(values):\n    if not values:\n        raise ValueError(\"median needs at least one value\")\n    ordered = sorted(values)\n    return ordered[(len(ordered) - 1) // 2]\n",
+          "mistake": {
+            "tag": "OFF_BY_ONE_RANGE",
+            "title": "range() stops before its end",
+            "explanation": "range(a, b) stops before b, and range(n) starts at 0. Off-by-one loops skip the first or last item."
+          }
+        },
+        {
+          "id": "mean",
+          "code": "def median(values):\n    if not values:\n        raise ValueError(\"median needs at least one value\")\n    return sum(values) / len(values)\n",
+          "mistake": {
+            "tag": "MEAN_NOT_MEDIAN",
+            "title": "The mean is not the median",
+            "explanation": "The mean is pulled by large values. The median is the middle value after sorting, and the two middle values are averaged when the count is even."
+          }
+        },
+        {
+          "id": "empty-none",
+          "code": "def median(values):\n    if not values:\n        return None\n    ordered = sorted(values)\n    middle = len(ordered) // 2\n    if len(ordered) % 2 == 1:\n        return ordered[middle]\n    return (ordered[middle - 1] + ordered[middle]) / 2\n",
+          "mistake": {
+            "tag": "EMPTY_NOT_NONE",
+            "title": "An empty input gives an empty list, not None",
+            "explanation": "Returning None for an empty input changes the answer type. Return an empty list when there is nothing to report."
+          }
+        },
+        {
+          "id": "unsorted",
+          "code": "def median(values):\n    if not values:\n        raise ValueError(\"median needs at least one value\")\n    return values[len(values) // 2]\n",
+          "mistake": {
+            "tag": "UNSORTED_OUTPUT",
+            "title": "The rule asks for an order",
+            "explanation": "The rule says the lines or names come in a set order. Sort them before you return or format them."
+          }
+        }
+      ],
+      "requires": []
+    },
+    "datasets": {},
+    "expected": {
+      "status": "fail",
+      "passed": 3,
+      "total": 7,
+      "cases": [
+        [
+          "test_odd_count",
+          true
+        ],
+        [
+          "test_even_count",
+          false
+        ],
+        [
+          "test_two_values",
+          false
+        ],
+        [
+          "test_unsorted_input",
+          true
+        ],
+        [
+          "test_skewed_values",
+          true
+        ],
+        [
+          "test_empty_raises",
+          false
+        ],
+        [
+          "test_empty_again",
+          false
+        ]
+      ],
+      "matched": []
+    }
+  },
+  {
+    "name": "c03-suite-fix-median:variant:lower-middle",
+    "payload": {
+      "kind": "suite",
+      "learner": "def median(values):\n    if not values:\n        raise ValueError(\"median needs at least one value\")\n    ordered = sorted(values)\n    return ordered[(len(ordered) - 1) // 2]\n",
+      "tests": "def test_odd_count():\n    assert median([3, 1, 2]) == 2\n\n\ndef test_even_count():\n    assert median([4, 1, 3, 2]) == 2.5\n\n\ndef test_two_values():\n    assert median([10, 20]) == 15\n\n\ndef test_unsorted_input():\n    assert median([9, 1, 2]) == 2\n\n\ndef test_skewed_values():\n    assert median([1, 1, 10]) == 1\n\n\ndef test_empty_raises():\n    try:\n        median([])\n    except ValueError:\n        return\n    assert False, \"an empty list must raise ValueError\"\n\n\ndef test_empty_again():\n    try:\n        median([])\n    except ValueError:\n        return\n    assert False, \"an empty list must raise ValueError, again\"\n",
+      "scope": "all",
+      "cases": [
+        {
+          "id": "test_odd_count",
+          "label": "An odd count",
+          "visibility": "visible",
+          "args": [],
+          "rules": [
+            0
+          ]
+        },
+        {
+          "id": "test_even_count",
+          "label": "An even count",
+          "visibility": "visible",
+          "args": [],
+          "rules": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "test_two_values",
+          "label": "Two values",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "test_unsorted_input",
+          "label": "Unsorted values",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            0
+          ]
+        },
+        {
+          "id": "test_skewed_values",
+          "label": "One large value",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            0
+          ]
+        },
+        {
+          "id": "test_empty_raises",
+          "label": "An empty list raises ValueError",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            2
+          ]
+        },
+        {
+          "id": "test_empty_again",
+          "label": "An empty list raises ValueError, checked again",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            2
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "lower-middle",
+          "code": "def median(values):\n    if not values:\n        raise ValueError(\"median needs at least one value\")\n    ordered = sorted(values)\n    return ordered[(len(ordered) - 1) // 2]\n",
+          "mistake": {
+            "tag": "OFF_BY_ONE_RANGE",
+            "title": "range() stops before its end",
+            "explanation": "range(a, b) stops before b, and range(n) starts at 0. Off-by-one loops skip the first or last item."
+          }
+        },
+        {
+          "id": "mean",
+          "code": "def median(values):\n    if not values:\n        raise ValueError(\"median needs at least one value\")\n    return sum(values) / len(values)\n",
+          "mistake": {
+            "tag": "MEAN_NOT_MEDIAN",
+            "title": "The mean is not the median",
+            "explanation": "The mean is pulled by large values. The median is the middle value after sorting, and the two middle values are averaged when the count is even."
+          }
+        },
+        {
+          "id": "empty-none",
+          "code": "def median(values):\n    if not values:\n        return None\n    ordered = sorted(values)\n    middle = len(ordered) // 2\n    if len(ordered) % 2 == 1:\n        return ordered[middle]\n    return (ordered[middle - 1] + ordered[middle]) / 2\n",
+          "mistake": {
+            "tag": "EMPTY_NOT_NONE",
+            "title": "An empty input gives an empty list, not None",
+            "explanation": "Returning None for an empty input changes the answer type. Return an empty list when there is nothing to report."
+          }
+        },
+        {
+          "id": "unsorted",
+          "code": "def median(values):\n    if not values:\n        raise ValueError(\"median needs at least one value\")\n    return values[len(values) // 2]\n",
+          "mistake": {
+            "tag": "UNSORTED_OUTPUT",
+            "title": "The rule asks for an order",
+            "explanation": "The rule says the lines or names come in a set order. Sort them before you return or format them."
+          }
+        }
+      ],
+      "requires": []
+    },
+    "datasets": {},
+    "expected": {
+      "status": "fail",
+      "passed": 5,
+      "total": 7,
+      "cases": [
+        [
+          "test_odd_count",
+          true
+        ],
+        [
+          "test_even_count",
+          false
+        ],
+        [
+          "test_two_values",
+          false
+        ],
+        [
+          "test_unsorted_input",
+          true
+        ],
+        [
+          "test_skewed_values",
+          true
+        ],
+        [
+          "test_empty_raises",
+          true
+        ],
+        [
+          "test_empty_again",
+          true
+        ]
+      ],
+      "matched": [
+        "lower-middle"
+      ]
+    }
+  },
+  {
+    "name": "c03-suite-fix-median:variant:mean",
+    "payload": {
+      "kind": "suite",
+      "learner": "def median(values):\n    if not values:\n        raise ValueError(\"median needs at least one value\")\n    return sum(values) / len(values)\n",
+      "tests": "def test_odd_count():\n    assert median([3, 1, 2]) == 2\n\n\ndef test_even_count():\n    assert median([4, 1, 3, 2]) == 2.5\n\n\ndef test_two_values():\n    assert median([10, 20]) == 15\n\n\ndef test_unsorted_input():\n    assert median([9, 1, 2]) == 2\n\n\ndef test_skewed_values():\n    assert median([1, 1, 10]) == 1\n\n\ndef test_empty_raises():\n    try:\n        median([])\n    except ValueError:\n        return\n    assert False, \"an empty list must raise ValueError\"\n\n\ndef test_empty_again():\n    try:\n        median([])\n    except ValueError:\n        return\n    assert False, \"an empty list must raise ValueError, again\"\n",
+      "scope": "all",
+      "cases": [
+        {
+          "id": "test_odd_count",
+          "label": "An odd count",
+          "visibility": "visible",
+          "args": [],
+          "rules": [
+            0
+          ]
+        },
+        {
+          "id": "test_even_count",
+          "label": "An even count",
+          "visibility": "visible",
+          "args": [],
+          "rules": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "test_two_values",
+          "label": "Two values",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "test_unsorted_input",
+          "label": "Unsorted values",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            0
+          ]
+        },
+        {
+          "id": "test_skewed_values",
+          "label": "One large value",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            0
+          ]
+        },
+        {
+          "id": "test_empty_raises",
+          "label": "An empty list raises ValueError",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            2
+          ]
+        },
+        {
+          "id": "test_empty_again",
+          "label": "An empty list raises ValueError, checked again",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            2
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "lower-middle",
+          "code": "def median(values):\n    if not values:\n        raise ValueError(\"median needs at least one value\")\n    ordered = sorted(values)\n    return ordered[(len(ordered) - 1) // 2]\n",
+          "mistake": {
+            "tag": "OFF_BY_ONE_RANGE",
+            "title": "range() stops before its end",
+            "explanation": "range(a, b) stops before b, and range(n) starts at 0. Off-by-one loops skip the first or last item."
+          }
+        },
+        {
+          "id": "mean",
+          "code": "def median(values):\n    if not values:\n        raise ValueError(\"median needs at least one value\")\n    return sum(values) / len(values)\n",
+          "mistake": {
+            "tag": "MEAN_NOT_MEDIAN",
+            "title": "The mean is not the median",
+            "explanation": "The mean is pulled by large values. The median is the middle value after sorting, and the two middle values are averaged when the count is even."
+          }
+        },
+        {
+          "id": "empty-none",
+          "code": "def median(values):\n    if not values:\n        return None\n    ordered = sorted(values)\n    middle = len(ordered) // 2\n    if len(ordered) % 2 == 1:\n        return ordered[middle]\n    return (ordered[middle - 1] + ordered[middle]) / 2\n",
+          "mistake": {
+            "tag": "EMPTY_NOT_NONE",
+            "title": "An empty input gives an empty list, not None",
+            "explanation": "Returning None for an empty input changes the answer type. Return an empty list when there is nothing to report."
+          }
+        },
+        {
+          "id": "unsorted",
+          "code": "def median(values):\n    if not values:\n        raise ValueError(\"median needs at least one value\")\n    return values[len(values) // 2]\n",
+          "mistake": {
+            "tag": "UNSORTED_OUTPUT",
+            "title": "The rule asks for an order",
+            "explanation": "The rule says the lines or names come in a set order. Sort them before you return or format them."
+          }
+        }
+      ],
+      "requires": []
+    },
+    "datasets": {},
+    "expected": {
+      "status": "fail",
+      "passed": 5,
+      "total": 7,
+      "cases": [
+        [
+          "test_odd_count",
+          true
+        ],
+        [
+          "test_even_count",
+          true
+        ],
+        [
+          "test_two_values",
+          true
+        ],
+        [
+          "test_unsorted_input",
+          false
+        ],
+        [
+          "test_skewed_values",
+          false
+        ],
+        [
+          "test_empty_raises",
+          true
+        ],
+        [
+          "test_empty_again",
+          true
+        ]
+      ],
+      "matched": [
+        "mean"
+      ]
+    }
+  },
+  {
+    "name": "c03-suite-fix-median:variant:empty-none",
+    "payload": {
+      "kind": "suite",
+      "learner": "def median(values):\n    if not values:\n        return None\n    ordered = sorted(values)\n    middle = len(ordered) // 2\n    if len(ordered) % 2 == 1:\n        return ordered[middle]\n    return (ordered[middle - 1] + ordered[middle]) / 2\n",
+      "tests": "def test_odd_count():\n    assert median([3, 1, 2]) == 2\n\n\ndef test_even_count():\n    assert median([4, 1, 3, 2]) == 2.5\n\n\ndef test_two_values():\n    assert median([10, 20]) == 15\n\n\ndef test_unsorted_input():\n    assert median([9, 1, 2]) == 2\n\n\ndef test_skewed_values():\n    assert median([1, 1, 10]) == 1\n\n\ndef test_empty_raises():\n    try:\n        median([])\n    except ValueError:\n        return\n    assert False, \"an empty list must raise ValueError\"\n\n\ndef test_empty_again():\n    try:\n        median([])\n    except ValueError:\n        return\n    assert False, \"an empty list must raise ValueError, again\"\n",
+      "scope": "all",
+      "cases": [
+        {
+          "id": "test_odd_count",
+          "label": "An odd count",
+          "visibility": "visible",
+          "args": [],
+          "rules": [
+            0
+          ]
+        },
+        {
+          "id": "test_even_count",
+          "label": "An even count",
+          "visibility": "visible",
+          "args": [],
+          "rules": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "test_two_values",
+          "label": "Two values",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "test_unsorted_input",
+          "label": "Unsorted values",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            0
+          ]
+        },
+        {
+          "id": "test_skewed_values",
+          "label": "One large value",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            0
+          ]
+        },
+        {
+          "id": "test_empty_raises",
+          "label": "An empty list raises ValueError",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            2
+          ]
+        },
+        {
+          "id": "test_empty_again",
+          "label": "An empty list raises ValueError, checked again",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            2
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "lower-middle",
+          "code": "def median(values):\n    if not values:\n        raise ValueError(\"median needs at least one value\")\n    ordered = sorted(values)\n    return ordered[(len(ordered) - 1) // 2]\n",
+          "mistake": {
+            "tag": "OFF_BY_ONE_RANGE",
+            "title": "range() stops before its end",
+            "explanation": "range(a, b) stops before b, and range(n) starts at 0. Off-by-one loops skip the first or last item."
+          }
+        },
+        {
+          "id": "mean",
+          "code": "def median(values):\n    if not values:\n        raise ValueError(\"median needs at least one value\")\n    return sum(values) / len(values)\n",
+          "mistake": {
+            "tag": "MEAN_NOT_MEDIAN",
+            "title": "The mean is not the median",
+            "explanation": "The mean is pulled by large values. The median is the middle value after sorting, and the two middle values are averaged when the count is even."
+          }
+        },
+        {
+          "id": "empty-none",
+          "code": "def median(values):\n    if not values:\n        return None\n    ordered = sorted(values)\n    middle = len(ordered) // 2\n    if len(ordered) % 2 == 1:\n        return ordered[middle]\n    return (ordered[middle - 1] + ordered[middle]) / 2\n",
+          "mistake": {
+            "tag": "EMPTY_NOT_NONE",
+            "title": "An empty input gives an empty list, not None",
+            "explanation": "Returning None for an empty input changes the answer type. Return an empty list when there is nothing to report."
+          }
+        },
+        {
+          "id": "unsorted",
+          "code": "def median(values):\n    if not values:\n        raise ValueError(\"median needs at least one value\")\n    return values[len(values) // 2]\n",
+          "mistake": {
+            "tag": "UNSORTED_OUTPUT",
+            "title": "The rule asks for an order",
+            "explanation": "The rule says the lines or names come in a set order. Sort them before you return or format them."
+          }
+        }
+      ],
+      "requires": []
+    },
+    "datasets": {},
+    "expected": {
+      "status": "fail",
+      "passed": 5,
+      "total": 7,
+      "cases": [
+        [
+          "test_odd_count",
+          true
+        ],
+        [
+          "test_even_count",
+          true
+        ],
+        [
+          "test_two_values",
+          true
+        ],
+        [
+          "test_unsorted_input",
+          true
+        ],
+        [
+          "test_skewed_values",
+          true
+        ],
+        [
+          "test_empty_raises",
+          false
+        ],
+        [
+          "test_empty_again",
+          false
+        ]
+      ],
+      "matched": [
+        "empty-none"
+      ]
+    }
+  },
+  {
+    "name": "c03-suite-fix-median:variant:unsorted",
+    "payload": {
+      "kind": "suite",
+      "learner": "def median(values):\n    if not values:\n        raise ValueError(\"median needs at least one value\")\n    return values[len(values) // 2]\n",
+      "tests": "def test_odd_count():\n    assert median([3, 1, 2]) == 2\n\n\ndef test_even_count():\n    assert median([4, 1, 3, 2]) == 2.5\n\n\ndef test_two_values():\n    assert median([10, 20]) == 15\n\n\ndef test_unsorted_input():\n    assert median([9, 1, 2]) == 2\n\n\ndef test_skewed_values():\n    assert median([1, 1, 10]) == 1\n\n\ndef test_empty_raises():\n    try:\n        median([])\n    except ValueError:\n        return\n    assert False, \"an empty list must raise ValueError\"\n\n\ndef test_empty_again():\n    try:\n        median([])\n    except ValueError:\n        return\n    assert False, \"an empty list must raise ValueError, again\"\n",
+      "scope": "all",
+      "cases": [
+        {
+          "id": "test_odd_count",
+          "label": "An odd count",
+          "visibility": "visible",
+          "args": [],
+          "rules": [
+            0
+          ]
+        },
+        {
+          "id": "test_even_count",
+          "label": "An even count",
+          "visibility": "visible",
+          "args": [],
+          "rules": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "test_two_values",
+          "label": "Two values",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "test_unsorted_input",
+          "label": "Unsorted values",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            0
+          ]
+        },
+        {
+          "id": "test_skewed_values",
+          "label": "One large value",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            0
+          ]
+        },
+        {
+          "id": "test_empty_raises",
+          "label": "An empty list raises ValueError",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            2
+          ]
+        },
+        {
+          "id": "test_empty_again",
+          "label": "An empty list raises ValueError, checked again",
+          "visibility": "hidden",
+          "args": [],
+          "rules": [
+            2
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "lower-middle",
+          "code": "def median(values):\n    if not values:\n        raise ValueError(\"median needs at least one value\")\n    ordered = sorted(values)\n    return ordered[(len(ordered) - 1) // 2]\n",
+          "mistake": {
+            "tag": "OFF_BY_ONE_RANGE",
+            "title": "range() stops before its end",
+            "explanation": "range(a, b) stops before b, and range(n) starts at 0. Off-by-one loops skip the first or last item."
+          }
+        },
+        {
+          "id": "mean",
+          "code": "def median(values):\n    if not values:\n        raise ValueError(\"median needs at least one value\")\n    return sum(values) / len(values)\n",
+          "mistake": {
+            "tag": "MEAN_NOT_MEDIAN",
+            "title": "The mean is not the median",
+            "explanation": "The mean is pulled by large values. The median is the middle value after sorting, and the two middle values are averaged when the count is even."
+          }
+        },
+        {
+          "id": "empty-none",
+          "code": "def median(values):\n    if not values:\n        return None\n    ordered = sorted(values)\n    middle = len(ordered) // 2\n    if len(ordered) % 2 == 1:\n        return ordered[middle]\n    return (ordered[middle - 1] + ordered[middle]) / 2\n",
+          "mistake": {
+            "tag": "EMPTY_NOT_NONE",
+            "title": "An empty input gives an empty list, not None",
+            "explanation": "Returning None for an empty input changes the answer type. Return an empty list when there is nothing to report."
+          }
+        },
+        {
+          "id": "unsorted",
+          "code": "def median(values):\n    if not values:\n        raise ValueError(\"median needs at least one value\")\n    return values[len(values) // 2]\n",
+          "mistake": {
+            "tag": "UNSORTED_OUTPUT",
+            "title": "The rule asks for an order",
+            "explanation": "The rule says the lines or names come in a set order. Sort them before you return or format them."
+          }
+        }
+      ],
+      "requires": []
+    },
+    "datasets": {},
+    "expected": {
+      "status": "fail",
+      "passed": 3,
+      "total": 7,
+      "cases": [
+        [
+          "test_odd_count",
+          false
+        ],
+        [
+          "test_even_count",
+          false
+        ],
+        [
+          "test_two_values",
+          false
+        ],
+        [
+          "test_unsorted_input",
+          false
+        ],
+        [
+          "test_skewed_values",
+          true
+        ],
+        [
+          "test_empty_raises",
+          true
+        ],
+        [
+          "test_empty_again",
+          true
+        ]
+      ],
+      "matched": [
+        "unsorted"
+      ]
+    }
+  },
+  {
+    "name": "c03-boss-test-clean-lines:model",
+    "payload": {
+      "kind": "testing",
+      "entry": "clean_lines",
+      "learner": "def test_trims_and_drops_blanks():\n    assert clean_lines([\"  Dock 1 \", \"\", \"Bay 2\"]) == [\"Dock 1\", \"Bay 2\"]\n\n\ndef test_keeps_order():\n    assert clean_lines([\"z\", \" a \", \"m\"]) == [\"z\", \"a\", \"m\"]\n\n\ndef test_spaces_only_line_is_blank():\n    assert clean_lines([\"   \", \"Gate\"]) == [\"Gate\"]\n\n\ndef test_empty_input():\n    assert clean_lines([]) == []\n",
+      "reference": "def clean_lines(lines):\n    cleaned = []\n    for line in lines:\n        text = line.strip()\n        if text:\n            cleaned.append(text)\n    return cleaned\n",
+      "scope": "all",
+      "mutants": [
+        {
+          "id": "keeps-blanks",
+          "label": "Keeps lines that are blank after trimming",
+          "code": "def clean_lines(lines):\n    return [line.strip() for line in lines]\n",
+          "mistake": {
+            "tag": "TRUTHINESS",
+            "title": "Empty values are false",
+            "explanation": "An empty list, string, dict, or 0 is false in an if test. Check the value you mean, such as len(items) == 0 or items is None."
+          },
+          "visibility": "visible"
+        },
+        {
+          "id": "no-trim",
+          "label": "Keeps the spaces around each line",
+          "code": "def clean_lines(lines):\n    return [line for line in lines if line.strip()]\n",
+          "mistake": {
+            "tag": "STR_IMMUTABLE",
+            "title": "Strings cannot change in place",
+            "explanation": "Methods such as upper() return a new string. The original stays the same, so the result must be stored or returned."
+          },
+          "visibility": "visible"
+        },
+        {
+          "id": "sorted-output",
+          "label": "Sorts the lines",
+          "code": "def clean_lines(lines):\n    cleaned = []\n    for line in lines:\n        text = line.strip()\n        if text:\n            cleaned.append(text)\n    return sorted(cleaned)\n",
+          "mistake": {
+            "tag": "SORTED_CHANGES_ORDER",
+            "title": "sorted() reorders the items",
+            "explanation": "sorted() puts items in order. Use it only when the rule asks for an order, and keep the caller order otherwise."
+          },
+          "visibility": "hidden"
+        }
+      ],
+      "requires": []
+    },
+    "datasets": {},
+    "expected": {
+      "status": "pass",
+      "passed": 4,
+      "total": 4,
+      "cases": [
+        [
+          "correct",
+          true
+        ],
+        [
+          "keeps-blanks",
+          true
+        ],
+        [
+          "no-trim",
+          true
+        ],
+        [
+          "hidden-2",
+          true
+        ]
+      ],
+      "matched": []
+    }
+  },
+  {
+    "name": "c03-boss-test-clean-lines:weak",
+    "payload": {
+      "kind": "testing",
+      "entry": "clean_lines",
+      "learner": "def test_trims_one_line():\n    assert clean_lines([\"  Dock 1 \"]) == [\"Dock 1\"]\n",
+      "reference": "def clean_lines(lines):\n    cleaned = []\n    for line in lines:\n        text = line.strip()\n        if text:\n            cleaned.append(text)\n    return cleaned\n",
+      "scope": "all",
+      "mutants": [
+        {
+          "id": "keeps-blanks",
+          "label": "Keeps lines that are blank after trimming",
+          "code": "def clean_lines(lines):\n    return [line.strip() for line in lines]\n",
+          "mistake": {
+            "tag": "TRUTHINESS",
+            "title": "Empty values are false",
+            "explanation": "An empty list, string, dict, or 0 is false in an if test. Check the value you mean, such as len(items) == 0 or items is None."
+          },
+          "visibility": "visible"
+        },
+        {
+          "id": "no-trim",
+          "label": "Keeps the spaces around each line",
+          "code": "def clean_lines(lines):\n    return [line for line in lines if line.strip()]\n",
+          "mistake": {
+            "tag": "STR_IMMUTABLE",
+            "title": "Strings cannot change in place",
+            "explanation": "Methods such as upper() return a new string. The original stays the same, so the result must be stored or returned."
+          },
+          "visibility": "visible"
+        },
+        {
+          "id": "sorted-output",
+          "label": "Sorts the lines",
+          "code": "def clean_lines(lines):\n    cleaned = []\n    for line in lines:\n        text = line.strip()\n        if text:\n            cleaned.append(text)\n    return sorted(cleaned)\n",
+          "mistake": {
+            "tag": "SORTED_CHANGES_ORDER",
+            "title": "sorted() reorders the items",
+            "explanation": "sorted() puts items in order. Use it only when the rule asks for an order, and keep the caller order otherwise."
+          },
+          "visibility": "hidden"
+        }
+      ],
+      "requires": []
+    },
+    "datasets": {},
+    "expected": {
+      "status": "fail",
+      "passed": 2,
+      "total": 4,
+      "cases": [
+        [
+          "correct",
+          true
+        ],
+        [
+          "keeps-blanks",
+          false
+        ],
+        [
+          "no-trim",
+          true
+        ],
+        [
+          "hidden-2",
+          false
+        ]
+      ],
+      "matched": [
+        "keeps-blanks",
+        "sorted-output"
+      ]
+    }
+  },
+  {
+    "name": "c03-boss-test-clean-lines:starter",
+    "payload": {
+      "kind": "testing",
+      "entry": "clean_lines",
+      "learner": "def test_example():\n    pass\n",
+      "reference": "def clean_lines(lines):\n    cleaned = []\n    for line in lines:\n        text = line.strip()\n        if text:\n            cleaned.append(text)\n    return cleaned\n",
+      "scope": "all",
+      "mutants": [
+        {
+          "id": "keeps-blanks",
+          "label": "Keeps lines that are blank after trimming",
+          "code": "def clean_lines(lines):\n    return [line.strip() for line in lines]\n",
+          "mistake": {
+            "tag": "TRUTHINESS",
+            "title": "Empty values are false",
+            "explanation": "An empty list, string, dict, or 0 is false in an if test. Check the value you mean, such as len(items) == 0 or items is None."
+          },
+          "visibility": "visible"
+        },
+        {
+          "id": "no-trim",
+          "label": "Keeps the spaces around each line",
+          "code": "def clean_lines(lines):\n    return [line for line in lines if line.strip()]\n",
+          "mistake": {
+            "tag": "STR_IMMUTABLE",
+            "title": "Strings cannot change in place",
+            "explanation": "Methods such as upper() return a new string. The original stays the same, so the result must be stored or returned."
+          },
+          "visibility": "visible"
+        },
+        {
+          "id": "sorted-output",
+          "label": "Sorts the lines",
+          "code": "def clean_lines(lines):\n    cleaned = []\n    for line in lines:\n        text = line.strip()\n        if text:\n            cleaned.append(text)\n    return sorted(cleaned)\n",
+          "mistake": {
+            "tag": "SORTED_CHANGES_ORDER",
+            "title": "sorted() reorders the items",
+            "explanation": "sorted() puts items in order. Use it only when the rule asks for an order, and keep the caller order otherwise."
+          },
+          "visibility": "hidden"
+        }
+      ],
+      "requires": []
+    },
+    "datasets": {},
+    "expected": {
+      "status": "fail",
+      "passed": 1,
+      "total": 4,
+      "cases": [
+        [
+          "correct",
+          true
+        ],
+        [
+          "keeps-blanks",
+          false
+        ],
+        [
+          "no-trim",
+          false
+        ],
+        [
+          "hidden-2",
+          false
+        ]
+      ],
+      "matched": [
+        "keeps-blanks",
+        "no-trim",
+        "sorted-output"
+      ]
+    }
+  },
+  {
+    "name": "c03-boss-test-count-words:model",
+    "payload": {
+      "kind": "testing",
+      "entry": "count_words",
+      "learner": "def test_counts_ignoring_case():\n    assert count_words([\"Dock dock\", \"rail\"]) == {\"dock\": 2, \"rail\": 1}\n\n\ndef test_any_whitespace_separates_words():\n    assert count_words([\"A\\tb\", \"a  B\"]) == {\"a\": 2, \"b\": 2}\n\n\ndef test_double_spaces():\n    assert count_words([\"a  b\"]) == {\"a\": 1, \"b\": 1}\n\n\ndef test_empty_input_gives_empty_dict():\n    assert count_words([]) == {}\n\n\ndef test_returns_a_dict():\n    assert isinstance(count_words([\"x\"]), dict)\n",
+      "reference": "def count_words(lines):\n    counts = {}\n    for line in lines:\n        for word in line.lower().split():\n            counts[word] = counts.get(word, 0) + 1\n    return counts\n",
+      "scope": "all",
+      "mutants": [
+        {
+          "id": "case-sensitive",
+          "label": "Counts Dock and dock as different words",
+          "code": "def count_words(lines):\n    counts = {}\n    for line in lines:\n        for word in line.split():\n            counts[word] = counts.get(word, 0) + 1\n    return counts\n",
+          "mistake": {
+            "tag": "CASE_SENSITIVE_KEYS",
+            "title": "Words that differ only by case are different keys",
+            "explanation": "Dock and dock are different dict keys. Lower the words first when the rule says counting ignores case."
+          },
+          "visibility": "visible"
+        },
+        {
+          "id": "split-on-space",
+          "label": "Splits only on spaces, not tabs",
+          "code": "def count_words(lines):\n    counts = {}\n    for line in lines:\n        for word in line.lower().split(\" \"):\n            counts[word] = counts.get(word, 0) + 1\n    return counts\n",
+          "mistake": {
+            "tag": "SPLIT_ON_SPACE",
+            "title": "split(\" \") only splits on single spaces",
+            "explanation": "split() with no argument splits on any run of whitespace, including tabs and repeated spaces. split(\" \") does not."
+          },
+          "visibility": "visible"
+        },
+        {
+          "id": "pairs-not-dict",
+          "label": "Returns pairs instead of a dict",
+          "code": "def count_words(lines):\n    counts = {}\n    for line in lines:\n        for word in line.lower().split():\n            counts[word] = counts.get(word, 0) + 1\n    return sorted(counts.items())\n",
+          "mistake": {
+            "tag": "CONTAINER_SHAPE",
+            "title": "Return the shape the rule names",
+            "explanation": "A list of pairs is not a dict, even when it holds the same counts. Check the return type the rule states."
+          },
+          "visibility": "hidden"
+        }
+      ],
+      "requires": []
+    },
+    "datasets": {},
+    "expected": {
+      "status": "pass",
+      "passed": 4,
+      "total": 4,
+      "cases": [
+        [
+          "correct",
+          true
+        ],
+        [
+          "case-sensitive",
+          true
+        ],
+        [
+          "split-on-space",
+          true
+        ],
+        [
+          "hidden-2",
+          true
+        ]
+      ],
+      "matched": []
+    }
+  },
+  {
+    "name": "c03-boss-test-count-words:weak",
+    "payload": {
+      "kind": "testing",
+      "entry": "count_words",
+      "learner": "def test_counts_one_line():\n    assert count_words([\"dock rail dock\"]) == {\"dock\": 2, \"rail\": 1}\n",
+      "reference": "def count_words(lines):\n    counts = {}\n    for line in lines:\n        for word in line.lower().split():\n            counts[word] = counts.get(word, 0) + 1\n    return counts\n",
+      "scope": "all",
+      "mutants": [
+        {
+          "id": "case-sensitive",
+          "label": "Counts Dock and dock as different words",
+          "code": "def count_words(lines):\n    counts = {}\n    for line in lines:\n        for word in line.split():\n            counts[word] = counts.get(word, 0) + 1\n    return counts\n",
+          "mistake": {
+            "tag": "CASE_SENSITIVE_KEYS",
+            "title": "Words that differ only by case are different keys",
+            "explanation": "Dock and dock are different dict keys. Lower the words first when the rule says counting ignores case."
+          },
+          "visibility": "visible"
+        },
+        {
+          "id": "split-on-space",
+          "label": "Splits only on spaces, not tabs",
+          "code": "def count_words(lines):\n    counts = {}\n    for line in lines:\n        for word in line.lower().split(\" \"):\n            counts[word] = counts.get(word, 0) + 1\n    return counts\n",
+          "mistake": {
+            "tag": "SPLIT_ON_SPACE",
+            "title": "split(\" \") only splits on single spaces",
+            "explanation": "split() with no argument splits on any run of whitespace, including tabs and repeated spaces. split(\" \") does not."
+          },
+          "visibility": "visible"
+        },
+        {
+          "id": "pairs-not-dict",
+          "label": "Returns pairs instead of a dict",
+          "code": "def count_words(lines):\n    counts = {}\n    for line in lines:\n        for word in line.lower().split():\n            counts[word] = counts.get(word, 0) + 1\n    return sorted(counts.items())\n",
+          "mistake": {
+            "tag": "CONTAINER_SHAPE",
+            "title": "Return the shape the rule names",
+            "explanation": "A list of pairs is not a dict, even when it holds the same counts. Check the return type the rule states."
+          },
+          "visibility": "hidden"
+        }
+      ],
+      "requires": []
+    },
+    "datasets": {},
+    "expected": {
+      "status": "fail",
+      "passed": 2,
+      "total": 4,
+      "cases": [
+        [
+          "correct",
+          true
+        ],
+        [
+          "case-sensitive",
+          false
+        ],
+        [
+          "split-on-space",
+          false
+        ],
+        [
+          "hidden-2",
+          true
+        ]
+      ],
+      "matched": [
+        "case-sensitive",
+        "split-on-space"
+      ]
+    }
+  },
+  {
+    "name": "c03-boss-test-count-words:starter",
+    "payload": {
+      "kind": "testing",
+      "entry": "count_words",
+      "learner": "def test_example():\n    pass\n",
+      "reference": "def count_words(lines):\n    counts = {}\n    for line in lines:\n        for word in line.lower().split():\n            counts[word] = counts.get(word, 0) + 1\n    return counts\n",
+      "scope": "all",
+      "mutants": [
+        {
+          "id": "case-sensitive",
+          "label": "Counts Dock and dock as different words",
+          "code": "def count_words(lines):\n    counts = {}\n    for line in lines:\n        for word in line.split():\n            counts[word] = counts.get(word, 0) + 1\n    return counts\n",
+          "mistake": {
+            "tag": "CASE_SENSITIVE_KEYS",
+            "title": "Words that differ only by case are different keys",
+            "explanation": "Dock and dock are different dict keys. Lower the words first when the rule says counting ignores case."
+          },
+          "visibility": "visible"
+        },
+        {
+          "id": "split-on-space",
+          "label": "Splits only on spaces, not tabs",
+          "code": "def count_words(lines):\n    counts = {}\n    for line in lines:\n        for word in line.lower().split(\" \"):\n            counts[word] = counts.get(word, 0) + 1\n    return counts\n",
+          "mistake": {
+            "tag": "SPLIT_ON_SPACE",
+            "title": "split(\" \") only splits on single spaces",
+            "explanation": "split() with no argument splits on any run of whitespace, including tabs and repeated spaces. split(\" \") does not."
+          },
+          "visibility": "visible"
+        },
+        {
+          "id": "pairs-not-dict",
+          "label": "Returns pairs instead of a dict",
+          "code": "def count_words(lines):\n    counts = {}\n    for line in lines:\n        for word in line.lower().split():\n            counts[word] = counts.get(word, 0) + 1\n    return sorted(counts.items())\n",
+          "mistake": {
+            "tag": "CONTAINER_SHAPE",
+            "title": "Return the shape the rule names",
+            "explanation": "A list of pairs is not a dict, even when it holds the same counts. Check the return type the rule states."
+          },
+          "visibility": "hidden"
+        }
+      ],
+      "requires": []
+    },
+    "datasets": {},
+    "expected": {
+      "status": "fail",
+      "passed": 1,
+      "total": 4,
+      "cases": [
+        [
+          "correct",
+          true
+        ],
+        [
+          "case-sensitive",
+          false
+        ],
+        [
+          "split-on-space",
+          false
+        ],
+        [
+          "hidden-2",
+          false
+        ]
+      ],
+      "matched": [
+        "case-sensitive",
+        "split-on-space",
+        "pairs-not-dict"
+      ]
+    }
+  },
+  {
+    "name": "c03-boss-test-top-words:model",
+    "payload": {
+      "kind": "testing",
+      "entry": "top_words",
+      "learner": "def test_highest_count_first():\n    assert top_words({\"a\": 1, \"b\": 3, \"c\": 2}, 2) == [(\"b\", 3), (\"c\", 2)]\n\n\ndef test_highest_again():\n    assert top_words({\"x\": 5, \"y\": 1}, 1) == [(\"x\", 5)]\n\n\ndef test_ties_in_alphabetical_order():\n    assert top_words({\"m\": 2, \"b\": 2}, 2) == [(\"b\", 2), (\"m\", 2)]\n\n\ndef test_ties_again():\n    assert top_words({\"z\": 4, \"y\": 4}, 2) == [(\"y\", 4), (\"z\", 4)]\n\n\ndef test_at_most_n_pairs():\n    assert top_words({\"p\": 1, \"q\": 1, \"r\": 1}, 2) == [(\"p\", 1), (\"q\", 1)]\n\n\ndef test_fewer_words_than_n():\n    assert top_words({\"a\": 1}, 3) == [(\"a\", 1)]\n",
+      "reference": "def top_words(counts, n):\n    ranked = sorted(counts.items(), key=lambda pair: (-pair[1], pair[0]))\n    return ranked[:n]\n",
+      "scope": "all",
+      "mutants": [
+        {
+          "id": "ties-in-dict-order",
+          "label": "Keeps ties in the order they were added",
+          "code": "def top_words(counts, n):\n    ranked = sorted(counts.items(), key=lambda pair: -pair[1])\n    return ranked[:n]\n",
+          "mistake": {
+            "tag": "DICT_ORDER_ASSUMPTION",
+            "title": "Dict order is insertion order",
+            "explanation": "A dict keeps the order its keys were added. It is not sorted. Sort explicitly when the output needs an order."
+          },
+          "visibility": "visible"
+        },
+        {
+          "id": "ascending",
+          "label": "Puts the lowest count first",
+          "code": "def top_words(counts, n):\n    ranked = sorted(counts.items(), key=lambda pair: (pair[1], pair[0]))\n    return ranked[:n]\n",
+          "mistake": {
+            "tag": "SORTED_CHANGES_ORDER",
+            "title": "sorted() reorders the items",
+            "explanation": "sorted() puts items in order. Use it only when the rule asks for an order, and keep the caller order otherwise."
+          },
+          "visibility": "hidden"
+        },
+        {
+          "id": "one-short",
+          "label": "Returns one pair fewer than n",
+          "code": "def top_words(counts, n):\n    ranked = sorted(counts.items(), key=lambda pair: (-pair[1], pair[0]))\n    return ranked[: n - 1]\n",
+          "mistake": {
+            "tag": "OFF_BY_ONE_RANGE",
+            "title": "range() stops before its end",
+            "explanation": "range(a, b) stops before b, and range(n) starts at 0. Off-by-one loops skip the first or last item."
+          },
+          "visibility": "visible"
+        }
+      ],
+      "requires": []
+    },
+    "datasets": {},
+    "expected": {
+      "status": "pass",
+      "passed": 4,
+      "total": 4,
+      "cases": [
+        [
+          "correct",
+          true
+        ],
+        [
+          "ties-in-dict-order",
+          true
+        ],
+        [
+          "hidden-1",
+          true
+        ],
+        [
+          "one-short",
+          true
+        ]
+      ],
+      "matched": []
+    }
+  },
+  {
+    "name": "c03-boss-test-top-words:weak",
+    "payload": {
+      "kind": "testing",
+      "entry": "top_words",
+      "learner": "def test_highest_first():\n    assert top_words({\"a\": 1, \"b\": 3, \"c\": 2}, 2) == [(\"b\", 3), (\"c\", 2)]\n",
+      "reference": "def top_words(counts, n):\n    ranked = sorted(counts.items(), key=lambda pair: (-pair[1], pair[0]))\n    return ranked[:n]\n",
+      "scope": "all",
+      "mutants": [
+        {
+          "id": "ties-in-dict-order",
+          "label": "Keeps ties in the order they were added",
+          "code": "def top_words(counts, n):\n    ranked = sorted(counts.items(), key=lambda pair: -pair[1])\n    return ranked[:n]\n",
+          "mistake": {
+            "tag": "DICT_ORDER_ASSUMPTION",
+            "title": "Dict order is insertion order",
+            "explanation": "A dict keeps the order its keys were added. It is not sorted. Sort explicitly when the output needs an order."
+          },
+          "visibility": "visible"
+        },
+        {
+          "id": "ascending",
+          "label": "Puts the lowest count first",
+          "code": "def top_words(counts, n):\n    ranked = sorted(counts.items(), key=lambda pair: (pair[1], pair[0]))\n    return ranked[:n]\n",
+          "mistake": {
+            "tag": "SORTED_CHANGES_ORDER",
+            "title": "sorted() reorders the items",
+            "explanation": "sorted() puts items in order. Use it only when the rule asks for an order, and keep the caller order otherwise."
+          },
+          "visibility": "hidden"
+        },
+        {
+          "id": "one-short",
+          "label": "Returns one pair fewer than n",
+          "code": "def top_words(counts, n):\n    ranked = sorted(counts.items(), key=lambda pair: (-pair[1], pair[0]))\n    return ranked[: n - 1]\n",
+          "mistake": {
+            "tag": "OFF_BY_ONE_RANGE",
+            "title": "range() stops before its end",
+            "explanation": "range(a, b) stops before b, and range(n) starts at 0. Off-by-one loops skip the first or last item."
+          },
+          "visibility": "visible"
+        }
+      ],
+      "requires": []
+    },
+    "datasets": {},
+    "expected": {
+      "status": "fail",
+      "passed": 3,
+      "total": 4,
+      "cases": [
+        [
+          "correct",
+          true
+        ],
+        [
+          "ties-in-dict-order",
+          false
+        ],
+        [
+          "hidden-1",
+          true
+        ],
+        [
+          "one-short",
+          true
+        ]
+      ],
+      "matched": [
+        "ties-in-dict-order"
+      ]
+    }
+  },
+  {
+    "name": "c03-boss-test-top-words:starter",
+    "payload": {
+      "kind": "testing",
+      "entry": "top_words",
+      "learner": "def test_example():\n    pass\n",
+      "reference": "def top_words(counts, n):\n    ranked = sorted(counts.items(), key=lambda pair: (-pair[1], pair[0]))\n    return ranked[:n]\n",
+      "scope": "all",
+      "mutants": [
+        {
+          "id": "ties-in-dict-order",
+          "label": "Keeps ties in the order they were added",
+          "code": "def top_words(counts, n):\n    ranked = sorted(counts.items(), key=lambda pair: -pair[1])\n    return ranked[:n]\n",
+          "mistake": {
+            "tag": "DICT_ORDER_ASSUMPTION",
+            "title": "Dict order is insertion order",
+            "explanation": "A dict keeps the order its keys were added. It is not sorted. Sort explicitly when the output needs an order."
+          },
+          "visibility": "visible"
+        },
+        {
+          "id": "ascending",
+          "label": "Puts the lowest count first",
+          "code": "def top_words(counts, n):\n    ranked = sorted(counts.items(), key=lambda pair: (pair[1], pair[0]))\n    return ranked[:n]\n",
+          "mistake": {
+            "tag": "SORTED_CHANGES_ORDER",
+            "title": "sorted() reorders the items",
+            "explanation": "sorted() puts items in order. Use it only when the rule asks for an order, and keep the caller order otherwise."
+          },
+          "visibility": "hidden"
+        },
+        {
+          "id": "one-short",
+          "label": "Returns one pair fewer than n",
+          "code": "def top_words(counts, n):\n    ranked = sorted(counts.items(), key=lambda pair: (-pair[1], pair[0]))\n    return ranked[: n - 1]\n",
+          "mistake": {
+            "tag": "OFF_BY_ONE_RANGE",
+            "title": "range() stops before its end",
+            "explanation": "range(a, b) stops before b, and range(n) starts at 0. Off-by-one loops skip the first or last item."
+          },
+          "visibility": "visible"
+        }
+      ],
+      "requires": []
+    },
+    "datasets": {},
+    "expected": {
+      "status": "fail",
+      "passed": 1,
+      "total": 4,
+      "cases": [
+        [
+          "correct",
+          true
+        ],
+        [
+          "ties-in-dict-order",
+          false
+        ],
+        [
+          "hidden-1",
+          false
+        ],
+        [
+          "one-short",
+          false
+        ]
+      ],
+      "matched": [
+        "ties-in-dict-order",
+        "ascending",
+        "one-short"
+      ]
+    }
+  },
+  {
+    "name": "c03-boss-test-report-lines:model",
+    "payload": {
+      "kind": "testing",
+      "entry": "report_lines",
+      "learner": "def test_word_colon_count():\n    assert report_lines([[\"sea\", 3], [\"air\", 2]]) == [\"sea: 3\", \"air: 2\"]\n\n\ndef test_single_pair():\n    assert report_lines([[\"x\", 1]]) == [\"x: 1\"]\n\n\ndef test_keeps_order_of_ties():\n    assert report_lines([[\"b\", 2], [\"a\", 2]]) == [\"b: 2\", \"a: 2\"]\n\n\ndef test_empty_list():\n    assert report_lines([]) == []\n",
+      "reference": "def report_lines(pairs):\n    return [f\"{word}: {count}\" for word, count in pairs]\n",
+      "scope": "all",
+      "mutants": [
+        {
+          "id": "no-colon",
+          "label": "Leaves out the colon",
+          "code": "def report_lines(pairs):\n    return [f\"{word} {count}\" for word, count in pairs]\n",
+          "mistake": {
+            "tag": "FORMAT_SPEC",
+            "title": "The layout must match the rule exactly",
+            "explanation": "A report line is checked character by character. Use the separator and order the rule names."
+          },
+          "visibility": "hidden"
+        },
+        {
+          "id": "reversed",
+          "label": "Reverses the order of the lines",
+          "code": "def report_lines(pairs):\n    return [f\"{word}: {count}\" for word, count in pairs][::-1]\n",
+          "mistake": {
+            "tag": "REVERSED_ORDER",
+            "title": "Reversing flips the order",
+            "explanation": "Reversing a list or slicing with [::-1] puts the last item first. Keep the order the rule gives."
+          },
+          "visibility": "visible"
+        }
+      ],
+      "requires": []
+    },
+    "datasets": {},
+    "expected": {
+      "status": "pass",
+      "passed": 3,
+      "total": 3,
+      "cases": [
+        [
+          "correct",
+          true
+        ],
+        [
+          "hidden-0",
+          true
+        ],
+        [
+          "reversed",
+          true
+        ]
+      ],
+      "matched": []
+    }
+  },
+  {
+    "name": "c03-boss-test-report-lines:weak",
+    "payload": {
+      "kind": "testing",
+      "entry": "report_lines",
+      "learner": "def test_word_colon_count():\n    assert report_lines([[\"sea\", 3]]) == [\"sea: 3\"]\n",
+      "reference": "def report_lines(pairs):\n    return [f\"{word}: {count}\" for word, count in pairs]\n",
+      "scope": "all",
+      "mutants": [
+        {
+          "id": "no-colon",
+          "label": "Leaves out the colon",
+          "code": "def report_lines(pairs):\n    return [f\"{word} {count}\" for word, count in pairs]\n",
+          "mistake": {
+            "tag": "FORMAT_SPEC",
+            "title": "The layout must match the rule exactly",
+            "explanation": "A report line is checked character by character. Use the separator and order the rule names."
+          },
+          "visibility": "hidden"
+        },
+        {
+          "id": "reversed",
+          "label": "Reverses the order of the lines",
+          "code": "def report_lines(pairs):\n    return [f\"{word}: {count}\" for word, count in pairs][::-1]\n",
+          "mistake": {
+            "tag": "REVERSED_ORDER",
+            "title": "Reversing flips the order",
+            "explanation": "Reversing a list or slicing with [::-1] puts the last item first. Keep the order the rule gives."
+          },
+          "visibility": "visible"
+        }
+      ],
+      "requires": []
+    },
+    "datasets": {},
+    "expected": {
+      "status": "fail",
+      "passed": 2,
+      "total": 3,
+      "cases": [
+        [
+          "correct",
+          true
+        ],
+        [
+          "hidden-0",
+          true
+        ],
+        [
+          "reversed",
+          false
+        ]
+      ],
+      "matched": [
+        "reversed"
+      ]
+    }
+  },
+  {
+    "name": "c03-boss-test-report-lines:starter",
+    "payload": {
+      "kind": "testing",
+      "entry": "report_lines",
+      "learner": "def test_example():\n    pass\n",
+      "reference": "def report_lines(pairs):\n    return [f\"{word}: {count}\" for word, count in pairs]\n",
+      "scope": "all",
+      "mutants": [
+        {
+          "id": "no-colon",
+          "label": "Leaves out the colon",
+          "code": "def report_lines(pairs):\n    return [f\"{word} {count}\" for word, count in pairs]\n",
+          "mistake": {
+            "tag": "FORMAT_SPEC",
+            "title": "The layout must match the rule exactly",
+            "explanation": "A report line is checked character by character. Use the separator and order the rule names."
+          },
+          "visibility": "hidden"
+        },
+        {
+          "id": "reversed",
+          "label": "Reverses the order of the lines",
+          "code": "def report_lines(pairs):\n    return [f\"{word}: {count}\" for word, count in pairs][::-1]\n",
+          "mistake": {
+            "tag": "REVERSED_ORDER",
+            "title": "Reversing flips the order",
+            "explanation": "Reversing a list or slicing with [::-1] puts the last item first. Keep the order the rule gives."
+          },
+          "visibility": "visible"
+        }
+      ],
+      "requires": []
+    },
+    "datasets": {},
+    "expected": {
+      "status": "fail",
+      "passed": 1,
+      "total": 3,
+      "cases": [
+        [
+          "correct",
+          true
+        ],
+        [
+          "hidden-0",
+          false
+        ],
+        [
+          "reversed",
+          false
+        ]
+      ],
+      "matched": [
+        "no-colon",
+        "reversed"
+      ]
+    }
   }
 ]

@@ -84,6 +84,18 @@ export const MISTAKES = {
   UNSORTED_OUTPUT: mistake('UNSORTED_OUTPUT', 'The rule asks for an order', 'The rule says the lines or names come in a set order. Sort them before you return or format them.'),
   DUPLICATES_DROPPED: mistake('DUPLICATES_DROPPED', 'Repeats count, and a set drops them', 'The rule counts each repeat. A set keeps one copy of each value, so the count and the output change.'),
   TOTAL_OVERWRITTEN: mistake('TOTAL_OVERWRITTEN', 'Each item replaces the total', 'Adding to a total needs the old value. Assigning the new value throws away every earlier item.'),
+  ASSERT_MESSAGE_OMITTED: mistake('ASSERT_MESSAGE_OMITTED', 'An assert without a message says little when it fails', 'The message is shown with a failed assert. Without it, the failure shows only the assert line, so say what the check expected.'),
+  ASSERT_WRONG_EXCEPTION: mistake('ASSERT_WRONG_EXCEPTION', 'A failed assert raises AssertionError', 'A failed assert always raises AssertionError. To raise another error, write a raise statement.'),
+  FLOAT_EXACT_COMPARE: mistake('FLOAT_EXACT_COMPARE', 'Float sums are not always exact', '0.1 + 0.2 is not exactly 0.3 in binary floating point. Compare floats with a tolerance, such as math.isclose.'),
+  TEST_NEVER_RUN: mistake('TEST_NEVER_RUN', 'Defining a test does not run it', 'A def statement only creates the function. The test runs when something calls it, and the game calls each test function itself.'),
+  ASSERT_SWALLOWED: mistake('ASSERT_SWALLOWED', 'A test that catches its own failure never fails', 'If a test catches AssertionError, the failure is hidden. Let the assert fail, so the runner reports it.'),
+  HELPER_RUN_AS_TEST: mistake('HELPER_RUN_AS_TEST', 'A helper is not a test', 'Only functions whose names start with test_ are tests. A helper runs only when a test calls it.'),
+  MEAN_NOT_MEDIAN: mistake('MEAN_NOT_MEDIAN', 'The mean is not the median', 'The mean is pulled by large values. The median is the middle value after sorting, and the two middle values are averaged when the count is even.'),
+  BOUNDARY_UNTESTED: mistake('BOUNDARY_UNTESTED', 'The edge of a rule was never tested', 'Test the value at the limit of a rule, and the first value past it. Typical values alone miss an off-by-one bug.'),
+  EMPTY_INPUT_UNTESTED: mistake('EMPTY_INPUT_UNTESTED', 'The empty input was never tested', 'Many bugs only show up when there are no items. A suite that never passes an empty input cannot catch them.'),
+  SIZE_BELOW_ONE_UNTESTED: mistake('SIZE_BELOW_ONE_UNTESTED', 'A size below 1 was never tested', 'The rule for a size below 1 needs its own test. Without one, a missing check goes unnoticed.'),
+  NAN_UNTESTED: mistake('NAN_UNTESTED', 'nan and inf were never tested', 'nan and inf need their own tests. A check that is missing for them passes every other case.'),
+  ORDER_UNTESTED: mistake('ORDER_UNTESTED', 'The order of the output was never tested', 'A test that checks only the count or the size misses a bug that changes the order of the items.'),
 } as const satisfies Record<string, Mistake>;
 
 export type MistakeTag = keyof typeof MISTAKES;

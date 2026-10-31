@@ -490,5 +490,80 @@
       }
     ],
     "jsNotes": []
+  },
+  {
+    "lesson": "c03-testing/assert",
+    "sections": [
+      {
+        "id": "assert-basics",
+        "docClaim": false,
+        "quotes": []
+      },
+      {
+        "id": "assert-message",
+        "docClaim": true,
+        "quotes": [
+          "pytest-assert-message"
+        ]
+      },
+      {
+        "id": "assert-float",
+        "docClaim": true,
+        "quotes": [
+          "pytest-approx"
+        ]
+      }
+    ],
+    "jsNotes": []
+  },
+  {
+    "lesson": "c03-testing/pytest-style",
+    "sections": [
+      {
+        "id": "test-functions",
+        "docClaim": false,
+        "quotes": []
+      },
+      {
+        "id": "test-shape",
+        "docClaim": true,
+        "quotes": [
+          "pytest-assert-standard"
+        ]
+      }
+    ],
+    "jsNotes": []
+  },
+  {
+    "lesson": "c03-testing/good-cases",
+    "sections": [
+      {
+        "id": "cases-boundaries",
+        "docClaim": false,
+        "quotes": []
+      },
+      {
+        "id": "cases-empty",
+        "docClaim": false,
+        "quotes": []
+      }
+    ],
+    "jsNotes": []
+  },
+  {
+    "lesson": "c03-testing/test-first",
+    "sections": [
+      {
+        "id": "test-first",
+        "docClaim": false,
+        "quotes": []
+      },
+      {
+        "id": "test-fix",
+        "docClaim": false,
+        "quotes": []
+      }
+    ],
+    "jsNotes": []
   }
 ]

@@ -5,6 +5,8 @@ import { CHAPTER1 as CHAPTER1_INFO } from './chapter1/index';
 import chapter1Outputs from './generated/chapter1.outputs.json';
 import { CHAPTER2 as CHAPTER2_INFO } from './chapter2/index';
 import chapter2Outputs from './generated/chapter2.outputs.json';
+import { CHAPTER3 as CHAPTER3_INFO } from './chapter3/index';
+import chapter3Outputs from './generated/chapter3.outputs.json';
 import type { Chapter, ChoiceItem, Lesson } from './types';
 
 // The only module that loads the generated outputs. Chapter modules hold content and stay
@@ -12,6 +14,7 @@ import type { Chapter, ChoiceItem, Lesson } from './types';
 export const CHAPTERS: readonly Chapter[] = [
   { ...CHAPTER1_INFO, outputs: chapter1Outputs },
   { ...CHAPTER2_INFO, outputs: chapter2Outputs },
+  { ...CHAPTER3_INFO, outputs: chapter3Outputs },
 ];
 
 export interface Found<T> {

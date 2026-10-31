@@ -1,0 +1,170 @@
+{
+  "examples": {
+    "c03-assert-1": {
+      "codeHash": "6ff3059323864790",
+      "stdout": "first check passed\nsecond check failed AssertionError\n",
+      "error": null
+    },
+    "c03-assert-2": {
+      "codeHash": "aed43db7cb4c5ae9",
+      "stdout": "failed: tax is wrong\n",
+      "error": null
+    },
+    "c03-assert-3": {
+      "codeHash": "6bf4c5d604774393",
+      "stdout": "not exact\nTrue\n",
+      "error": null
+    },
+    "c03-pytest-1": {
+      "codeHash": "ff09cdfcde6cd019",
+      "stdout": "test_adds_tax passed\ntest_fails_on_purpose failed\n",
+      "error": null
+    },
+    "c03-pytest-2": {
+      "codeHash": "c6a7d34161bd7144",
+      "stdout": "test ran\n",
+      "error": null
+    },
+    "c03-cases-1": {
+      "codeHash": "3921f0685438c911",
+      "stdout": "1 [[1], [2], [3]]\n3 [[1, 2, 3]]\n4 [[1, 2, 3]]\n",
+      "error": null
+    },
+    "c03-cases-2": {
+      "codeHash": "7e8f79c2493cc940",
+      "stdout": "[]\n1\n",
+      "error": null
+    },
+    "c03-first-1": {
+      "codeHash": "4f6d4751b203df79",
+      "stdout": "fails, so the fix is still needed\n",
+      "error": null
+    },
+    "c03-first-2": {
+      "codeHash": "b4bee7c1effef7ae",
+      "stdout": "both tests pass\n",
+      "error": null
+    }
+  },
+  "choice": {
+    "c03-predict-assert-message": {
+      "codeHash": "aed43db7cb4c5ae9",
+      "answer": "true",
+      "options": [
+        {
+          "id": "true",
+          "text": "failed: tax is wrong",
+          "tag": null,
+          "codeHash": "aed43db7cb4c5ae9",
+          "error": null
+        },
+        {
+          "id": "message-dropped",
+          "text": "failed: ",
+          "tag": "ASSERT_MESSAGE_OMITTED",
+          "codeHash": "4e4ce1df11ee740f",
+          "error": null
+        }
+      ]
+    },
+    "c03-predict-float-tolerance": {
+      "codeHash": "37a0fd39070193c5",
+      "answer": "true",
+      "options": [
+        {
+          "id": "true",
+          "text": "not exact\nTrue",
+          "tag": null,
+          "codeHash": "37a0fd39070193c5",
+          "error": null
+        },
+        {
+          "id": "exact-sums",
+          "text": "exact\nTrue",
+          "tag": "FLOAT_EXACT_COMPARE",
+          "codeHash": "b57dd543ffb9daa2",
+          "error": null
+        }
+      ]
+    },
+    "c03-predict-test-runner": {
+      "codeHash": "32eae51a16493b62",
+      "answer": "true",
+      "options": [
+        {
+          "id": "swallowed",
+          "text": "{'test_total': 'pass', 'test_empty': 'pass'}",
+          "tag": "ASSERT_SWALLOWED",
+          "codeHash": "efcefba15a2e207b",
+          "error": null
+        },
+        {
+          "id": "true",
+          "text": "{'test_total': 'pass', 'test_empty': 'fail'}",
+          "tag": null,
+          "codeHash": "32eae51a16493b62",
+          "error": null
+        },
+        {
+          "id": "helper-counted",
+          "text": "{'test_total': 'pass', 'test_empty': 'fail', 'helper': 'fail'}",
+          "tag": "HELPER_RUN_AS_TEST",
+          "codeHash": "02d3712fe4d76aa6",
+          "error": null
+        }
+      ]
+    },
+    "c03-traceback-test-without-function": {
+      "codeHash": "624041cca6659816",
+      "answer": "true",
+      "options": [
+        {
+          "id": "true",
+          "text": "NameError: name 'in_batches' is not defined",
+          "tag": null,
+          "codeHash": "624041cca6659816",
+          "error": {
+            "type": "NameError",
+            "message": "name 'in_batches' is not defined",
+            "line": 2
+          }
+        },
+        {
+          "id": "never-called",
+          "text": "(no error)",
+          "tag": "TEST_NEVER_RUN",
+          "codeHash": "ab12241032a5ea73",
+          "error": null
+        }
+      ]
+    },
+    "c03-traceback-assert-message": {
+      "codeHash": "dcb2fe9365212d89",
+      "answer": "true",
+      "options": [
+        {
+          "id": "true",
+          "text": "AssertionError: more shipped than stocked: left -2",
+          "tag": null,
+          "codeHash": "dcb2fe9365212d89",
+          "error": {
+            "type": "AssertionError",
+            "message": "more shipped than stocked: left -2",
+            "line": 6
+          }
+        },
+        {
+          "id": "raises-value",
+          "text": "ValueError: more shipped than stocked: left -2",
+          "tag": "ASSERT_WRONG_EXCEPTION",
+          "codeHash": "dca319caf1da28c9",
+          "error": {
+            "type": "ValueError",
+            "message": "more shipped than stocked: left -2",
+            "line": 7
+          }
+        }
+      ]
+    }
+  }
+}

@@ -25,6 +25,14 @@ interface LearnerCase {
 }
 
 function learnerCases(spec: ChallengeSpec): LearnerCase[] {
+  // A testing item's learners are test suites, so the model and weak suites are exported as learners.
+  if (spec.kind === 'testing') {
+    return [
+      { name: `${spec.id}:model`, learner: spec.modelTests ?? '', kind: 'reference' },
+      { name: `${spec.id}:weak`, learner: spec.weakTests ?? '', kind: 'variant' },
+      { name: `${spec.id}:starter`, learner: spec.starter, kind: 'starter' },
+    ];
+  }
   return [
     { name: `${spec.id}:reference`, learner: spec.reference, kind: 'reference' },
     { name: `${spec.id}:starter`, learner: spec.starter, kind: 'starter' },

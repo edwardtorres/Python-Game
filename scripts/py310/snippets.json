@@ -732,6 +732,122 @@
     "code": "def report_lines(rows):\n    return [(dock, f\"{total:.1f}\") for dock, total in sorted(rows)]\n"
   },
   {
+    "name": "c03-testing-in-batches:model",
+    "code": "def test_batch_sizes():\n    assert list(in_batches([1, 2, 3, 4, 5], 2)) == [[1, 2], [3, 4], [5]]\n\n\ndef test_order_inside_batches():\n    assert list(in_batches([\"a\", \"b\", \"c\", \"d\"], 2)) == [[\"a\", \"b\"], [\"c\", \"d\"]]\n\n\ndef test_empty_input():\n    assert list(in_batches([], 3)) == []\n\n\ndef test_empty_input_any_size():\n    assert list(in_batches([], 1)) == []\n\n\ndef test_size_below_one():\n    try:\n        list(in_batches([1, 2], 0))\n    except ValueError:\n        return\n    assert False, \"a size below 1 must raise ValueError\"\n\n\ndef test_size_below_one_with_no_items():\n    try:\n        list(in_batches([], 0))\n    except ValueError:\n        return\n    assert False, \"a size below 1 must raise ValueError, even with no items\"\n"
+  },
+  {
+    "name": "c03-testing-in-batches:weak",
+    "code": "def test_batch_count():\n    assert len(list(in_batches([1, 2, 3, 4, 5], 2))) == 3\n"
+  },
+  {
+    "name": "c03-testing-in-batches:starter",
+    "code": "def test_example():\n    pass\n"
+  },
+  {
+    "name": "c03-testing-parse-weight:model",
+    "code": "def test_decimal_text():\n    assert parse_weight(\" 4.5 \") == 4.5\n\n\ndef test_decimal_text_again():\n    assert parse_weight(\"2.75\") == 2.75\n\n\ndef test_letters_give_none():\n    assert parse_weight(\"abc\") is None\n\n\ndef test_empty_text_gives_none():\n    assert parse_weight(\"\") is None\n\n\ndef test_number_value_raises():\n    try:\n        parse_weight(12)\n    except TypeError:\n        return\n    assert False, \"a value that is not text must raise TypeError\"\n\n\ndef test_none_value_raises():\n    try:\n        parse_weight(None)\n    except TypeError:\n        return\n    assert False, \"None is not text, so it must raise TypeError\"\n\n\ndef test_nan_gives_none():\n    assert parse_weight(\"nan\") is None\n\n\ndef test_inf_gives_none():\n    assert parse_weight(\"inf\") is None\n"
+  },
+  {
+    "name": "c03-testing-parse-weight:weak",
+    "code": "def test_decimal_text():\n    assert parse_weight(\" 4.5 \") == 4.5\n"
+  },
+  {
+    "name": "c03-testing-parse-weight:starter",
+    "code": "def test_example():\n    pass\n"
+  },
+  {
+    "name": "c03-suite-fix-dock-count:reference",
+    "code": "def count_docks(log):\n    return len(set(log))\n"
+  },
+  {
+    "name": "c03-suite-fix-dock-count:starter",
+    "code": "def count_docks(log):\n    return len(log)\n"
+  },
+  {
+    "name": "c03-suite-fix-dock-count:variant:counts-lines",
+    "code": "def count_docks(log):\n    return len(log)\n"
+  },
+  {
+    "name": "c03-suite-fix-dock-count:variant:lowercase-names",
+    "code": "def count_docks(log):\n    return len(set(name.lower() for name in log))\n"
+  },
+  {
+    "name": "c03-suite-fix-dock-count:variant:none-when-empty",
+    "code": "def count_docks(log):\n    if not log:\n        return None\n    return len(set(log))\n"
+  },
+  {
+    "name": "c03-suite-fix-median:reference",
+    "code": "def median(values):\n    if not values:\n        raise ValueError(\"median needs at least one value\")\n    ordered = sorted(values)\n    middle = len(ordered) // 2\n    if len(ordered) % 2 == 1:\n        return ordered[middle]\n    return (ordered[middle - 1] + ordered[middle]) / 2\n"
+  },
+  {
+    "name": "c03-suite-fix-median:starter",
+    "code": "def median(values):\n    return sorted(values)[len(values) // 2]\n"
+  },
+  {
+    "name": "c03-suite-fix-median:variant:lower-middle",
+    "code": "def median(values):\n    if not values:\n        raise ValueError(\"median needs at least one value\")\n    ordered = sorted(values)\n    return ordered[(len(ordered) - 1) // 2]\n"
+  },
+  {
+    "name": "c03-suite-fix-median:variant:mean",
+    "code": "def median(values):\n    if not values:\n        raise ValueError(\"median needs at least one value\")\n    return sum(values) / len(values)\n"
+  },
+  {
+    "name": "c03-suite-fix-median:variant:empty-none",
+    "code": "def median(values):\n    if not values:\n        return None\n    ordered = sorted(values)\n    middle = len(ordered) // 2\n    if len(ordered) % 2 == 1:\n        return ordered[middle]\n    return (ordered[middle - 1] + ordered[middle]) / 2\n"
+  },
+  {
+    "name": "c03-suite-fix-median:variant:unsorted",
+    "code": "def median(values):\n    if not values:\n        raise ValueError(\"median needs at least one value\")\n    return values[len(values) // 2]\n"
+  },
+  {
+    "name": "c03-boss-test-clean-lines:model",
+    "code": "def test_trims_and_drops_blanks():\n    assert clean_lines([\"  Dock 1 \", \"\", \"Bay 2\"]) == [\"Dock 1\", \"Bay 2\"]\n\n\ndef test_keeps_order():\n    assert clean_lines([\"z\", \" a \", \"m\"]) == [\"z\", \"a\", \"m\"]\n\n\ndef test_spaces_only_line_is_blank():\n    assert clean_lines([\"   \", \"Gate\"]) == [\"Gate\"]\n\n\ndef test_empty_input():\n    assert clean_lines([]) == []\n"
+  },
+  {
+    "name": "c03-boss-test-clean-lines:weak",
+    "code": "def test_trims_one_line():\n    assert clean_lines([\"  Dock 1 \"]) == [\"Dock 1\"]\n"
+  },
+  {
+    "name": "c03-boss-test-clean-lines:starter",
+    "code": "def test_example():\n    pass\n"
+  },
+  {
+    "name": "c03-boss-test-count-words:model",
+    "code": "def test_counts_ignoring_case():\n    assert count_words([\"Dock dock\", \"rail\"]) == {\"dock\": 2, \"rail\": 1}\n\n\ndef test_any_whitespace_separates_words():\n    assert count_words([\"A\\tb\", \"a  B\"]) == {\"a\": 2, \"b\": 2}\n\n\ndef test_double_spaces():\n    assert count_words([\"a  b\"]) == {\"a\": 1, \"b\": 1}\n\n\ndef test_empty_input_gives_empty_dict():\n    assert count_words([]) == {}\n\n\ndef test_returns_a_dict():\n    assert isinstance(count_words([\"x\"]), dict)\n"
+  },
+  {
+    "name": "c03-boss-test-count-words:weak",
+    "code": "def test_counts_one_line():\n    assert count_words([\"dock rail dock\"]) == {\"dock\": 2, \"rail\": 1}\n"
+  },
+  {
+    "name": "c03-boss-test-count-words:starter",
+    "code": "def test_example():\n    pass\n"
+  },
+  {
+    "name": "c03-boss-test-top-words:model",
+    "code": "def test_highest_count_first():\n    assert top_words({\"a\": 1, \"b\": 3, \"c\": 2}, 2) == [(\"b\", 3), (\"c\", 2)]\n\n\ndef test_highest_again():\n    assert top_words({\"x\": 5, \"y\": 1}, 1) == [(\"x\", 5)]\n\n\ndef test_ties_in_alphabetical_order():\n    assert top_words({\"m\": 2, \"b\": 2}, 2) == [(\"b\", 2), (\"m\", 2)]\n\n\ndef test_ties_again():\n    assert top_words({\"z\": 4, \"y\": 4}, 2) == [(\"y\", 4), (\"z\", 4)]\n\n\ndef test_at_most_n_pairs():\n    assert top_words({\"p\": 1, \"q\": 1, \"r\": 1}, 2) == [(\"p\", 1), (\"q\", 1)]\n\n\ndef test_fewer_words_than_n():\n    assert top_words({\"a\": 1}, 3) == [(\"a\", 1)]\n"
+  },
+  {
+    "name": "c03-boss-test-top-words:weak",
+    "code": "def test_highest_first():\n    assert top_words({\"a\": 1, \"b\": 3, \"c\": 2}, 2) == [(\"b\", 3), (\"c\", 2)]\n"
+  },
+  {
+    "name": "c03-boss-test-top-words:starter",
+    "code": "def test_example():\n    pass\n"
+  },
+  {
+    "name": "c03-boss-test-report-lines:model",
+    "code": "def test_word_colon_count():\n    assert report_lines([[\"sea\", 3], [\"air\", 2]]) == [\"sea: 3\", \"air: 2\"]\n\n\ndef test_single_pair():\n    assert report_lines([[\"x\", 1]]) == [\"x: 1\"]\n\n\ndef test_keeps_order_of_ties():\n    assert report_lines([[\"b\", 2], [\"a\", 2]]) == [\"b: 2\", \"a: 2\"]\n\n\ndef test_empty_list():\n    assert report_lines([]) == []\n"
+  },
+  {
+    "name": "c03-boss-test-report-lines:weak",
+    "code": "def test_word_colon_count():\n    assert report_lines([[\"sea\", 3]]) == [\"sea: 3\"]\n"
+  },
+  {
+    "name": "c03-boss-test-report-lines:starter",
+    "code": "def test_example():\n    pass\n"
+  },
+  {
     "name": "example:types-1",
     "code": "print(int(\"42\") + 1, float(\"2.5\") * 2, str(7) + \"!\")\nprint(type(3), type(3.0), type(\"3\"))\n"
   },
@@ -1178,5 +1294,85 @@
   {
     "name": "choice:c02-traceback-heap-empty:read-front",
     "code": "jobs = []\njobs.append(4)\njobs.pop(0)\nprint(jobs[0])\n"
+  },
+  {
+    "name": "example:c03-assert-1",
+    "code": "def add_tax(amount):\n    return round(amount * 1.2, 2)\n\n\nassert add_tax(10) == 12.0\nprint(\"first check passed\")\ntry:\n    assert add_tax(10) == 11.0\nexcept AssertionError as error:\n    print(\"second check failed\", type(error).__name__)\n"
+  },
+  {
+    "name": "example:c03-assert-2",
+    "code": "def add_tax(amount):\n    return round(amount * 1.2, 2)\n\n\ntry:\n    assert add_tax(10) == 11.0, \"tax is wrong\"\n    print(\"passed\")\nexcept AssertionError as error:\n    print(\"failed:\", error)\n"
+  },
+  {
+    "name": "example:c03-assert-3",
+    "code": "import math\n\ntry:\n    assert 0.1 + 0.2 == 0.3\n    print(\"exact\")\nexcept AssertionError:\n    print(\"not exact\")\nprint(math.isclose(0.1 + 0.2, 0.3))\n"
+  },
+  {
+    "name": "example:c03-pytest-1",
+    "code": "def test_adds_tax():\n    assert round(10 * 1.2, 2) == 12.0\n\n\ndef test_fails_on_purpose():\n    assert round(10 * 1.2, 2) == 13.0\n\n\ndef helper():\n    return 1\n\n\nfor name in [\"test_adds_tax\", \"test_fails_on_purpose\", \"helper\"]:\n    if name.startswith(\"test_\"):\n        try:\n            globals()[name]()\n            print(name, \"passed\")\n        except AssertionError:\n            print(name, \"failed\")\n"
+  },
+  {
+    "name": "example:c03-pytest-2",
+    "code": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n\n\ndef test_splits_into_pairs():\n    assert list(in_batches([1, 2, 3], 2)) == [[1, 2], [3]]\n\n\ntest_splits_into_pairs()\nprint(\"test ran\")\n"
+  },
+  {
+    "name": "example:c03-cases-1",
+    "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n\n\nfor size in (1, 3, 4):\n    print(size, list(in_batches([1, 2, 3], size)))\n"
+  },
+  {
+    "name": "example:c03-cases-2",
+    "code": "def in_batches(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n\n\nprint(list(in_batches([], 3)))\nprint(len(list(in_batches([1], 3))))\n"
+  },
+  {
+    "name": "example:c03-first-1",
+    "code": "def double(x):\n    return x + 1\n\n\ndef test_double():\n    assert double(3) == 6\n\n\ntry:\n    test_double()\n    print(\"passes\")\nexcept AssertionError:\n    print(\"fails, so the fix is still needed\")\n"
+  },
+  {
+    "name": "example:c03-first-2",
+    "code": "def double(x):\n    return x * 2\n\n\ndef test_double():\n    assert double(3) == 6\n\n\ndef test_double_zero():\n    assert double(0) == 0\n\n\nfor test in (test_double, test_double_zero):\n    test()\nprint(\"both tests pass\")\n"
+  },
+  {
+    "name": "choice:c03-predict-assert-message",
+    "code": "def add_tax(amount):\n    return round(amount * 1.2, 2)\n\n\ntry:\n    assert add_tax(10) == 11.0, \"tax is wrong\"\n    print(\"passed\")\nexcept AssertionError as error:\n    print(\"failed:\", error)\n"
+  },
+  {
+    "name": "choice:c03-predict-assert-message:message-dropped",
+    "code": "def add_tax(amount):\n    return round(amount * 1.2, 2)\n\n\ntry:\n    assert add_tax(10) == 11.0\n    print(\"passed\")\nexcept AssertionError as error:\n    print(\"failed:\", error)\n"
+  },
+  {
+    "name": "choice:c03-predict-float-tolerance",
+    "code": "try:\n    assert 0.1 + 0.2 == 0.3\n    print(\"exact\")\nexcept AssertionError:\n    print(\"not exact\")\nprint(round(0.1 + 0.2, 2) == 0.3)\n"
+  },
+  {
+    "name": "choice:c03-predict-float-tolerance:exact-sums",
+    "code": "try:\n    assert 0.5 + 0.25 == 0.75\n    print(\"exact\")\nexcept AssertionError:\n    print(\"not exact\")\nprint(round(0.1 + 0.2, 2) == 0.3)\n"
+  },
+  {
+    "name": "choice:c03-predict-test-runner",
+    "code": "def test_total():\n    assert sum([1, 2]) == 3\n\n\ndef test_empty():\n    assert sum([]) == 1\n\n\ndef helper():\n    assert False\n\n\nresults = {}\nfor name in [\"test_total\", \"test_empty\", \"helper\"]:\n    if name.startswith(\"test_\"):\n        try:\n            globals()[name]()\n            results[name] = \"pass\"\n        except AssertionError:\n            results[name] = \"fail\"\nprint(results)\n"
+  },
+  {
+    "name": "choice:c03-predict-test-runner:helper-counted",
+    "code": "def test_total():\n    assert sum([1, 2]) == 3\n\n\ndef test_empty():\n    assert sum([]) == 1\n\n\ndef helper():\n    assert False\n\n\nresults = {}\nfor name in [\"test_total\", \"test_empty\", \"helper\"]:\n    if True:\n        try:\n            globals()[name]()\n            results[name] = \"pass\"\n        except AssertionError:\n            results[name] = \"fail\"\nprint(results)\n"
+  },
+  {
+    "name": "choice:c03-predict-test-runner:swallowed",
+    "code": "def test_total():\n    assert sum([1, 2]) == 3\n\n\ndef test_empty():\n    assert sum([]) == 1\n\n\ndef helper():\n    assert False\n\n\nresults = {}\nfor name in [\"test_total\", \"test_empty\", \"helper\"]:\n    if name.startswith(\"test_\"):\n        try:\n            globals()[name]()\n            results[name] = \"pass\"\n        except AssertionError:\n            results[name] = \"pass\"\nprint(results)\n"
+  },
+  {
+    "name": "choice:c03-traceback-test-without-function",
+    "code": "def test_batches():\n    assert in_batches([1, 2, 3], 2) == [[1, 2], [3]]\n\n\ntest_batches()\n"
+  },
+  {
+    "name": "choice:c03-traceback-test-without-function:never-called",
+    "code": "def test_batches():\n    assert in_batches([1, 2, 3], 2) == [[1, 2], [3]]\n"
+  },
+  {
+    "name": "choice:c03-traceback-assert-message",
+    "code": "def parcels_left(total, shipped):\n    return total - shipped\n\n\nleft = parcels_left(10, 12)\nassert left >= 0, f\"more shipped than stocked: left {left}\"\n"
+  },
+  {
+    "name": "choice:c03-traceback-assert-message:raises-value",
+    "code": "def parcels_left(total, shipped):\n    return total - shipped\n\n\nleft = parcels_left(10, 12)\nif left < 0:\n    raise ValueError(f\"more shipped than stocked: left {left}\")\n"
   }
 ]

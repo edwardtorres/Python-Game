@@ -1,0 +1,22 @@
+[
+  {
+    "id": "c03-predict-assert-message",
+    "answer": "A"
+  },
+  {
+    "id": "c03-predict-float-tolerance",
+    "answer": "A"
+  },
+  {
+    "id": "c03-predict-test-runner",
+    "answer": "B"
+  },
+  {
+    "id": "c03-traceback-test-without-function",
+    "answer": "A"
+  },
+  {
+    "id": "c03-traceback-assert-message",
+    "answer": "A"
+  }
+]

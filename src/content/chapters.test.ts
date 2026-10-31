@@ -18,6 +18,7 @@ import type { Chapter } from './types';
 const COUNTS: Record<string, { lessons: number; choice: number; graded: number; boss: number }> = {
   'c01-foundations': { lessons: 13, choice: 15, graded: 14, boss: 4 },
   'c02-informatics': { lessons: 11, choice: 13, graded: 11, boss: 4 },
+  'c03-testing': { lessons: 4, choice: 5, graded: 4, boss: 4 },
 };
 
 let runtime: PyRuntime;
@@ -72,6 +73,9 @@ function namedRules(spec: ChallengeSpec): Map<string, number[]> {
 describe.each(CHAPTERS.map((chapter) => [chapter.id, chapter] as const))('chapter %s', (_id, chapter) => {
   const outputs = () => outputsOf(chapter);
   const graded = [...chapter.graded, ...chapter.boss];
+  // Testing items grade mutants, not cases, so they have their own checks below.
+  const generic = graded.filter((spec) => spec.kind !== 'testing');
+  const testing = graded.filter((spec) => spec.kind === 'testing');
 
   describe('lessons (source pass)', () => {
     it('has the counts its plan sets', () => {
@@ -127,13 +131,13 @@ describe.each(CHAPTERS.map((chapter) => [chapter.id, chapter] as const))('chapte
   });
 
   describe('graded items', () => {
-    it.each(graded.map((spec) => [spec.id, spec] as const))('%s: the reference passes, and the grader is repeatable', (_id, spec) => {
+    it.each(generic.map((spec) => [spec.id, spec] as const))('%s: the reference passes, and the grader is repeatable', (_id, spec) => {
       const first = grade(spec, spec.reference, 'submit');
       expect(first.status, JSON.stringify(first.cases.filter((c) => !c.ok))).toBe('pass');
       expect(grade(spec, spec.reference, 'submit')).toEqual(first);
     }, 120_000);
 
-    it.each(graded.map((spec) => [spec.id, spec] as const))('%s: has three hints and a rule for every wrong variant', (_id, spec) => {
+    it.each(generic.map((spec) => [spec.id, spec] as const))('%s: has three hints and a rule for every wrong variant', (_id, spec) => {
       expect(spec.hints).toHaveLength(3);
       expect(spec.rules.length).toBeGreaterThan(0);
       const covered = new Set(Object.values(spec.variantRule));
@@ -141,7 +145,7 @@ describe.each(CHAPTERS.map((chapter) => [chapter.id, chapter] as const))('chapte
       expect(Object.keys(spec.variantRule).sort()).toEqual(spec.variants.map((variant) => variant.id).sort());
     });
 
-    it.each(graded.map((spec) => [spec.id, spec] as const))('%s: every case names its rules, and a wrong variant fails only cases that name its rule', (_id, spec) => {
+    it.each(generic.map((spec) => [spec.id, spec] as const))('%s: every case names its rules, and a wrong variant fails only cases that name its rule', (_id, spec) => {
       const named = namedRules(spec);
       for (const [caseId, rules] of named) {
         expect(rules.length, `${caseId} names a rule`).toBeGreaterThan(0);
@@ -158,7 +162,7 @@ describe.each(CHAPTERS.map((chapter) => [chapter.id, chapter] as const))('chapte
       }
     }, 240_000);
 
-    it.each(graded.map((spec) => [spec.id, spec] as const))('%s: each wrong variant is caught by at least two cases, and one fails visible data', (_id, spec) => {
+    it.each(generic.map((spec) => [spec.id, spec] as const))('%s: each wrong variant is caught by at least two cases, and one fails visible data', (_id, spec) => {
       expect(spec.variants.length).toBeGreaterThanOrEqual(2);
       let visibleFailure = false;
       for (const variant of spec.variants) {
@@ -172,13 +176,43 @@ describe.each(CHAPTERS.map((chapter) => [chapter.id, chapter] as const))('chapte
       expect(visibleFailure, 'at least one wrong variant fails on visible data').toBe(true);
     }, 240_000);
 
-    it.each(graded.map((spec) => [spec.id, spec] as const))('%s: the starter is a skeleton (write task) or broken (fix task)', (_id, spec) => {
+    it.each(generic.map((spec) => [spec.id, spec] as const))('%s: the starter is a skeleton (write task) or broken (fix task)', (_id, spec) => {
       if (startsBroken(spec)) {
         expect(isSkeleton(spec.starter), 'fix tasks start from broken code, not a skeleton').toBe(false);
         expect(grade(spec, spec.starter, 'submit').status, 'the broken starter fails').toBe('fail');
       } else {
         expect(isSkeleton(spec.starter), 'write tasks start from a bare pass').toBe(true);
       }
+    });
+  });
+
+  describe.runIf(testing.length > 0)('testing items (the learner writes tests)', () => {
+    it.each(testing.map((spec) => [spec.id, spec] as const))('%s: the model suite passes the reference and kills every mutant', (_id, spec) => {
+      const { payload, datasets } = buildGradeRequest(spec, spec.modelTests ?? '', 'submit');
+      const result = runtime.grade(JSON.stringify(payload), JSON.stringify(datasets));
+      expect(result.status, JSON.stringify(result.cases.filter((c) => !c.ok))).toBe('pass');
+    }, 240_000);
+
+    it.each(testing.map((spec) => [spec.id, spec] as const))('%s: every mutant is killed by at least two test functions', (_id, spec) => {
+      const { payload, datasets } = buildGradeRequest(spec, spec.modelTests ?? '', 'submit');
+      const result = runtime.grade(JSON.stringify({ ...payload, report: true }), JSON.stringify(datasets));
+      for (const mutant of spec.mutants ?? []) {
+        expect(result.report?.kills[mutant.id]?.length ?? 0, `${mutant.id} is killed by two test functions`).toBeGreaterThanOrEqual(2);
+      }
+    }, 240_000);
+
+    it.each(testing.map((spec) => [spec.id, spec] as const))('%s: a weak suite leaves a visible mutant alive', (_id, spec) => {
+      const visible = new Set((spec.mutants ?? []).filter((mutant) => mutant.visibility === 'visible').map((mutant) => mutant.id));
+      const { payload, datasets } = buildGradeRequest(spec, spec.weakTests ?? '', 'run');
+      const result = runtime.grade(JSON.stringify(payload), JSON.stringify(datasets));
+      expect(result.matched.some((match) => visible.has(match.variantId)), 'a visible mutant survives the weak suite').toBe(true);
+    }, 240_000);
+
+    it.each(testing.map((spec) => [spec.id, spec] as const))('%s: every rule has a mutant, and every mutant names a rule', (_id, spec) => {
+      const rules = Object.values(spec.variantRule);
+      expect(spec.rules.length).toBeGreaterThan(0);
+      spec.rules.forEach((_, index) => expect(rules.includes(index), `rule ${index + 1} has a mutant`).toBe(true));
+      expect(Object.keys(spec.variantRule).sort()).toEqual((spec.mutants ?? []).map((mutant) => mutant.id).sort());
     });
   });
 

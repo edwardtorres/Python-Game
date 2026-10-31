@@ -26,6 +26,10 @@ export interface ChallengeSpec {
   mutants?: Mutant[];
   // Suite tasks: the owner's test functions, in the source the grader runs against the learner's code.
   ownerTests?: string;
+  // Testing tasks: a complete test suite that passes the reference and kills every mutant. The content
+  // check uses it to count kills per test function. The weak suite passes the visible cases only.
+  modelTests?: string;
+  weakTests?: string;
   notebook: boolean;
   ticket: Ticket;
   // Stated rules. Every rule has at least one wrong variant that violates it (see variantRule).

@@ -280,5 +280,23 @@
     "source": "Python documentation: Data model, __eq__",
     "url": "https://docs.python.org/3/reference/datamodel.html",
     "quote": "By default, object implements __eq__() by using is"
+  },
+  {
+    "id": "pytest-assert-standard",
+    "source": "pytest documentation: How to write and report assertions in tests",
+    "url": "https://docs.pytest.org/en/stable/how-to/assert.html",
+    "quote": "pytest allows you to use the standard Python assert for verifying expectations and values in Python tests."
+  },
+  {
+    "id": "pytest-assert-message",
+    "source": "pytest documentation: How to write and report assertions in tests",
+    "url": "https://docs.pytest.org/en/stable/how-to/assert.html",
+    "quote": "If a message is specified with the assertion like this"
+  },
+  {
+    "id": "pytest-approx",
+    "source": "pytest documentation: How to write and report assertions in tests",
+    "url": "https://docs.pytest.org/en/stable/how-to/assert.html",
+    "quote": "Instead of using assert abs(a - b) < tol"
   }
 ]

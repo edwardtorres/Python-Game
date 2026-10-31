@@ -1,0 +1,73 @@
+[
+  {
+    "id": "c03-boss-test-clean-lines",
+    "title": "Boss part 1: tests for clean_lines",
+    "ticket": {
+      "from": "Ana, Report Desk",
+      "subject": "Tests for clean_lines",
+      "body": "clean_lines prepares the lines of a report. Write tests for it, one test function for each rule the owner lists. The game runs your tests against the correct version and against wrong versions."
+    },
+    "rules": [
+      "A test checks that spaces are removed from both ends of each line.",
+      "A test checks that lines blank after trimming are dropped.",
+      "A test checks that the lines keep their original order."
+    ],
+    "entry": "clean_lines",
+    "starter": "def test_example():\n    pass\n",
+    "kind": "testing",
+    "mustFix": false
+  },
+  {
+    "id": "c03-boss-test-count-words",
+    "title": "Boss part 2: tests for count_words",
+    "ticket": {
+      "from": "Bea, Report Desk",
+      "subject": "Tests for count_words",
+      "body": "count_words counts the words on the report lines. Write tests for it, one test function for each rule the owner lists. The game runs your tests against the correct version and against wrong versions."
+    },
+    "rules": [
+      "A test checks that words are split on any whitespace.",
+      "A test checks that counting ignores case.",
+      "A test checks that the result is a dict from each word to its count."
+    ],
+    "entry": "count_words",
+    "starter": "def test_example():\n    pass\n",
+    "kind": "testing",
+    "mustFix": false
+  },
+  {
+    "id": "c03-boss-test-top-words",
+    "title": "Boss part 3: tests for top_words",
+    "ticket": {
+      "from": "Cal, Report Desk",
+      "subject": "Tests for top_words",
+      "body": "top_words picks the most common words for the report. Write tests for it, one test function for each rule the owner lists. The game runs your tests against the correct version and against wrong versions."
+    },
+    "rules": [
+      "A test checks that the highest count comes first.",
+      "A test checks that ties are ordered A to Z.",
+      "A test checks that at most n pairs are returned."
+    ],
+    "entry": "top_words",
+    "starter": "def test_example():\n    pass\n",
+    "kind": "testing",
+    "mustFix": false
+  },
+  {
+    "id": "c03-boss-test-report-lines",
+    "title": "Boss part 4: tests for report_lines",
+    "ticket": {
+      "from": "Dev, Report Desk",
+      "subject": "Tests for report_lines",
+      "body": "report_lines writes the report lines. Write tests for it, one test function for each rule the owner lists. The game runs your tests against the correct version and against wrong versions."
+    },
+    "rules": [
+      "A test checks that each line reads \"word: count\".",
+      "A test checks that the order of the pairs is kept."
+    ],
+    "entry": "report_lines",
+    "starter": "def test_example():\n    pass\n",
+    "kind": "testing",
+    "mustFix": false
+  }
+]

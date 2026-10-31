@@ -1,0 +1,86 @@
+[
+  {
+    "id": "c03-predict-assert-message",
+    "kind": "predict",
+    "prompt": "Predict the output before you run it. Choose the output the code prints.",
+    "code": "def add_tax(amount):\n    return round(amount * 1.2, 2)\n\n\ntry:\n    assert add_tax(10) == 11.0, \"tax is wrong\"\n    print(\"passed\")\nexcept AssertionError as error:\n    print(\"failed:\", error)\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "failed: tax is wrong"
+      },
+      {
+        "label": "B",
+        "text": "failed: "
+      }
+    ]
+  },
+  {
+    "id": "c03-predict-float-tolerance",
+    "kind": "predict",
+    "prompt": "Predict the output before you run it. Choose the output the code prints.",
+    "code": "try:\n    assert 0.1 + 0.2 == 0.3\n    print(\"exact\")\nexcept AssertionError:\n    print(\"not exact\")\nprint(round(0.1 + 0.2, 2) == 0.3)\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "not exact\nTrue"
+      },
+      {
+        "label": "B",
+        "text": "exact\nTrue"
+      }
+    ]
+  },
+  {
+    "id": "c03-predict-test-runner",
+    "kind": "predict",
+    "prompt": "Predict the output before you run it. Choose the output the code prints.",
+    "code": "def test_total():\n    assert sum([1, 2]) == 3\n\n\ndef test_empty():\n    assert sum([]) == 1\n\n\ndef helper():\n    assert False\n\n\nresults = {}\nfor name in [\"test_total\", \"test_empty\", \"helper\"]:\n    if name.startswith(\"test_\"):\n        try:\n            globals()[name]()\n            results[name] = \"pass\"\n        except AssertionError:\n            results[name] = \"fail\"\nprint(results)\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "{'test_total': 'pass', 'test_empty': 'pass'}"
+      },
+      {
+        "label": "B",
+        "text": "{'test_total': 'pass', 'test_empty': 'fail'}"
+      },
+      {
+        "label": "C",
+        "text": "{'test_total': 'pass', 'test_empty': 'fail', 'helper': 'fail'}"
+      }
+    ]
+  },
+  {
+    "id": "c03-traceback-test-without-function",
+    "kind": "traceback",
+    "prompt": "The code below stops with an error. Choose the error it raises.",
+    "code": "def test_batches():\n    assert in_batches([1, 2, 3], 2) == [[1, 2], [3]]\n\n\ntest_batches()\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "NameError: name 'in_batches' is not defined"
+      },
+      {
+        "label": "B",
+        "text": "(no error)"
+      }
+    ]
+  },
+  {
+    "id": "c03-traceback-assert-message",
+    "kind": "traceback",
+    "prompt": "The code below stops with an error. Choose the error it raises.",
+    "code": "def parcels_left(total, shipped):\n    return total - shipped\n\n\nleft = parcels_left(10, 12)\nassert left >= 0, f\"more shipped than stocked: left {left}\"\n",
+    "options": [
+      {
+        "label": "A",
+        "text": "AssertionError: more shipped than stocked: left -2"
+      },
+      {
+        "label": "B",
+        "text": "ValueError: more shipped than stocked: left -2"
+      }
+    ]
+  }
+]

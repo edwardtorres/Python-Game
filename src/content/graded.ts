@@ -62,3 +62,60 @@ export function functionSpec(chapterId: string, item: GradedItem): ChallengeSpec
   };
   return item.structure === undefined ? base : { ...base, kind: 'structure', structureChecks: item.structure };
 }
+
+// A wrong version of the code under test. The learner's tests must fail on it, and its rule is the
+// one it breaks. A hidden mutant keeps its place in the list, but its label is not shown.
+export interface MutantSpec {
+  id: string;
+  label: string;
+  code: string;
+  tag: MistakeTag;
+  rule: number;
+  visibility: 'visible' | 'hidden';
+}
+
+export interface TestingItem {
+  id: string;
+  title: string;
+  lessonId: string;
+  competencies: string[];
+  ticket: Ticket;
+  rules: string[];
+  entry: string;
+  starter: string;
+  reference: string;
+  modelTests: string;
+  weakTests: string;
+  mutants: MutantSpec[];
+  hints: [string, string, string];
+}
+
+export function testingSpec(chapterId: string, item: TestingItem): ChallengeSpec {
+  return {
+    id: item.id,
+    chapterId,
+    title: item.title,
+    kind: 'testing',
+    notebook: false,
+    ticket: item.ticket,
+    rules: item.rules,
+    entry: item.entry,
+    starter: item.starter,
+    competencies: item.competencies,
+    datasets: [],
+    cases: [],
+    rulesForGrader: {},
+    reference: item.reference,
+    variants: [],
+    variantRule: Object.fromEntries(item.mutants.map((mutant) => [mutant.id, mutant.rule])),
+    hints: item.hints,
+    mutants: item.mutants.map((mutant) => ({ id: mutant.id, label: mutant.label, code: mutant.code, mistake: MISTAKES[mutant.tag], visibility: mutant.visibility })),
+    modelTests: item.modelTests,
+    weakTests: item.weakTests,
+  };
+}
+
+// A suite task: the learner writes the implementation, and the owner's test functions grade it.
+export function suiteSpec(chapterId: string, item: GradedItem & { ownerTests: string }): ChallengeSpec {
+  return { ...functionSpec(chapterId, item), kind: 'suite', ownerTests: item.ownerTests };
+}

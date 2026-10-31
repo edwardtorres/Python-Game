@@ -1,0 +1,76 @@
+[
+  {
+    "id": "c03-testing-in-batches",
+    "title": "Tests for in_batches",
+    "ticket": {
+      "from": "Yara, Dock Quality",
+      "subject": "Tests for batching",
+      "body": "in_batches has been in use for a month. Write tests for it. Each test is a function whose name starts with test_, and it uses assert. The game runs your tests against the correct version of in_batches and against wrong versions of it."
+    },
+    "rules": [
+      "A test checks the size of each batch.",
+      "A test checks that items keep their order, inside a batch and between batches.",
+      "A test checks an empty input.",
+      "A test checks that a size below 1 raises ValueError."
+    ],
+    "entry": "in_batches",
+    "starter": "def test_example():\n    pass\n",
+    "kind": "testing",
+    "mustFix": false
+  },
+  {
+    "id": "c03-testing-parse-weight",
+    "title": "Tests for parse_weight",
+    "ticket": {
+      "from": "Ravi, Scale Desk",
+      "subject": "Tests for weight text",
+      "body": "parse_weight reads a weight typed at the scale. Write tests for it. It returns a float for a number, None for text that is not a number, and it raises TypeError for a value that is not text."
+    },
+    "rules": [
+      "A test checks decimal text with spaces, such as \" 4.5 \".",
+      "A test checks text that is not a number, which gives None.",
+      "A test checks that a value that is not text raises TypeError.",
+      "A test checks that nan and inf give None."
+    ],
+    "entry": "parse_weight",
+    "starter": "def test_example():\n    pass\n",
+    "kind": "testing",
+    "mustFix": false
+  },
+  {
+    "id": "c03-suite-fix-dock-count",
+    "title": "Fix: count the docks",
+    "ticket": {
+      "from": "Mina, Yard Office",
+      "subject": "Count the docks",
+      "body": "The log has one line per scan. Return how many different dock names appear in it. The owner tests run against your function, and the current code fails them."
+    },
+    "rules": [
+      "Count each dock name once, however often it appears.",
+      "An empty log has zero docks.",
+      "Names are compared exactly, so \"Dock 1\" and \"dock 1\" are different docks."
+    ],
+    "entry": "count_docks",
+    "starter": "def count_docks(log):\n    return len(log)\n",
+    "kind": "suite",
+    "mustFix": true
+  },
+  {
+    "id": "c03-suite-fix-median",
+    "title": "Fix: the median of delivery times",
+    "ticket": {
+      "from": "Oscar, Analytics",
+      "subject": "Median delivery time",
+      "body": "Return the median of a list of delivery times. Sort the values, and take the middle one. When the count is even, take the mean of the two middle values. An empty list raises ValueError. The current code fails the owner tests."
+    },
+    "rules": [
+      "Sort the values, and take the middle value when the count is odd.",
+      "When the count is even, average the two middle values.",
+      "An empty list raises ValueError."
+    ],
+    "entry": "median",
+    "starter": "def median(values):\n    return sorted(values)[len(values) // 2]\n",
+    "kind": "suite",
+    "mustFix": true
+  }
+]
