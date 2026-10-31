@@ -9,7 +9,7 @@ import { PyRuntime } from '../engine/runtime';
 import type { GradeResult } from '../engine/types';
 import { buildOutputs, type ChapterOutputs, runSnippet, serialise } from './chapter1/generate';
 import { CHAPTER1_BOSS, CHAPTER1_CHOICE, CHAPTER1_GRADED, CHAPTER1_LESSONS } from './chapter1/index';
-import { MISTAKES } from './chapter1/mistakes';
+import { MISTAKES } from './mistakes';
 
 const OUTPUTS = path.resolve('src/content/generated/chapter1.outputs.json');
 const GRADED = [...CHAPTER1_GRADED, ...CHAPTER1_BOSS];

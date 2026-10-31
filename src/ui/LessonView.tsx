@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { EngineStatus, PythonEngine } from '../engine/client';
-import type { Example, Lesson, Section } from '../content/chapter1/types';
-import { MISTAKES, type MistakeTag } from '../content/chapter1/mistakes';
+import type { Example, Lesson, Section } from '../content/types';
+import { MISTAKES, type MistakeTag } from '../content/mistakes';
 import { CodeEditor } from './CodeEditor';
 import quotesJson from '../../docs/quotes.json';
 

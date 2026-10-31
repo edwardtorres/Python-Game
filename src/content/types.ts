@@ -1,7 +1,7 @@
-// Chapter 1 content, as typed data. Lessons teach with runnable examples. Choice items
-// (predict and traceback) take their answers from running code, never from a table.
+// Content types shared by every chapter, as typed data. Lessons teach with runnable examples.
+// Choice items (predict and traceback) take their answers from running code, never from a table.
 // Graded items reuse the grader through ChallengeSpec.
-import type { Mistake } from '../../engine/types';
+import type { Mistake } from '../engine/types';
 
 export interface Example {
   id: string;

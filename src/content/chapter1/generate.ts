@@ -5,10 +5,10 @@ import { createHash } from 'node:crypto';
 import type { PyRuntime } from '../../engine/runtime';
 import type { CellResult } from '../../engine/types';
 import { CHAPTER1_CHOICE, CHAPTER1_LESSONS } from './index';
-import type { ChoiceItem } from './types';
-import type { ChapterOutputs, ChoiceOutput, ExampleOutput, OptionOutput } from './output-types';
+import type { ChoiceItem } from '../types';
+import type { ChapterOutputs, ChoiceOutput, ExampleOutput, OptionOutput } from '../output-types';
 
-export type { ChapterOutputs, ChoiceOutput, ExampleOutput, OptionOutput } from './output-types';
+export type { ChapterOutputs, ChoiceOutput, ExampleOutput, OptionOutput } from '../output-types';
 
 export function codeHash(code: string): string {
   return createHash('sha256').update(code).digest('hex').slice(0, 16);

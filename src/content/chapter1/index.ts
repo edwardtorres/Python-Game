@@ -4,7 +4,7 @@ import { BOSS_SPECS, GRADED_SPECS } from './graded-items';
 import { CHOICE_ITEMS, PREDICT_ITEMS, TRACEBACK_ITEMS } from './choice-items';
 import { LESSONS_A } from './lessons-a';
 import { LESSONS_B } from './lessons-b';
-import type { ChoiceItem, Lesson } from './types';
+import type { ChoiceItem, Lesson } from '../types';
 
 export const CHAPTER1_ID = 'c01-foundations';
 export const BOSS_ID = 'c01-boss';

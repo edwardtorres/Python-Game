@@ -5,7 +5,7 @@ import { CHALLENGES, getChallenge } from '../challenges/registry';
 import type { ChallengeSpec } from '../challenges/types';
 import { CURRICULUM } from '../curriculum/data';
 import { CHAPTER1_BOSS, CHAPTER1_CHOICE, CHAPTER1_GRADED, CHAPTER1_ID, CHAPTER1_LESSONS } from '../content/chapter1/index';
-import type { ChapterOutputs } from '../content/chapter1/output-types';
+import type { ChapterOutputs } from '../content/output-types';
 import outputsJson from '../content/generated/chapter1.outputs.json';
 import { browserStorage, createSaveStore } from '../save/store';
 import { type ChallengeProgress, type ChapterProgress, type ChoiceProgress, type SaveV2, emptyChapter, emptyChoice, emptyProgress } from '../save/schema';

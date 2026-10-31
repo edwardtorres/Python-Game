@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import type { EngineStatus, PythonEngine } from '../engine/client';
-import type { ChoiceItem } from '../content/chapter1/types';
-import type { ChoiceOutput } from '../content/chapter1/output-types';
-import { MISTAKES, type MistakeTag } from '../content/chapter1/mistakes';
+import type { ChoiceItem } from '../content/types';
+import type { ChoiceOutput } from '../content/output-types';
+import { MISTAKES, type MistakeTag } from '../content/mistakes';
 import { applyChoice, canRevealSolution, revealHint, revealSolution } from '../app/progress';
 import type { ChoiceProgress } from '../save/schema';
 

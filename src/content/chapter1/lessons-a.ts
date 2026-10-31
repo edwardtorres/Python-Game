@@ -1,6 +1,6 @@
 // Chapter 1 lessons 1 to 7. Each example runs in the engine, and its output is recorded
 // in generated/chapter1.outputs.json. Every claim in a section is shown by its examples.
-import type { Lesson } from './types';
+import type { Lesson } from '../types';
 
 export const LESSONS_A: Lesson[] = [
   {

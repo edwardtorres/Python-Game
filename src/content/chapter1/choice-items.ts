@@ -1,8 +1,8 @@
 // Chapter 1 choice items: 10 predict-the-output and 5 read-the-traceback. The right answer
 // and every option come from running code. A wrong option is the output or error of a
 // variant that a learner's mistake would produce, so the option text is never written by hand.
-import { MISTAKES, type MistakeTag } from './mistakes';
-import type { ChoiceItem, ChoiceVariant, PredictItem, TracebackItem } from './types';
+import { MISTAKES, type MistakeTag } from '../mistakes';
+import type { ChoiceItem, ChoiceVariant, PredictItem, TracebackItem } from '../types';
 
 function variant(id: string, code: string, tag: MistakeTag): ChoiceVariant {
   return { id, code, mistake: MISTAKES[tag] };

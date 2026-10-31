@@ -7,7 +7,7 @@
 // The grader's own tests (src/content/chapter1.test.ts) check this for every item.
 import type { ChallengeSpec, Ticket } from '../../challenges/types';
 import type { FunctionCase, StructureCheck, WrongVariant } from '../../engine/types';
-import { MISTAKES, type MistakeTag } from './mistakes';
+import { MISTAKES, type MistakeTag } from '../mistakes';
 
 type Variant = [id: string, code: string, tag: MistakeTag, rule: number];
 

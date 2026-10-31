@@ -1,6 +1,6 @@
 // The mistake taxonomy. Every wrong variant and every common-mistake note uses one of
 // these tags, so feedback can name the mistake and review can count them.
-import type { Mistake } from '../../engine/types';
+import type { Mistake } from '../engine/types';
 
 function mistake(tag: string, title: string, explanation: string): Mistake {
   return { tag, title, explanation };

@@ -1,6 +1,6 @@
-// The shape of generated/chapter1.outputs.json. The app reads this file, so these types
-// must not import anything that needs Node (the generator in generate.ts does).
-import type { PythonErrorInfo } from '../../engine/types';
+// The shape of each generated/<chapter>.outputs.json. The app reads those files, so these types
+// must not import anything that needs Node (the generators do).
+import type { PythonErrorInfo } from '../engine/types';
 
 export interface ExampleOutput {
   codeHash: string;
