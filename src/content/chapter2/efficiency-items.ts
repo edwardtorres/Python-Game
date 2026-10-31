@@ -80,8 +80,8 @@ const EFFICIENCY: GradedItem[] = [
       fn('v-empty', 'No jobs', 'visible', [[]], [0]),
       fn('h-single', 'One job', 'hidden', [[7]], [0, 1]),
       fn('h-zero', 'A zero-weight job', 'hidden', [[0, 0, 5]], [0, 1]),
-      timed('t-visible', 'A long queue, timed', 'visible', 200000, [0, 1, 2]),
-      timed('t-hidden', 'A longer queue, timed', 'hidden', 200000, [0, 1, 2]),
+      timed('t-visible', 'A long queue, timed', 'visible', 400000, [0, 1, 2]),
+      timed('t-hidden', 'A longer queue, timed', 'hidden', 400000, [0, 1, 2]),
     ],
     variants: [
       ['list-front-pop', 'def running_totals(jobs):\n    queue = list(jobs)\n    total = 0\n    totals = []\n    while queue:\n        total += queue.pop(0)\n        totals.append(total)\n    return totals\n', 'LIST_FRONT_POP', 2],
