@@ -19,8 +19,6 @@ interface Record {
 // The fix-2b solves were written from the Step 2b review's briefs, one fresh solver per batch. They
 // must pass under the current rules. The older solves are recorded, and only the ones named by
 // mustPass must pass; an older solve can fail when a ticket it was written for has changed since.
-const STALE_SOLVES = ['fix-2b/I/c03-testing-in-batches.py', 'fix-2b/I/c03-testing-parse-weight.py'];
-
 const RECORDS: Record[] = [
   {
     root: 'docs/blind-solves/chapter1',
@@ -34,10 +32,8 @@ const RECORDS: Record[] = [
   },
   {
     root: 'docs/blind-solves/chapter3',
-    dirs: ['solutions/G5', 'solutions/G6', 'fix-2b/I', 'fix-2b/J'],
-    // These two solves followed the chapter 3 rule text from before the Step 2b decisions. They stay
-    // recorded and are not required to pass until their rule text is updated and a fresh solve is made.
-    mustPass: (solution) => solution.startsWith('fix-2b/') && !STALE_SOLVES.includes(solution),
+    dirs: ['solutions/G5', 'solutions/G6', 'fix-2b/I', 'fix-2b/J', 'fix-2b/K'],
+    mustPass: (solution) => solution.startsWith('fix-2b/'),
   },
 ];
 

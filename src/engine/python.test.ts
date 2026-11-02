@@ -446,3 +446,106 @@ describe('pandas comparison: integer and float widths', () => {
     expect(result.status).toBe('fail');
   });
 });
+
+describe('efficiency cases: timing, the budget, and the margin over the reference', () => {
+  const setup = 'def make_args(size):\n    return [list(range(size))]\n';
+  const fast = 'def answer(values):\n    return len(values)\n';
+  // The same answer after a long loop, so it is correct and far slower than the reference.
+  const slow = 'def answer(values):\n    total = 0\n    for _ in range(3000000):\n        total += 1\n    return len(values)\n';
+  const timed = (visibility: 'visible' | 'hidden') => ({ id: 't', label: 'timed', visibility, args: [], rules: [0], timing: { size: 100 } });
+
+  it('passes a learner as fast as the reference, and reports its timed cases only on request', () => {
+    const base = functionPayload(fast, fast, { timing: { setup }, cases: [timed('visible')] });
+    const plain = runtime.grade(JSON.stringify(base), JSON.stringify(DATASETS));
+    expect(plain.status).toBe('pass');
+    expect(plain.timings).toBeUndefined();
+    const reported = runtime.grade(JSON.stringify({ ...base, report_timings: true }), JSON.stringify(DATASETS));
+    expect(reported.status).toBe('pass');
+    expect(reported.timings).toHaveLength(1);
+    expect(reported.timings?.[0]).toMatchObject({ id: 't', visibility: 'visible', timeout: false });
+    expect(reported.timings?.[0]?.reference).toBeGreaterThan(0);
+    expect(reported.timings?.[0]?.learner).toBeGreaterThan(0);
+  });
+
+  it('fails a correct learner that is far slower than the reference, and names the margin', () => {
+    const result = runtime.grade(JSON.stringify(functionPayload(slow, fast, { timing: { setup }, cases: [timed('visible')] })), JSON.stringify(DATASETS));
+    expect(result.status).toBe('fail');
+    expect(result.cases[0]?.ok).toBe(false);
+    expect(result.cases[0]?.message).toMatch(/took .* ms, and the reference took .* ms; the limit is 50 times that/);
+  });
+
+  it('stops a call over the budget as a timeout, and a hidden timed case says only that it is too slow', () => {
+    const payload = functionPayload(slow, fast, { timing: { setup, budget: 0.01 }, cases: [timed('hidden')], report_timings: true });
+    const result = runtime.grade(JSON.stringify(payload), JSON.stringify(DATASETS));
+    expect(result.status).toBe('fail');
+    expect(result.cases[0]?.message).toBe('Too slow on a hidden case.');
+    expect(result.timings?.[0]?.timeout).toBe(true);
+    expect(result.timings?.[0]?.learner).toBeGreaterThanOrEqual(0.01);
+  });
+});
+
+describe('eager cases: a size check must run when the function is called', () => {
+  const eagerReference = 'def batches(size):\n    if size < 1:\n        raise ValueError("size must be at least 1")\n    return iter([])\n';
+  // Checks the size only once the generator is used, so a call with size 0 returns without raising.
+  const lazy = 'def batches(size):\n    if size < 1:\n        raise ValueError("size must be at least 1")\n    yield from []\n';
+  const eagerLearner = eagerReference;
+  const zeroCase = (eager: boolean) => ({ id: 'zero', label: 'size zero', visibility: 'hidden' as const, args: [0], rules: [0], ...(eager ? { eager: true } : {}) });
+
+  it('passes an eager learner on an eager case', () => {
+    const result = runtime.grade(JSON.stringify(functionPayload(eagerLearner, eagerReference, { entry: 'batches', cases: [zeroCase(true)] })), JSON.stringify(DATASETS));
+    expect(result.status).toBe('pass');
+  });
+
+  it('fails a lazy learner on an eager case, because it returns a value where the reference raises', () => {
+    const result = runtime.grade(JSON.stringify(functionPayload(lazy, eagerReference, { entry: 'batches', cases: [zeroCase(true)] })), JSON.stringify(DATASETS));
+    expect(result.status).toBe('fail');
+    expect(result.cases[0]?.ok).toBe(false);
+  });
+
+  it('passes the same lazy learner on a case that uses the batches, since the error is raised then', () => {
+    const result = runtime.grade(JSON.stringify(functionPayload(lazy, eagerReference, { entry: 'batches', cases: [zeroCase(false)] })), JSON.stringify(DATASETS));
+    expect(result.status).toBe('pass');
+  });
+});
+
+describe('structure checks for classes: decorated_with, subclass_of, and defines within a class', () => {
+  const check = (learner: string, checks: StructurePayload['checks']) => {
+    const payload: StructurePayload = { kind: 'structure', learner, checks, requires: [] };
+    return runtime.grade(JSON.stringify(payload), '{}');
+  };
+
+  it('decorated_with passes a class with the decorator, including a call with arguments', () => {
+    const decorator: StructurePayload['checks'] = [{ type: 'decorated_with', label: 'Parcel is a dataclass', within: 'Parcel', name: 'dataclass' }];
+    expect(check('from dataclasses import dataclass\n\n\n@dataclass\nclass Parcel:\n    kg: float\n', decorator).status).toBe('pass');
+    expect(check('import dataclasses\n\n\n@dataclasses.dataclass(order=True)\nclass Parcel:\n    kg: float\n', decorator).status).toBe('pass');
+  });
+
+  it('decorated_with fails a class without the decorator', () => {
+    const decorator: StructurePayload['checks'] = [{ type: 'decorated_with', label: 'Parcel is a dataclass', within: 'Parcel', name: 'dataclass' }];
+    expect(check('class Parcel:\n    kg: float\n', decorator).status).toBe('fail');
+  });
+
+  it('subclass_of passes a class with the base, and fails one without it', () => {
+    const subclass: StructurePayload['checks'] = [{ type: 'subclass_of', label: 'Pallet is a Parcel', within: 'Pallet', name: 'Parcel' }];
+    const parcel = 'class Parcel:\n    pass\n\n\n';
+    expect(check(`${parcel}class Pallet(Parcel):\n    pass\n`, subclass).status).toBe('pass');
+    expect(check(`${parcel}class Pallet:\n    pass\n`, subclass).status).toBe('fail');
+  });
+
+  it('defines within a class finds a dunder method on that class, not one elsewhere', () => {
+    const eq: StructurePayload['checks'] = [{ type: 'defines', label: 'Parcel defines __eq__', within: 'Parcel', name: '__eq__' }];
+    expect(check('class Parcel:\n    def __eq__(self, other):\n        return True\n', eq).status).toBe('pass');
+    expect(check('class Other:\n    def __eq__(self, other):\n        return True\n\n\nclass Parcel:\n    pass\n', eq).status).toBe('fail');
+  });
+
+  it('a function item with checks grades its cases and the checks together', () => {
+    const checks: StructurePayload['checks'] = [{ type: 'decorated_with', label: 'Parcel is a dataclass', within: 'Parcel', name: 'dataclass', rules: [1] }];
+    const learner = 'class Parcel:\n    pass\n\n\ndef answer():\n    return 1\n';
+    const result = runtime.grade(JSON.stringify(functionPayload(learner, learner, { checks })), JSON.stringify(DATASETS));
+    expect(result.status).toBe('fail');
+    expect(result.cases.map((c) => [c.id, c.ok])).toEqual([
+      ['c1', true],
+      ['check-0', false],
+    ]);
+  });
+});
