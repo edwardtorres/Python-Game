@@ -27,6 +27,8 @@ export interface TestBridge {
   setCode(challengeId: string, code: string): void;
   setCell(challengeId: string, index: number, code: string): void;
   addCell(challengeId: string): void;
+  // Grades a ticket's code with the timings reported, for the efficiency measurements.
+  measure(challengeId: string, code: string): Promise<unknown>;
   status(): { engine: string; restarts: Record<string, number>; lastWasmBytes: number; workerStarts: number };
 }
 

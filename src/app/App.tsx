@@ -7,6 +7,7 @@ import { CHAPTERS, chapterOf, findChapter, findChoice, findLesson, findTicket } 
 import { browserStorage, createSaveStore } from '../save/store';
 import { type ChallengeProgress, type ChapterProgress, type ChoiceProgress, type SaveV2, emptyChapter, emptyChoice, emptyProgress } from '../save/schema';
 import { installTestBridge, readTestHooks } from '../dev/testHooks';
+import { buildGradeRequest } from '../challenges/payload';
 import { BossView } from '../ui/BossView';
 import { ChallengeView } from '../ui/ChallengeView';
 import { ChapterPage } from '../ui/ChapterPage';
@@ -76,6 +77,13 @@ export function App() {
       setCell: (id, index, code) =>
         onProgress(id, (current) => ({ ...current, cells: current.cells.map((cell, position) => (position === index ? code : cell)) })),
       addCell: (id) => onProgress(id, (current) => ({ ...current, cells: [...current.cells, ''] })),
+      measure: async (id, code) => {
+        const found = findTicket(id);
+        if (found === undefined) throw new Error(`no ticket named ${id}`);
+        const { payload, datasets } = buildGradeRequest(found.item, code, 'submit', { reportTimings: true });
+        const outcome = await engine.grade(payload, datasets);
+        return outcome.kind === 'graded' ? outcome.result : { interrupted: outcome.method };
+      },
       status: () => {
         const stats = engine.getStats();
         return { engine: engineStatus, restarts: stats.restarts, lastWasmBytes: stats.lastWasmBytes, workerStarts: stats.workerStarts };

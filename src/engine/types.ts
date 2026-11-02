@@ -58,6 +58,8 @@ export interface GradePayload {
   timing?: { setup: string; budget?: number };
   // Structure checks graded alongside the cases, for class tasks that check behaviour and shape.
   checks?: StructureCheck[];
+  // Dev measurements: the grade result then lists each timed case's measured times.
+  report_timings?: boolean;
   // Notebook submissions: keep imports and definitions, ignore top-level exploration.
   definitions_only?: boolean;
 }
@@ -172,6 +174,15 @@ export interface TestingReport {
   kills: Record<string, string[]>;
 }
 
+// The measured times of one timed case. A call that timed out reports the time of its first run.
+export interface TimingRecord {
+  id: string;
+  visibility: Visibility;
+  reference: number | null;
+  learner: number | null;
+  timeout: boolean;
+}
+
 export interface GradeResult {
   status: 'pass' | 'fail' | 'error';
   error: PythonErrorInfo | null;
@@ -180,6 +191,7 @@ export interface GradeResult {
   total: number;
   matched: MatchedMistake[];
   report?: TestingReport;
+  timings?: TimingRecord[];
 }
 
 export interface CellDisplay {

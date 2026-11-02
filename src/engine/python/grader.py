@@ -250,7 +250,7 @@ def _timed_call(fn, make_args, size, filename, budget):
             return {"ok": False, "error": _error_info(exc, filename)}
         seconds.append(time.perf_counter() - started)
         if budget is not None and seconds[-1] > budget:
-            return {"ok": False, "timeout": True, "error": {"type": "TimeBudget", "message": f"ran past the {budget:g} second budget", "line": None}}
+            return {"ok": False, "timeout": True, "seconds": seconds[-1], "error": {"type": "TimeBudget", "message": f"ran past the {budget:g} second budget", "line": None}}
     return {"ok": True, "value": value, "seconds": min(seconds)}
 
 
@@ -420,7 +420,7 @@ def _grade_cases(payload, datasets):
                 continue
             if _signature(kind, variant_outputs, expected) + variant_checks == learner_signature:
                 matched.append({"variantId": variant["id"], **variant["mistake"]})
-    return {
+    result = {
         "status": "pass" if passed else "fail",
         "error": None,
         "cases": results,
@@ -428,6 +428,20 @@ def _grade_cases(payload, datasets):
         "total": len(results),
         "matched": matched,
     }
+    if payload.get("report_timings"):
+        # The browser measurements for efficiency items. Off by default, so grades stay repeatable.
+        result["timings"] = [
+            {
+                "id": case["id"],
+                "visibility": case.get("visibility", "visible"),
+                "reference": want.get("seconds"),
+                "learner": got.get("seconds"),
+                "timeout": bool(got.get("timeout")),
+            }
+            for case, got, want in zip(cases, outputs, expected)
+            if case.get("timing") is not None
+        ]
+    return result
 
 
 class _SuiteRecorder:
