@@ -1,110 +1,153 @@
-# Step 2b review audit (partial): WebKit csp, and the reconciliation with the prompt
+# Step 2b review audit
 
-Status at the time of writing: **Part 1 passes in both browsers. Parts 2 and 3 and Step 0 have not started.** The last CI run, on `ed19a38`, passed every job. A temporary five-run loop is still in the csp spec, and it comes out before the step's final commit. Each section below says what is done and what is not.
+**Status.** The review's code and content changes pass CI in both browsers at `15c35e8` (run `41370176780`). This commit adds only this file. One item is still open: TimeComplexity (A4), see the deviations below.
 
-## The WebKit cause and fix
+## CI results
 
-**What the CI logs show.**
+Run `41370176780` on `15c35e8`:
 
-- Run `41161368223` (commit `0870994`): the production-preview csp test failed in WebKit on both attempts. It waited 2 minutes for "Submitted. Every check passed." and never saw it. The test logged nothing else, so this run does not say why. Chromium passed.
-- Run `41162712628` (commit `4d3f7b4`): its WebKit and Chromium e2e jobs were **cancelled** when I pushed `d3321c5`. The workflow sets `cancel-in-progress: true` for each ref, so a push cancels the run in progress. This run never reached the csp test's diagnostic output. The process rule that follows: no push while a run on the branch is in progress.
-- Run `41163075343` (commit `d3321c5`): the csp test failed in both preview projects at the wait for "Python ready". The wait was wrong. The engine starts lazily, on the first grade (`src/engine/client.ts`, `ensureReady`), so "Python ready" never appears before the first Submit. The dump showed the engine idle, the starter code still in the editor, and no `WORKER created` line from the csp test.
+| Job | Result |
+|---|---|
+| types, lint, unit tests, build, production scan | Pass. Unit: 11 files, 507 tests. The build passed and the hook scan found no test hooks. |
+| script tests and the static Python 3.10 check | Pass. 19 script tests, 0 failures. |
+| docs quotes | Pass. 51 quotes, 0 failed, 0 warnings. |
+| CPython 3.10 (every grading payload) | Pass. |
+| e2e (chromium) | 53 passed, 1 flaky, 1 skipped. |
+| e2e (webkit) | 54 passed, 1 skipped. |
 
-**What the diagnostic showed.**
+The skipped test in both browsers is `e2e/capture-v1-save.spec.ts`. It runs only with `CAPTURE_V1=1`, by design.
 
-- Two kinds of item are refused on the editor page, in both browsers, under `style-src 'self'` in the production policy:
-  1. CodeMirror's one injected style element. Its exact text hashes to `sha256-F46hirtH8PYJsIDsSPl2wePAnpACTrugnGsv136vcWU=`, the value Chromium reports for it.
-  2. Inline `style` attributes that CodeMirror sets on its gutter elements, with heights and margins that change as the document grows. Their values are dynamic, so no hash can list them. Chromium states that hashes do not apply to style attributes.
-- Locally in Chromium, against the production preview, the typed reference grades and shows `Submitted. Every check passed.`. The document text is correct once read from the DOM (`textContent`), not from the rendered text, which depends on styles.
+**Flaky test, not fixed here.** In chromium, `e2e/workers.spec.ts` (second and third workers, production headers) failed once at 400 ms with "the built worker script was not found", and passed on retry. The test waits for the engine's status element, which always has text, so it reads the page's resource list before the worker script has loaded. This is a weak precondition that predates this step. It is recorded below as a known issue.
 
-**Fix.** The production `style-src` is now `'self' 'unsafe-inline'`. `script-src` keeps `'self' 'wasm-unsafe-eval'`. No hash is listed in the same directive, because browsers that support hashes ignore `'unsafe-inline'` when one is present. `e2e/csp.spec.ts` now fails if the production page refuses a style on the editor, in either browser. The owner chose allowing inline styles over keeping the policy.
+**Efficiency flow in both browsers.** The chapter 2 efficiency ticket (stock check: the slow `list-lookup` variant is graded too slow, its mistake is named, then the reference passes) passed at 390 px and 1280 px in both browsers. The efficiency measurement spec passed in both browsers.
 
-**Results.**
+**Other flows in both browsers.** The chapter 2 class ticket, the chapter 3 weak-suite and test-driven-fix flows, and the chapter 3 boss passed at both widths.
 
-- Run `41164449354` (commit `57dd154`): passed in both browsers. That run still had the refusals, and it read the editor's lines from the DOM before Submit. The WebKit test passed on its first attempt.
-- Run `41171534718` (commit `ed19a38`): passed in both browsers, with the fix. The csp test ran without the DOM read and without the "Python ready" wait. The temporary loop repeated the typed-and-submitted flow five more times in each browser, and all five passed in Chromium and in WebKit.
+**Earlier runs in this step.**
 
-**What the evidence shows, and what it does not.**
+- Run `41368215334` (`fd7fde6`): chromium failed only in the efficiency measurement spec. The job-queue reference measured over 50 ms, and repeated tickets measured 46 to 50 times at its visible size. WebKit passed. These findings drove the decisions below.
+- Run `41246477878` (`3ace787`): the efficiency flow failed in both browsers at a 200,000-job queue, which was too fast for the budget message. Sized at 400,000 in `df29597`, and passed in CI.
 
-- With the refusals present and no DOM read, the WebKit csp test failed twice (run `41161368223`, commit `0870994`). With the refusals present and a DOM read, it passed once (`57dd154`). With the policy allowing styles and no DOM read, it passed six times in WebKit (`ed19a38`, the test and the five-run loop).
-- The race explanation, that Submit is clicked before the typed text reaches the app, is not supported by these runs. The run that failed and the run that passed had the same typing and click sequence, and they differ in the policy. The style refusals fit the difference better.
-- Not shown: how refused styles break WebKit's input. The runs show an association, not a mechanism. No separate run isolated the gutter attributes from the style element.
-- The "Python ready" wait was a test error and is removed. That part is confirmed.
+**The WebKit csp failure (the first part of this step).**
 
-**Next step.** Remove the five-run loop before the final commit. The refusal check stays.
+- Run `41161368223` (`0870994`) and run `41163075343` (`d3321c5`) failed the production csp test in WebKit. Run `41162712628` (`4d3f7b4`) was cancelled when I pushed `d3321c5`, because the workflow cancels a run in progress for the same ref.
+- The cause was in the production policy, not in the engine. `style-src 'self'` refused CodeMirror's injected style element and the inline style attributes it sets on its gutter elements. The "Python ready" wait was also a test error: the engine starts on the first grade.
+- The fix is a production `style-src 'self' 'unsafe-inline'`, with `script-src` unchanged. Run `41171534718` (`ed19a38`) passed in both browsers with the fix.
+- Not shown: how the refused styles break WebKit's input. The runs show an association, not a mechanism.
 
-## The pytest decision
+**Other parts of the step.**
 
-Not started. Facts recorded for the decision:
+- Pytest (A1): pytest 9.0.2 and its pure-Python dependencies load from the Pyodide lock for chapter 3 testing items only. `scripts/fetch-pyodide.mjs` checks each wheel's SHA-256. The testing and suite flows pass in both browsers.
+- Class items (A3): three function-kind items (`c02-class-parcel-order`, `c02-class-pallet-inherit`, `c02-class-version-dunders`), with structure checks `decorated_with`, `subclass_of`, and `defines` within a class.
+- JavaScript notes: chapter 2 has three (`js-object-keys`, `js-array-copy`, `js-object-identity`). Chapter 3 has two (`js-assert-truthiness`, `js-test-identity`). `docs/quotes.json` has 51 entries, all verified in CI.
+- TimeComplexity (A4): **open.** No direct URL has been found. `docs/snapshot-urls.txt` leaves it out, because its URL answers with a script redirect.
 
-- The Pyodide lock (`public/pyodide/pyodide-lock.json`) lists `pytest` 9.0.2, `pluggy` 1.6.0, `iniconfig` 2.3.0, `packaging` 26.1, and `pygments` 2.20.0, all pure Python. `exceptiongroup` and `tomli` are listed too, and are needed only before Python 3.11.
-- `scripts/fetch-pyodide.mjs` copies only the closure of `PACKAGES` (numpy, pandas, matplotlib, scikit-learn). A chapter 3 set would be added with each wheel's SHA-256 from the lock.
-- The current testing runner (`exec` of `test_*` functions) stays until pytest works in Node and in both browsers.
+## The job-queue decision and the measured margins
 
-## Efficiency items and margins in both browsers
+**Decision: the job queue is converted to untimed.** The owner's rule keeps a timed item only if the slow variant is at least 50 times slower and over the 1-second budget, while the reference stays under 50 ms, in both browsers. In run `41368215334` (`fd7fde6`), the reference measured 52.2 ms and then 51.2 ms in chromium, over the 50 ms ceiling. WebKit measured 49.3 ms, just under it. The rule fails in chromium, so the item converts.
 
-Not started. The approved design uses wall-clock timing with a wide margin: the reference must finish under 50 ms at a fixed size, and the slow variant must take at least 50 times as long, measured in both browsers and recorded in CI. Candidates are `in` on a list versus a set, and `+=` on a string versus `"".join`. CPython can optimise `+=`, so that pair may not show the margin, and must be measured first. The "slow version times out" flow stops the variant with the existing buffer interrupt.
+The converted item, `c02-eff-job-queue`, has:
 
-## Class items
+- Five behaviour cases: the four earlier untimed cases, plus a ten-job case.
+- Two structure checks. `popleft` must be called within `running_totals`. `pop(0)` must not be called there: `forbids_method` with `arg: 0` forbids only a literal 0 as the first argument.
+- Rule 3: "Keep the waiting jobs in a collections.deque, and take each job off its front with popleft." The wrong variant `list-front-pop` keeps its tag, `LIST_FRONT_POP`. It fails both checks, which name rule 3.
 
-Not started. Planned as function-kind items: the entry function returns built-in values, so `_same` never compares instances. Structure checks use `ast` (`decorated_with` for `@dataclass`, `defines` for dunders, `calls_method` for `super().__init__`).
+**Measured margins.** Each row is the slow variant divided by the reference, from the `EFFICIENCY` lines in the CI logs.
 
-## JavaScript notes (with counts)
+Before the change, run `41368215334` (`fd7fde6`):
 
-Not started. Counts: chapter 2, 0 notes; chapter 3, 0 notes. `docs/quotes.json` still has 50 entries, unchanged. The owner's latest instruction adds JavaScript notes for chapters 2 and 3. That overrides the earlier "no JavaScript notes" decision. The notes need quotes verified against the snapshots.
+| Item | Case | Browser | Reference | Slow variant | Ratio |
+|---|---|---|---|---|---|
+| Job queue (timed then) | visible | chromium | 52.2 ms | 5894 ms, over budget | 113x |
+| Job queue | visible | chromium, retry | 51.2 ms | 5932 ms, over budget | 116x |
+| Job queue | hidden | chromium | 43.5 ms | 5932 ms, over budget | 136x |
+| Job queue | visible | webkit | 49.3 ms | 5886 ms, over budget | 119x |
+| Job queue | hidden | webkit | 42.6 ms | 6026 ms, over budget | 141x |
+| Repeated tickets (2000 visible) | visible | chromium | 0.7 ms | 35.6 ms | 50x |
+| Repeated tickets | visible | chromium, retry | 0.8 ms | 35.9 ms | 46x |
+| Repeated tickets | hidden (8000) | chromium | 2.2 ms | 582.1 ms | 266x |
+| Repeated tickets (2000 visible) | visible | webkit | 0.5 ms | 35.1 ms | 76x |
+| Repeated tickets | hidden (8000) | webkit | 2.2 ms | 534.3 ms | 241x |
+| Stock check (2000 visible) | visible | chromium | 0.3 ms | 49.1 ms | 149x |
+| Stock check | visible | chromium, retry | 0.4 ms | 49.5 ms | 134x |
+| Stock check (8000 hidden) | hidden | chromium | 1.5 ms | 763.0 ms | 519x |
+| Stock check | hidden | chromium, retry | 1.5 ms | 761.8 ms | 495x |
+| Stock check | visible | webkit | 0.3 ms | 47.0 ms | 147x |
+| Stock check | hidden | webkit | 1.4 ms | 744.1 ms | 532x |
 
-## The owner decisions and changed tickets, with blind-solve results
+After the change, run `41370176780` (`15c35e8`):
 
-Not started. Located so far (from reading the content, not yet edited):
+| Item | Case | Browser | Reference | Slow variant | Ratio |
+|---|---|---|---|---|---|
+| Repeated tickets (4000 visible) | visible | chromium | 0.8 ms | 102.4 ms | 128x |
+| Repeated tickets | hidden (8000) | chromium | 1.2 ms | 408.5 ms | 331x |
+| Repeated tickets (4000 visible) | visible | webkit | 1.1 ms | 133.6 ms | 117x |
+| Repeated tickets | hidden (8000) | webkit | 2.3 ms | 526.0 ms | 229x |
+| Stock check (2000 visible) | visible | chromium | 0.4 ms | 29.7 ms | 83x |
+| Stock check | hidden (8000) | chromium | 1.0 ms | 458.4 ms | 477x |
+| Stock check | visible | webkit | 0.4 ms | 46.6 ms | 117x |
+| Stock check | hidden | webkit | 1.5 ms | 725.5 ms | 497x |
 
-| Decision | Where it lives | Status |
-|---|---|---|
-| `count_docks` states its signature and that each log entry is an exact dock name | `src/content/chapter3/graded-items.ts` (line 58) | not started |
-| "A to Z" tickets say uppercase sorts before lowercase, with a mixed-case case and a `case-insensitive` wrong variant (4 tickets) | ch1 route list (`chapter1/graded-items.ts`, line 144); ch1 word count (line 492); ch2 loading order (`chapter2/graded-items.ts`, line 13); ch2 label order (line 188) | not started |
-| `report_lines` states `f"{x:.1f}"`, adds a 2.25 → "2.2" tie case, a `rounds-half-up` wrong variant, and a round-half-to-even lesson note | `src/content/chapter2/boss-items.ts` (line 101). The ch1 `report_lines` (line 521) is another item with integer counts and is not changed | not started |
-| `median` states that an odd count returns the middle value unchanged and an even count returns the mean as a float | ch3 suite-fix item (`chapter3/graded-items.ts`) | not started |
-| `smallest_three` states ascending order | `chapter2/graded-items.ts` (line 300) | not started |
-| `in_batches` raises when called, not on the first `next` (matching `itertools.batched`). Its reference is a generator (`yield`), so this needs a change of structure, a case, a `raises-lazily` wrong variant, and a generator-laziness lesson note | `chapter1/graded-items.ts` (lines 114 to 130) | not started |
-| `parse_weight` states that `"1e400"` overflows to `inf` and returns `None`, and adds the case. The reference already does this | `chapter1/graded-items.ts` (line 232) | not started |
-| `save_and_reload` states the exact text, including line breaks | `chapter1/graded-items.ts` (line 266) | not started |
+**What the numbers show.**
 
-Each changed ticket gets a fresh blind solve, batched as in Step 2b. Chapter 1 changes regenerate its outputs, the CPython 3.10 cases, and the Chapter 1 blind-solve regrades.
+- Repeated tickets: the visible size moved from 2000 to 4000, because its ratio was 46 to 50 in chromium, under the 50x floor. The slow variant scans a slice on every step, so its time grows faster than the reference's, and the ratio rises with size. The hidden size stays at 8000.
+- Ratios move between runs, because the reference takes 0.3 to 1.5 ms and timer noise shows in it. Stock check's chromium visible ratio was 149x and 134x in one run, and 83x in the next. Every ratio in the final runs is at least 83x, and every reference is under 50 ms.
+- The efficiency flow now uses stock check. Its slow variant fails with a "took … ms" message on the visible case, not "ran past the budget". No timed item's slow variant runs past the 1-second budget now, so that message no longer appears in the browser flows.
 
-## e2e and axe results in both browsers
+## The chapter 3 rule-text fix and blind-solve results
 
-CI run `41171534718` on `ed19a38`, all five jobs passed:
+- **`c03-testing-in-batches`.** Rule 4 says a size below 1 raises ValueError when the function is called, not when the batches are used. The reference was a generator, so its ValueError came on first use, and the rule and the reference disagreed. I changed the reference, not only the rule text: it now validates at call time, as the chapter 1 item does. I added a `raises-lazily` mutant (rule 4, hidden) and two call-time model tests, `test_size_zero_raises_on_call` and `test_size_zero_raises_on_call_with_no_items`. The model suite now kills every mutant with at least two test functions.
+- **`c03-testing-parse-weight`.** Rule 4 says nan, inf, and text that overflows to inf, such as `1e400`, give None. The reference already returned None for all three, because `float("1e400")` is infinite, and a non-finite value gives None. Only the rule text changed.
+- **Fresh blind solves (batch K).** `in_batches` passes 6 of 6, and `parse_weight` passes 5 of 5. The brief is `docs/blind-solves/chapter3/briefs/fix-2b/K.md`.
+- **Superseded, not deleted.** `docs/blind-solves/chapter3/superseded/fix-2b-I/` holds the earlier solves for the two testing items. `superseded/G5/c03-testing-in-batches.py` wraps every call in `list()`, so it never checks the call-time rule, and the new mutant catches it (5 of 6). Its brief was written before the call-time wording.
+- **Exception list: empty.** `src/content/blind-solves.test.ts` has no exception list. All 15 chapter 3 records in `regrade.json` pass.
+- **Chapter 2 job queue (batches L and M).** The first fresh solve, L, used `itertools.accumulate`. It is correct and avoids `pop(0)`, but it never calls `popleft`, so it fails the structure check. Rule 3 did not say a deque with popleft was required, so the rule now says so. A fresh solve, M, written from the new brief, passes 7 of 7. L is kept in `docs/blind-solves/chapter2/superseded/fix-2b-L/`. The older H solve, written for the timed wording, still passes 7 of 7 and stays in the record.
+- **Regrade totals.** Chapter 2: 37 of 37 pass. Chapter 3: 15 of 15 pass. Chapter 1: 38 of 39 pass. The one failing record, `solutions/G1/c01-guided-format-label.py` (4 of 6), predates this step and was already failing at `5d34c86`. Its fix-2a and fix-2b re-solves pass, and the test does not require it. I did not change it. See the deviations.
 
-- e2e (chromium): 50 passed, 1 skipped. This includes `preview-chromium` csp (the refusal check and the five-run loop) and workers.
-- e2e (webkit): 50 passed, 1 skipped. This includes `preview-webkit` csp (the refusal check and the five-run loop) and workers.
+## The new unit tests
 
-Before the loop was added, run `41164449354` on `57dd154` had 49 passed and 1 skipped in each browser.
+`src/engine/python.test.ts` gains 11 tests in three groups, run under Pyodide in Node.
 
-The new flows the review lists (class ticket, efficiency ticket that times out, test-writing ticket naming the missed mutant) are not written yet.
+- **Efficiency timing (3).** A learner as fast as the reference passes, and reports its timed cases only when asked. A correct learner far slower than the reference fails, and the message names the margin. A call over the budget stops as a timeout, and a hidden timed case says only that it is too slow.
+- **Eager validation (3).** An eager learner passes an eager case. A lazy learner fails an eager case, because it returns a value where the reference raises. The same lazy learner passes a case that uses the batches, because the error is raised then.
+- **Class structure checks (5).** `decorated_with` passes with the decorator, including a call with arguments, and fails without it. `subclass_of` passes with the base and fails without it. `defines` within a class finds a dunder method on that class and not one elsewhere. A function item with checks grades its cases and its checks together.
+
+CI ran the full unit suite at `15c35e8`: 11 files, 507 tests, all passing.
 
 ## Anything you were unsure of, and deviations
 
-- **The prompt text was not in the transcript.** The review said the prompt was pasted above the message, but there was no pasted block. I asked the owner to paste it again, and the paste has not arrived. `docs/prompts/step-2b.md` is still the reconstruction, and Step 0 waits for the paste.
-- **Two runs were cancelled by my own pushes.** Run `41162712628` was cancelled by `d3321c5`. The rule is recorded above.
-- **The production style policy now allows inline styles.** This was the owner's choice between allowing them and keeping the policy. An injected style can restyle the page but cannot run code, and scripts keep the strict policy. The choice is recorded here so it stays visible.
-- **A wrong hash was tried first, and never committed.** I added only the style element's hash, then a probe showed the refused items were style attributes. The change was reverted before the commit, so `ed19a38` carries only the final policy.
-- **The temporary five-run loop is still in `e2e/csp.spec.ts`.** It comes out before the step's final commit.
-- **The TimeComplexity page cannot be fetched directly.** `docs/snapshot-urls.txt` excludes `wiki.python.org/moin/TimeComplexity`, because its URL answers with a script redirect. A direct URL has not been found yet.
-- **Efficiency margins use wall-clock time.** The grading rule asks for the same result on every run. The wide margin carries that rule, and the margin is recorded.
-- **The `4d3f7b4` commit has no `Co-Authored-By` trailer.** It was already pushed, and CLAUDE.md forbids rewriting pushed history, so it stays. Later commits carry the trailer.
-- **A repro script is in the session scratch folder,** not the repository. It runs the production csp flow in Chromium locally.
+1. **The Step 2b prompt.** `docs/prompts/step-2b-reconstructed.md` holds the reconstruction, and `docs/prompts/step-2b.md` is the same reconstruction, because the owner's prompt is not on any ref. The original is in the owner's chat. I did not wait for it.
+2. **A rule changed after a blind solve.** The first fresh solve for the job queue failed on the structure check, because rule 3 did not state the deque requirement. I changed rule 3 and ran a new fresh solve, M, against the new text. L is kept in `superseded/`, and M is the record for the item.
+3. **The reference changed, not only the rule text,** for `c03-testing-in-batches`. The reference had to match the rule. The new mutant and the model tests cover the change.
+4. **Repeated-tickets visible size, 2000 to 4000.** The owner's margin rule was not changed. The size was, because chromium measured 46 to 50 times.
+5. **Timed verdicts use wall-clock time.** The grading rule asks for the same result on every run. A timed verdict can change if a ratio sits near 50x. The final runs stay at 83x or more, which is the margin the rule relies on.
+6. **The `pop(0)` check is exact only for a literal 0.** A learner who writes `queue.pop(i)` with `i` set to 0 in a variable is not caught. No wrong variant in the item does that.
+7. **The efficiency flow uses stock check.** The flow no longer uses the job queue, which is untimed now.
+8. **Known flaky test.** `e2e/workers.spec.ts` (chromium, preview) failed once and passed on retry, as described under CI results. Its wait accepts status text that is always present, so the test should wait for the worker resource before reading it. Not changed in this step.
+9. **Chapter 1 record.** `solutions/G1/c01-guided-format-label.py` records 4 of 6. It is a Step 2a solve from before the 2a-fix rules, and its re-solves pass. The owner may want it moved to `superseded/`, so the record has no failing rows.
+10. **TimeComplexity (A4) is open.** No direct URL has been found, so the complexity claims are not sourced to it.
+11. **Earlier history.** Run `41162712628` was cancelled by my push `d3321c5`. I follow the rule now: no push while a run on the branch is in progress. Commit `4d3f7b4` has no `Co-Authored-By` trailer. It was already pushed, and CLAUDE.md forbids rewriting pushed history, so it stays.
+12. **An earlier `create_session` call.** I could not confirm it from the transcript or the session list, and no child session from this run appears in the list. Nothing further is recorded about it.
+13. **Commit grouping.** The commit `2c115d5` includes the chapter 3 G5 rename that was already staged. It has no content effect.
+14. **Committer.** Commits are authored by Edward Torres. The committer is `Claude <noreply@anthropic.com>` for the commits in this step, as for the earlier commits on the branch. CLAUDE.md says the committer does not matter.
 
-## Test and check results, and push status
+## Test and check results
 
-Local, on the `ed19a38` change:
+At `15c35e8`, run locally before the push:
 
-- `npx eslint e2e/csp.spec.ts vite.config.ts`, `npx tsc --noEmit`: pass.
-- `npm run build` (type check, production build, hook scan): pass. The scan found no test hooks.
-- `npx playwright test e2e/csp.spec.ts --project=preview-chromium` against the production preview: 3 passed, including the refusal check and the five-run loop.
+- `npm run typecheck` and `npm run lint`: clean.
+- `npm test`: 11 files, 507 tests passing.
+- `npm run test:scripts`: 19 passing.
+- `npm run build`, with the type check, production build, and hook scan: passing, with no test hooks found.
+- `npm run check:py310`: 385 snippets, 0 problems.
+- `npx vitest run src/content/chapters.test.ts`: 332 passing.
+- `UPDATE_BLIND=1`, then the blind-solve test without it: 6 of 6 passing.
+- Local chromium, the efficiency measurement spec and the chapter 2 efficiency flow: 3 passing. Repeated tickets measured 94x visible and 132x hidden. Stock check measured 112x visible and 303x hidden.
 
-CI on `ed19a38` (run `41171534718`): all five jobs passed. These are the docs quotes job, the types, lint, unit, build, and scan job, the CPython 3.10 job, and both e2e jobs.
+CI at `15c35e8`, run `41370176780`: all six jobs passed. The results are under CI results above. WebKit ran only in CI.
 
-Push status:
+## Push status
 
-- `claude/busy-wright-rooppm` is at `ed19a38`, pushed. This audit update is committed on the same branch as the next commit.
-- `main` is still at `7c22dcf`. It does not move while the step is open. Parts 2 and 3 have not started, Step 0 waits for the paste, and the five-run loop is still in the spec.
-- HEAD does not equal `origin/main` yet. That is expected while the step is open.
+- `claude/busy-wright-rooppm` is pushed through `15c35e8`, a fast-forward from `fd7fde6`, and CI run `41370176780` passed.
+- This audit is the next commit on the branch. Its CI run has to pass before `main` moves.
+- `main` stays at `7c22dcf` until then. After it moves, HEAD should equal `origin/main`.
