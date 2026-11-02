@@ -14,13 +14,6 @@
     "total": 8
   },
   {
-    "solution": "solutions/G5/c03-testing-in-batches.py",
-    "id": "c03-testing-in-batches",
-    "status": "pass",
-    "passed": 5,
-    "total": 5
-  },
-  {
     "solution": "solutions/G5/c03-testing-parse-weight.py",
     "id": "c03-testing-parse-weight",
     "status": "pass",
@@ -70,20 +63,6 @@
     "total": 8
   },
   {
-    "solution": "fix-2b/I/c03-testing-in-batches.py",
-    "id": "c03-testing-in-batches",
-    "status": "fail",
-    "passed": 4,
-    "total": 5
-  },
-  {
-    "solution": "fix-2b/I/c03-testing-parse-weight.py",
-    "id": "c03-testing-parse-weight",
-    "status": "fail",
-    "passed": 4,
-    "total": 5
-  },
-  {
     "solution": "fix-2b/J/c03-boss-test-clean-lines.py",
     "id": "c03-boss-test-clean-lines",
     "status": "pass",
@@ -110,5 +89,19 @@
     "status": "pass",
     "passed": 4,
     "total": 4
+  },
+  {
+    "solution": "fix-2b/K/c03-testing-in-batches.py",
+    "id": "c03-testing-in-batches",
+    "status": "pass",
+    "passed": 6,
+    "total": 6
+  },
+  {
+    "solution": "fix-2b/K/c03-testing-parse-weight.py",
+    "id": "c03-testing-parse-weight",
+    "status": "pass",
+    "passed": 5,
+    "total": 5
   }
 ]

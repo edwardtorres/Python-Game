@@ -27,7 +27,7 @@ const RECORDS: Record[] = [
   },
   {
     root: 'docs/blind-solves/chapter2',
-    dirs: ['solutions/G1', 'solutions/G2', 'solutions/G3', 'solutions/G4', 'solutions/G4-r2', 'fix-2b/E', 'fix-2b/F', 'fix-2b/G', 'fix-2b/H'],
+    dirs: ['solutions/G1', 'solutions/G2', 'solutions/G3', 'solutions/G4', 'solutions/G4-r2', 'fix-2b/E', 'fix-2b/F', 'fix-2b/G', 'fix-2b/H', 'fix-2b/M'],
     mustPass: (solution) => solution.startsWith('fix-2b/'),
   },
   {

@@ -234,8 +234,8 @@
     "solution": "fix-2b/H/c02-eff-job-queue.py",
     "id": "c02-eff-job-queue",
     "status": "pass",
-    "passed": 6,
-    "total": 6
+    "passed": 7,
+    "total": 7
   },
   {
     "solution": "fix-2b/H/c02-eff-repeated-tickets.py",
@@ -250,5 +250,12 @@
     "status": "pass",
     "passed": 6,
     "total": 6
+  },
+  {
+    "solution": "fix-2b/M/c02-eff-job-queue.py",
+    "id": "c02-eff-job-queue",
+    "status": "pass",
+    "passed": 7,
+    "total": 7
   }
 ]
