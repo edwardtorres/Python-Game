@@ -2,267 +2,267 @@
   {
     "url": "https://docs.python.org/3/tutorial/introduction.html",
     "file": "pages/docs.python.org/3__tutorial__introduction.html.txt",
-    "fetched": "2026-10-31T02:08:12.478Z",
-    "sha256": "aae8f6413513902b73c8c0210f973c310cdcd91d97b3f1675969c1c39dcec623",
+    "fetched": "2026-11-02T01:20:59.262Z",
+    "sha256": "bd817cfededbd5f9cd5648dfa68231d24123eb2b6e998024e2748cbcbb8fe6b5",
     "characters": 18513
   },
   {
     "url": "https://docs.python.org/3/tutorial/controlflow.html",
     "file": "pages/docs.python.org/3__tutorial__controlflow.html.txt",
-    "fetched": "2026-10-31T02:08:12.518Z",
-    "sha256": "4fa20e9b7fff28c73e2eab1df9cf32e5e12ae23f45bfa098ab96e0aa3ef8fb80",
+    "fetched": "2026-11-02T01:20:59.284Z",
+    "sha256": "741fbb3f72b41d53cabcdd38cf7d347220b9e70188634de39a01cd0685160552",
     "characters": 37929
   },
   {
     "url": "https://docs.python.org/3/tutorial/datastructures.html",
     "file": "pages/docs.python.org/3__tutorial__datastructures.html.txt",
-    "fetched": "2026-10-31T02:08:12.547Z",
-    "sha256": "1144e0a549527d153701455dccdbd16702828d7b583b1bf88b8aefec85447c6f",
+    "fetched": "2026-11-02T01:20:59.303Z",
+    "sha256": "588cd8753acf7d38918e73a948c903365e4de215da0ba445ab329883bd45c700",
     "characters": 26971
   },
   {
     "url": "https://docs.python.org/3/tutorial/inputoutput.html",
     "file": "pages/docs.python.org/3__tutorial__inputoutput.html.txt",
-    "fetched": "2026-10-31T02:08:12.573Z",
-    "sha256": "1d38276fc986a9928f4116d5d91722f22f7e05aecae53988103cf2c683c9f47a",
+    "fetched": "2026-11-02T01:20:59.358Z",
+    "sha256": "1cabd2b723a901219cb6109888c5bd613e7fa341f992de46cb57d16f05c553c4",
     "characters": 20083
   },
   {
     "url": "https://docs.python.org/3/tutorial/errors.html",
     "file": "pages/docs.python.org/3__tutorial__errors.html.txt",
-    "fetched": "2026-10-31T02:08:12.599Z",
-    "sha256": "74059a78af40ced22381ddbd8dec85c92543d0d1a2975612ec45bc625354dc2a",
+    "fetched": "2026-11-02T01:20:59.376Z",
+    "sha256": "9ea20d02eb9895604ad377b7fb66dd29414172c61fe91783df9267c77035dfae",
     "characters": 22839
   },
   {
     "url": "https://docs.python.org/3/tutorial/modules.html",
     "file": "pages/docs.python.org/3__tutorial__modules.html.txt",
-    "fetched": "2026-10-31T02:08:12.625Z",
-    "sha256": "ebf8605fb9a4c019f61703ae8659038e3662231814e5ea68230c17767d232f3b",
+    "fetched": "2026-11-02T01:20:59.394Z",
+    "sha256": "8c0e5d98f7bbd7be931d6c8bd89242cff39fd3c5b0f49f03af43262e2dbb4db1",
     "characters": 24116
   },
   {
     "url": "https://docs.python.org/3/tutorial/classes.html",
     "file": "pages/docs.python.org/3__tutorial__classes.html.txt",
-    "fetched": "2026-10-31T02:08:12.651Z",
-    "sha256": "9ce3b601d74fcee1724e224585e712ace86c1932d0f058db330bb8eb96c37c33",
+    "fetched": "2026-11-02T01:20:59.412Z",
+    "sha256": "a4a51e89575ec0d05165e57091c56769ebb4a554f35ce187c48d1f84ba3becf2",
     "characters": 36160
   },
   {
     "url": "https://docs.python.org/3/library/stdtypes.html",
     "file": "pages/docs.python.org/3__library__stdtypes.html.txt",
-    "fetched": "2026-10-31T02:08:12.748Z",
-    "sha256": "e5ef597aecce0dd5b62d4d8c4f97856d6b8e6d9df4cc175b84b06ab4c5b318d3",
-    "characters": 196513
+    "fetched": "2026-11-02T01:20:59.491Z",
+    "sha256": "3f2a59916d9f42a25463898647f1d56bcc15b3c8346f21ff48021ea5d3013c1c",
+    "characters": 196487
   },
   {
     "url": "https://docs.python.org/3/library/functions.html",
     "file": "pages/docs.python.org/3__library__functions.html.txt",
-    "fetched": "2026-10-31T02:08:12.808Z",
-    "sha256": "c654504676a9e02484d9b9699e54e26de60117e6b1d5ad4cb076198d73284caf",
-    "characters": 82029
+    "fetched": "2026-11-02T01:20:59.538Z",
+    "sha256": "4f42ad62b7ef2f1f77cf61ac8180f3f6f500034c82ff1b68e3fa7c3487f6d8d6",
+    "characters": 81965
   },
   {
     "url": "https://docs.python.org/3/library/io.html",
     "file": "pages/docs.python.org/3__library__io.html.txt",
-    "fetched": "2026-10-31T02:08:12.858Z",
-    "sha256": "170b62f7d540f68b863f65628cccf189cea7e4cbf399e57d5575f67cf0b65f12",
+    "fetched": "2026-11-02T01:20:59.597Z",
+    "sha256": "e490558545593c7038acd2986927b3738efd3c851f288931ad61c1cb4a6da2a1",
     "characters": 42277
   },
   {
     "url": "https://docs.python.org/3/library/itertools.html",
     "file": "pages/docs.python.org/3__library__itertools.html.txt",
-    "fetched": "2026-10-31T02:08:12.885Z",
-    "sha256": "7c0115de56fcdddf0f6f8180f597693f70aca8e6f97815b550a3945bc8b07b44",
+    "fetched": "2026-11-02T01:20:59.654Z",
+    "sha256": "ee142948e1734d854268345d4dc1ff2550b6647daa7d8a5a053f1b12f8e1f760",
     "characters": 39005
   },
   {
     "url": "https://docs.python.org/3/library/math.html",
     "file": "pages/docs.python.org/3__library__math.html.txt",
-    "fetched": "2026-10-31T02:08:12.912Z",
-    "sha256": "b47a25662665d159317d961b5c937d5706c439eca17de929770bbe1f15314614",
+    "fetched": "2026-11-02T01:20:59.672Z",
+    "sha256": "c8e88b2f5c0b4896e8aa51507ab6e7d489f6aa04b7ee822c61b772541b6b0fa7",
     "characters": 24694
   },
   {
     "url": "https://docs.python.org/3/library/heapq.html",
     "file": "pages/docs.python.org/3__library__heapq.html.txt",
-    "fetched": "2026-10-31T02:08:12.937Z",
-    "sha256": "4d5841eede7518f9c5f5ad4d96c87d6f2170751da8582f07ba16c3d83f4f7b8d",
+    "fetched": "2026-11-02T01:20:59.724Z",
+    "sha256": "4465f5c918ca89d1140cd5c98344adf2abdbd4c22744ae2871b079292e3aefa5",
     "characters": 16892
   },
   {
     "url": "https://docs.python.org/3/library/collections.html",
     "file": "pages/docs.python.org/3__library__collections.html.txt",
-    "fetched": "2026-10-31T02:08:12.964Z",
-    "sha256": "f65e762f0aac68e8c6d5825f643509582f0f6e93c72435cce614435f2760b55e",
+    "fetched": "2026-11-02T01:20:59.778Z",
+    "sha256": "44c1125ab286bd53534a124c3347e93c44f038704b12bab5aa8a59b3cc3341df",
     "characters": 46677
   },
   {
     "url": "https://docs.python.org/3/library/dataclasses.html",
     "file": "pages/docs.python.org/3__library__dataclasses.html.txt",
-    "fetched": "2026-10-31T02:08:12.991Z",
-    "sha256": "2c74b7916bb8fbf72f3d4184dc8e8d9dc572f51f309bc1d7e49ddedb02c4447e",
+    "fetched": "2026-11-02T01:20:59.797Z",
+    "sha256": "7ad261b2b6ad5cbc4a97c4e24ebbb7ce98b8a2a1a6df31bb1113ce533141d875",
     "characters": 31040
   },
   {
     "url": "https://docs.python.org/3/library/typing.html",
     "file": "pages/docs.python.org/3__library__typing.html.txt",
-    "fetched": "2026-10-31T02:08:13.034Z",
-    "sha256": "9598c9995a444c07e8723291d495b8292fcefa2563a8075022239cec5e118c36",
+    "fetched": "2026-11-02T01:20:59.827Z",
+    "sha256": "df1939d49c343053e02ee591e58fe7033d06bbc96ad4d7322ae030038e9539e6",
     "characters": 126726
   },
   {
     "url": "https://docs.python.org/3/reference/expressions.html",
     "file": "pages/docs.python.org/3__reference__expressions.html.txt",
-    "fetched": "2026-10-31T02:08:13.070Z",
-    "sha256": "5401ba05cd926d62245846fcd8c3f93e330e6712b2c5ce0080bcd6efe7ad9235",
+    "fetched": "2026-11-02T01:20:59.866Z",
+    "sha256": "8869084535d643ac4c9a187d0115f51256c1515cf9247461204741f050d540a2",
     "characters": 78167
   },
   {
     "url": "https://docs.python.org/3/reference/compound_stmts.html",
     "file": "pages/docs.python.org/3__reference__compound_stmts.html.txt",
-    "fetched": "2026-10-31T02:08:13.101Z",
-    "sha256": "31f66ed83268cdf66861771764e03e5f1e47a4835f0713157a54602ab359b897",
+    "fetched": "2026-11-02T01:20:59.887Z",
+    "sha256": "f7c08bb2267da2c5db88530f2867d5eaa2088637e159b0631a923b93107d2b4a",
     "characters": 63941
   },
   {
     "url": "https://docs.python.org/3/glossary.html",
     "file": "pages/docs.python.org/3__glossary.html.txt",
-    "fetched": "2026-10-31T02:08:13.129Z",
-    "sha256": "9dad646d90e9b72f79032ff08026756ff66ee3bd3ea8addb759beb939bdd90f1",
+    "fetched": "2026-11-02T01:20:59.908Z",
+    "sha256": "439ec3fb15052d769b55a17b998c55508aae8c180d126c6705d50b2dc6c70adc",
     "characters": 67321
   },
   {
     "url": "https://docs.python.org/3/reference/datamodel.html",
     "file": "pages/docs.python.org/3__reference__datamodel.html.txt",
-    "fetched": "2026-10-31T02:08:13.161Z",
-    "sha256": "67a92093adbf8f9caad2b34a6bbd2f80a1c2910bf34b4c600a98ee7b8978b7ff",
+    "fetched": "2026-11-02T01:20:59.932Z",
+    "sha256": "e90ae75144f485837ace59c0dad9a67bd5bb38ea54422d3773415a51b1c00767",
     "characters": 130415
   },
   {
     "url": "https://docs.python.org/3/howto/sorting.html",
     "file": "pages/docs.python.org/3__howto__sorting.html.txt",
-    "fetched": "2026-10-31T02:08:13.190Z",
-    "sha256": "d5f152d9051c0adbb970a59f990351d39027f681778b671087fe4c125cf91cc4",
+    "fetched": "2026-11-02T01:20:59.989Z",
+    "sha256": "8e8f75aad718476154dd61f417ccdbe2040b8e086aba9b28511eff9ef5e2b061",
     "characters": 14554
   },
   {
     "url": "https://docs.pytest.org/en/stable/how-to/assert.html",
     "file": "pages/docs.pytest.org/en__stable__how-to__assert.html.txt",
-    "fetched": "2026-10-31T02:08:13.447Z",
+    "fetched": "2026-11-02T01:21:00.354Z",
     "sha256": "8285bfcbb0f149457658ac3b2a30e20a29cf6081d7cf369bfce66e7faf4fa6ee",
     "characters": 19299
   },
   {
     "url": "https://numpy.org/doc/stable/user/basics.broadcasting.html",
     "file": "pages/numpy.org/doc__stable__user__basics.broadcasting.html.txt",
-    "fetched": "2026-10-31T02:08:13.684Z",
+    "fetched": "2026-11-02T01:21:00.469Z",
     "sha256": "87e52787b3fffd1136c887f85a2b2df0c451d8ecea6bc16e571b32374f62a571",
     "characters": 11034
   },
   {
     "url": "https://pandas.pydata.org/docs/user_guide/groupby.html",
     "file": "pages/pandas.pydata.org/docs__user_guide__groupby.html.txt",
-    "fetched": "2026-10-31T02:08:13.901Z",
+    "fetched": "2026-11-02T01:21:00.853Z",
     "sha256": "76dd0360fc6f87d1d269e9f530dd932bfdbfe262689f9a8793a22e1a51781c0e",
     "characters": 70325
   },
   {
     "url": "https://matplotlib.org/stable/users/explain/quick_start.html",
     "file": "pages/matplotlib.org/stable__users__explain__quick_start.html.txt",
-    "fetched": "2026-10-31T02:08:14.099Z",
-    "sha256": "58bd4bc0e113895541d8f70df8f9a73e929c9378d372ee6704a31de86411fdf4",
+    "fetched": "2026-11-02T01:21:01.185Z",
+    "sha256": "ea945c7f3cf5d19034e1cb80b76b1237f772edba0b5e07c6909b1983dc53d2e0",
     "characters": 22688
   },
   {
     "url": "https://docs.scipy.org/doc/scipy/reference/stats.html",
     "file": "pages/docs.scipy.org/doc__scipy__reference__stats.html.txt",
-    "fetched": "2026-10-31T02:08:14.245Z",
+    "fetched": "2026-11-02T01:21:01.484Z",
     "sha256": "520d9bef8c1e6e1cf67cfd340cf6b9812ade4ae791523fd104e1aec5773a295a",
     "characters": 30444
   },
   {
     "url": "https://scikit-learn.org/stable/modules/cross_validation.html",
     "file": "pages/scikit-learn.org/stable__modules__cross_validation.html.txt",
-    "fetched": "2026-10-31T02:08:14.492Z",
+    "fetched": "2026-11-02T01:21:01.958Z",
     "sha256": "78d7587fa92ba3b3e480c9d841b50fedc14ac29d571ccb319d4068235154f0e2",
     "characters": 41349
   },
   {
     "url": "https://requests.readthedocs.io/en/latest/user/quickstart/",
     "file": "pages/requests.readthedocs.io/en__latest__user__quickstart.txt",
-    "fetched": "2026-10-31T02:08:14.580Z",
+    "fetched": "2026-11-02T01:21:02.111Z",
     "sha256": "d1045d9c1882d1e9432b788a5b72f761323b3ed5cb70097906f0833dff5a9bb1",
     "characters": 17925
   },
   {
     "url": "https://developer.mozilla.org/en-US/docs/Glossary/Truthy",
     "file": "pages/developer.mozilla.org/en-US__docs__Glossary__Truthy.txt",
-    "fetched": "2026-10-31T02:08:14.694Z",
-    "sha256": "a449354b48ac8fa726af0f7987ad7e7d41936f571c54767883d265ee8b5a0238",
+    "fetched": "2026-11-02T01:21:02.241Z",
+    "sha256": "ff21584091edcace76a09e9883448313c7143de0d6b0f6ce73dab7f992db37ca",
     "characters": 11480
   },
   {
     "url": "https://developer.mozilla.org/en-US/docs/Glossary/Falsy",
     "file": "pages/developer.mozilla.org/en-US__docs__Glossary__Falsy.txt",
-    "fetched": "2026-10-31T02:08:14.769Z",
-    "sha256": "a8d86491ac6b161bc134402901fe40e08284e931d109bbd040fd391f925172c3",
+    "fetched": "2026-11-02T01:21:02.299Z",
+    "sha256": "b80f28e7959b8aaf126cf9d68cf0a0ffe06a1493b091ac775c9f9c5855995f03",
     "characters": 12215
   },
   {
     "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Grammar_and_types",
     "file": "pages/developer.mozilla.org/en-US__docs__Web__JavaScript__Guide__Grammar_and_types.txt",
-    "fetched": "2026-10-31T02:08:14.842Z",
-    "sha256": "a936dd8f771f9cb2727004fe46f68be22e593ff0ae4a73565306f846bd38681a",
+    "fetched": "2026-11-02T01:21:02.367Z",
+    "sha256": "50ac03b35848fad678122520f9bf15a10dcba5e472943915aba411d053c4d65a",
     "characters": 41483
   },
   {
     "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
     "file": "pages/developer.mozilla.org/en-US__docs__Web__JavaScript__Reference__Global_Objects__Number.txt",
-    "fetched": "2026-10-31T02:08:14.913Z",
-    "sha256": "db68db8129cf03f6d3927f568bc28649e6fd7153dfbb62336c45f252fb5da8b9",
+    "fetched": "2026-11-02T01:21:02.384Z",
+    "sha256": "254302a4802e577277ab331fa5061eefd010171b893d3614b9c3057b97920280",
     "characters": 14400
   },
   {
     "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters",
     "file": "pages/developer.mozilla.org/en-US__docs__Web__JavaScript__Reference__Functions__Default_parameters.txt",
-    "fetched": "2026-10-31T02:08:14.921Z",
-    "sha256": "a47eb4207a01a791553da534bcbd8e5cdf684b76e2e610cf002df4585c9f9bba",
+    "fetched": "2026-11-02T01:21:02.443Z",
+    "sha256": "ffe81838a9396f2fb1b4d1be889585385916aef306ccad20b0f9a2fe0fe913c6",
     "characters": 21230
   },
   {
     "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Equality",
     "file": "pages/developer.mozilla.org/en-US__docs__Web__JavaScript__Reference__Operators__Equality.txt",
-    "fetched": "2026-10-31T02:08:14.928Z",
-    "sha256": "a10aa7b76e17b08d30aa59a4d4a92f30d7e8b20806f8c182cc8f97fd60c59c01",
+    "fetched": "2026-11-02T01:21:02.499Z",
+    "sha256": "9f71e3f441af6faa36ddab42e87c5598498f4c0281e06a31201651fe6d8176c7",
     "characters": 19668
   },
   {
     "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Strict_equality",
     "file": "pages/developer.mozilla.org/en-US__docs__Web__JavaScript__Reference__Operators__Strict_equality.txt",
-    "fetched": "2026-10-31T02:08:14.938Z",
-    "sha256": "1e22abce0192593659f5f28f8373fb24e64dee9f9a430006cc10f098932b3092",
+    "fetched": "2026-11-02T01:21:02.562Z",
+    "sha256": "7ee5776cdc3e164429283cc1a782ff45c950990004116038fa3ec0556f7e6ddf",
     "characters": 16662
   },
   {
     "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let",
     "file": "pages/developer.mozilla.org/en-US__docs__Web__JavaScript__Reference__Statements__let.txt",
-    "fetched": "2026-10-31T02:08:14.949Z",
-    "sha256": "4a663b32fe7895b7c9a96f31bf3741303106cff505619929b066a0cc690f8667",
+    "fetched": "2026-11-02T01:21:02.619Z",
+    "sha256": "59cf8a6aaba9a7ab5ae4705c2736c661915c342df83e35629442cbf0ba43f61c",
     "characters": 24358
   },
   {
     "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice",
     "file": "pages/developer.mozilla.org/en-US__docs__Web__JavaScript__Reference__Global_Objects__Array__slice.txt",
-    "fetched": "2026-10-31T02:08:15.029Z",
-    "sha256": "b108d08d30fd48a44fe3de3496c0055ed274c0bbb906f18c19f32ee1ee84d9e7",
+    "fetched": "2026-11-02T01:21:02.682Z",
+    "sha256": "a2bea9838096c826467509a54e02d0f01174956117b233877fddd20cce2d23f3",
     "characters": 10930
   },
   {
     "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys",
     "file": "pages/developer.mozilla.org/en-US__docs__Web__JavaScript__Reference__Global_Objects__Object__keys.txt",
-    "fetched": "2026-10-31T02:08:15.039Z",
-    "sha256": "7e60a85b91deb159605188d2b31302a4a53f034c5e6113dec0f1f07e1b76fab7",
+    "fetched": "2026-11-02T01:21:02.740Z",
+    "sha256": "12fdc3190a469b16e350b54e516bd0eeb2e47f6a326bf70e9fece138776478fc",
     "characters": 6691
   }
 ]
