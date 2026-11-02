@@ -31011,6 +31011,30 @@
             0,
             1
           ]
+        },
+        {
+          "id": "h-ten",
+          "label": "Ten jobs in an uneven order",
+          "visibility": "hidden",
+          "args": [
+            [
+              5,
+              1,
+              4,
+              2,
+              8,
+              3,
+              6,
+              7,
+              9,
+              10
+            ]
+          ],
+          "rules": [
+            0,
+            1,
+            2
+          ]
         }
       ],
       "variants": [
@@ -31043,13 +31067,34 @@
         }
       ],
       "requires": [],
-      "definitions_only": false
+      "definitions_only": false,
+      "checks": [
+        {
+          "type": "calls_method",
+          "label": "take each job off the front with popleft",
+          "name": "popleft",
+          "within": "running_totals",
+          "rules": [
+            2
+          ]
+        },
+        {
+          "type": "forbids_method",
+          "label": "do not take a job off the front with pop(0)",
+          "name": "pop",
+          "arg": 0,
+          "within": "running_totals",
+          "rules": [
+            2
+          ]
+        }
+      ]
     },
     "datasets": {},
     "expected": {
       "status": "pass",
-      "passed": 4,
-      "total": 4,
+      "passed": 7,
+      "total": 7,
       "cases": [
         [
           "v-small",
@@ -31065,6 +31110,18 @@
         ],
         [
           "h-zero",
+          true
+        ],
+        [
+          "h-ten",
+          true
+        ],
+        [
+          "check-0",
+          true
+        ],
+        [
+          "check-1",
           true
         ]
       ],
@@ -31137,6 +31194,30 @@
             0,
             1
           ]
+        },
+        {
+          "id": "h-ten",
+          "label": "Ten jobs in an uneven order",
+          "visibility": "hidden",
+          "args": [
+            [
+              5,
+              1,
+              4,
+              2,
+              8,
+              3,
+              6,
+              7,
+              9,
+              10
+            ]
+          ],
+          "rules": [
+            0,
+            1,
+            2
+          ]
         }
       ],
       "variants": [
@@ -31169,13 +31250,34 @@
         }
       ],
       "requires": [],
-      "definitions_only": false
+      "definitions_only": false,
+      "checks": [
+        {
+          "type": "calls_method",
+          "label": "take each job off the front with popleft",
+          "name": "popleft",
+          "within": "running_totals",
+          "rules": [
+            2
+          ]
+        },
+        {
+          "type": "forbids_method",
+          "label": "do not take a job off the front with pop(0)",
+          "name": "pop",
+          "arg": 0,
+          "within": "running_totals",
+          "rules": [
+            2
+          ]
+        }
+      ]
     },
     "datasets": {},
     "expected": {
       "status": "fail",
-      "passed": 0,
-      "total": 4,
+      "passed": 1,
+      "total": 7,
       "cases": [
         [
           "v-small",
@@ -31192,6 +31294,18 @@
         [
           "h-zero",
           false
+        ],
+        [
+          "h-ten",
+          false
+        ],
+        [
+          "check-0",
+          false
+        ],
+        [
+          "check-1",
+          true
         ]
       ],
       "matched": []
@@ -31263,6 +31377,30 @@
             0,
             1
           ]
+        },
+        {
+          "id": "h-ten",
+          "label": "Ten jobs in an uneven order",
+          "visibility": "hidden",
+          "args": [
+            [
+              5,
+              1,
+              4,
+              2,
+              8,
+              3,
+              6,
+              7,
+              9,
+              10
+            ]
+          ],
+          "rules": [
+            0,
+            1,
+            2
+          ]
         }
       ],
       "variants": [
@@ -31295,13 +31433,34 @@
         }
       ],
       "requires": [],
-      "definitions_only": false
+      "definitions_only": false,
+      "checks": [
+        {
+          "type": "calls_method",
+          "label": "take each job off the front with popleft",
+          "name": "popleft",
+          "within": "running_totals",
+          "rules": [
+            2
+          ]
+        },
+        {
+          "type": "forbids_method",
+          "label": "do not take a job off the front with pop(0)",
+          "name": "pop",
+          "arg": 0,
+          "within": "running_totals",
+          "rules": [
+            2
+          ]
+        }
+      ]
     },
     "datasets": {},
     "expected": {
-      "status": "pass",
-      "passed": 4,
-      "total": 4,
+      "status": "fail",
+      "passed": 5,
+      "total": 7,
       "cases": [
         [
           "v-small",
@@ -31318,9 +31477,23 @@
         [
           "h-zero",
           true
+        ],
+        [
+          "h-ten",
+          true
+        ],
+        [
+          "check-0",
+          false
+        ],
+        [
+          "check-1",
+          false
         ]
       ],
-      "matched": []
+      "matched": [
+        "list-front-pop"
+      ]
     }
   },
   {
@@ -31389,6 +31562,30 @@
             0,
             1
           ]
+        },
+        {
+          "id": "h-ten",
+          "label": "Ten jobs in an uneven order",
+          "visibility": "hidden",
+          "args": [
+            [
+              5,
+              1,
+              4,
+              2,
+              8,
+              3,
+              6,
+              7,
+              9,
+              10
+            ]
+          ],
+          "rules": [
+            0,
+            1,
+            2
+          ]
         }
       ],
       "variants": [
@@ -31421,13 +31618,34 @@
         }
       ],
       "requires": [],
-      "definitions_only": false
+      "definitions_only": false,
+      "checks": [
+        {
+          "type": "calls_method",
+          "label": "take each job off the front with popleft",
+          "name": "popleft",
+          "within": "running_totals",
+          "rules": [
+            2
+          ]
+        },
+        {
+          "type": "forbids_method",
+          "label": "do not take a job off the front with pop(0)",
+          "name": "pop",
+          "arg": 0,
+          "within": "running_totals",
+          "rules": [
+            2
+          ]
+        }
+      ]
     },
     "datasets": {},
     "expected": {
       "status": "fail",
-      "passed": 1,
-      "total": 4,
+      "passed": 3,
+      "total": 7,
       "cases": [
         [
           "v-small",
@@ -31444,6 +31662,18 @@
         [
           "h-zero",
           false
+        ],
+        [
+          "h-ten",
+          false
+        ],
+        [
+          "check-0",
+          true
+        ],
+        [
+          "check-1",
+          true
         ]
       ],
       "matched": [
@@ -31517,6 +31747,30 @@
             0,
             1
           ]
+        },
+        {
+          "id": "h-ten",
+          "label": "Ten jobs in an uneven order",
+          "visibility": "hidden",
+          "args": [
+            [
+              5,
+              1,
+              4,
+              2,
+              8,
+              3,
+              6,
+              7,
+              9,
+              10
+            ]
+          ],
+          "rules": [
+            0,
+            1,
+            2
+          ]
         }
       ],
       "variants": [
@@ -31549,13 +31803,34 @@
         }
       ],
       "requires": [],
-      "definitions_only": false
+      "definitions_only": false,
+      "checks": [
+        {
+          "type": "calls_method",
+          "label": "take each job off the front with popleft",
+          "name": "popleft",
+          "within": "running_totals",
+          "rules": [
+            2
+          ]
+        },
+        {
+          "type": "forbids_method",
+          "label": "do not take a job off the front with pop(0)",
+          "name": "pop",
+          "arg": 0,
+          "within": "running_totals",
+          "rules": [
+            2
+          ]
+        }
+      ]
     },
     "datasets": {},
     "expected": {
       "status": "fail",
-      "passed": 1,
-      "total": 4,
+      "passed": 3,
+      "total": 7,
       "cases": [
         [
           "v-small",
@@ -31572,6 +31847,18 @@
         [
           "h-zero",
           false
+        ],
+        [
+          "h-ten",
+          false
+        ],
+        [
+          "check-0",
+          true
+        ],
+        [
+          "check-1",
+          true
         ]
       ],
       "matched": [
@@ -36862,8 +37149,8 @@
     "payload": {
       "kind": "testing",
       "entry": "in_batches",
-      "learner": "def test_batch_sizes():\n    assert list(in_batches([1, 2, 3, 4, 5], 2)) == [[1, 2], [3, 4], [5]]\n\n\ndef test_order_inside_batches():\n    assert list(in_batches([\"a\", \"b\", \"c\", \"d\"], 2)) == [[\"a\", \"b\"], [\"c\", \"d\"]]\n\n\ndef test_empty_input():\n    assert list(in_batches([], 3)) == []\n\n\ndef test_empty_input_any_size():\n    assert list(in_batches([], 1)) == []\n\n\ndef test_size_below_one():\n    try:\n        list(in_batches([1, 2], 0))\n    except ValueError:\n        return\n    assert False, \"a size below 1 must raise ValueError\"\n\n\ndef test_size_below_one_with_no_items():\n    try:\n        list(in_batches([], 0))\n    except ValueError:\n        return\n    assert False, \"a size below 1 must raise ValueError, even with no items\"\n",
-      "reference": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+      "learner": "def test_size_zero_raises_on_call():\n    try:\n        in_batches([1, 2], 0)\n    except ValueError:\n        return\n    assert False, \"a size below 1 must raise ValueError when the function is called\"\n\n\ndef test_size_zero_raises_on_call_with_no_items():\n    try:\n        in_batches([], 0)\n    except ValueError:\n        return\n    assert False, \"a size below 1 must raise ValueError when the function is called, even with no items\"\n\n\ndef test_batch_sizes():\n    assert list(in_batches([1, 2, 3, 4, 5], 2)) == [[1, 2], [3, 4], [5]]\n\n\ndef test_order_inside_batches():\n    assert list(in_batches([\"a\", \"b\", \"c\", \"d\"], 2)) == [[\"a\", \"b\"], [\"c\", \"d\"]]\n\n\ndef test_empty_input():\n    assert list(in_batches([], 3)) == []\n\n\ndef test_empty_input_any_size():\n    assert list(in_batches([], 1)) == []\n\n\ndef test_size_below_one():\n    try:\n        list(in_batches([1, 2], 0))\n    except ValueError:\n        return\n    assert False, \"a size below 1 must raise ValueError\"\n\n\ndef test_size_below_one_with_no_items():\n    try:\n        list(in_batches([], 0))\n    except ValueError:\n        return\n    assert False, \"a size below 1 must raise ValueError, even with no items\"\n",
+      "reference": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    return _chunks(items, size)\n\n\ndef _chunks(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
       "scope": "all",
       "mutants": [
         {
@@ -36907,6 +37194,17 @@
             "tag": "UNCHECKED_ARGUMENT",
             "title": "A size or count must be checked before use",
             "explanation": "Without a check, a size of zero or less quietly gives a wrong answer. Raise ValueError for a value the function cannot use, as itertools.batched does."
+          },
+          "visibility": "hidden"
+        },
+        {
+          "id": "raises-lazily",
+          "label": "Raises for a size below 1 only when the batches are used",
+          "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "mistake": {
+            "tag": "RAISES_LAZILY",
+            "title": "The size check runs only when the batches are used",
+            "explanation": "A generator function runs its body only when you take an item from it. A check inside it raises late, so a bad size passes until the batches are read. Check the argument first, then return the generator."
           },
           "visibility": "hidden"
         }
@@ -36930,7 +37228,7 @@
       "kind": "testing",
       "entry": "in_batches",
       "learner": "def test_batch_count():\n    assert len(list(in_batches([1, 2, 3, 4, 5], 2))) == 3\n",
-      "reference": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+      "reference": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    return _chunks(items, size)\n\n\ndef _chunks(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
       "scope": "all",
       "mutants": [
         {
@@ -36974,6 +37272,17 @@
             "tag": "UNCHECKED_ARGUMENT",
             "title": "A size or count must be checked before use",
             "explanation": "Without a check, a size of zero or less quietly gives a wrong answer. Raise ValueError for a value the function cannot use, as itertools.batched does."
+          },
+          "visibility": "hidden"
+        },
+        {
+          "id": "raises-lazily",
+          "label": "Raises for a size below 1 only when the batches are used",
+          "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "mistake": {
+            "tag": "RAISES_LAZILY",
+            "title": "The size check runs only when the batches are used",
+            "explanation": "A generator function runs its body only when you take an item from it. A check inside it raises late, so a bad size passes until the batches are read. Check the argument first, then return the generator."
           },
           "visibility": "hidden"
         }
@@ -36997,7 +37306,7 @@
       "kind": "testing",
       "entry": "in_batches",
       "learner": "def test_example():\n    pass\n",
-      "reference": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+      "reference": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    return _chunks(items, size)\n\n\ndef _chunks(items, size):\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
       "scope": "all",
       "mutants": [
         {
@@ -37041,6 +37350,17 @@
             "tag": "UNCHECKED_ARGUMENT",
             "title": "A size or count must be checked before use",
             "explanation": "Without a check, a size of zero or less quietly gives a wrong answer. Raise ValueError for a value the function cannot use, as itertools.batched does."
+          },
+          "visibility": "hidden"
+        },
+        {
+          "id": "raises-lazily",
+          "label": "Raises for a size below 1 only when the batches are used",
+          "code": "def in_batches(items, size):\n    if size < 1:\n        raise ValueError(\"size must be at least 1\")\n    batch = []\n    for item in items:\n        batch.append(item)\n        if len(batch) == size:\n            yield batch\n            batch = []\n    if batch:\n        yield batch\n",
+          "mistake": {
+            "tag": "RAISES_LAZILY",
+            "title": "The size check runs only when the batches are used",
+            "explanation": "A generator function runs its body only when you take an item from it. A check inside it raises late, so a bad size passes until the batches are read. Check the argument first, then return the generator."
           },
           "visibility": "hidden"
         }

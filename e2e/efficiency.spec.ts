@@ -3,12 +3,12 @@ import { CHAPTER2_GRADED } from '../src/content/chapter2/index';
 import { findItem } from './chapter-flows';
 import { logPageErrors } from './helpers';
 
-// Each efficiency item with its slow variant. Runs in both dev projects, so the margins come from
-// the browser's own Python engine. The conditions are the owner's: the slow variant is at least 50
-// times slower than the reference, and the reference stays under 50 ms for every timed case.
+// Each timed efficiency item with its slow variant. Runs in both dev projects, so the margins come
+// from the browser's own Python engine. The conditions are the owner's: the slow variant is at least
+// 50 times slower than the reference, and the reference stays under 50 ms for every timed case. The
+// job queue is untimed (a structure check holds it to popleft), so it is not measured here.
 const MEASURED = [
   { id: 'c02-eff-repeated-tickets', slow: 'slow-scan' },
-  { id: 'c02-eff-job-queue', slow: 'list-front-pop' },
   { id: 'c02-eff-stock-check', slow: 'list-lookup' },
 ];
 

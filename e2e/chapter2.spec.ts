@@ -55,18 +55,18 @@ for (const viewport of VIEWPORTS) {
       await ticketWrongThenRight(page, CHAPTER, /Class: versions with __repr__ and __lt__/, ticket, wrong.code, wrong.mistake.title, ticket.reference);
     });
 
-    test('an efficiency ticket: the slow version runs past its budget and names its mistake, then the fast one passes', async ({ page }) => {
-      const ticket = findItem(CHAPTER2_GRADED, 'c02-eff-job-queue');
-      const slow = ticket.variants.find((variant) => variant.id === 'list-front-pop');
-      if (slow === undefined) throw new Error('no slow variant list-front-pop');
+    test('an efficiency ticket: the slow version takes too long and names its mistake, then the fast one passes', async ({ page }) => {
+      const ticket = findItem(CHAPTER2_GRADED, 'c02-eff-stock-check');
+      const slow = ticket.variants.find((variant) => variant.id === 'list-lookup');
+      if (slow === undefined) throw new Error('no slow variant list-lookup');
       logPageErrors(page);
       await page.goto(CHAPTER);
-      await page.getByRole('link', { name: /Efficiency: work through a job queue/ }).tap();
+      await page.getByRole('link', { name: /Efficiency: check order lines against the catalog/ }).tap();
       await expect(page.getByRole('heading', { level: 1, name: ticket.title })).toBeVisible();
       await setCode(page, ticket.id, slow.code);
       await page.getByRole('button', { name: 'Submit' }).tap();
-      // The slow version's timed cases run past the budget, and the feedback says so before the mistake.
-      await expect(page.getByText(/ran past the 1 second budget/)).toBeVisible({ timeout: 180_000 });
+      // The slow version's timed visible case takes more than 50 times the reference, and the feedback says so before the mistake.
+      await expect(page.getByText(/took [\d.]+ ms, and the reference took/)).toBeVisible({ timeout: 180_000 });
       await expect(page.getByText(`Likely mistake: ${slow.mistake.title}`)).toBeVisible({ timeout: 180_000 });
       await expectAccessible(page);
       await expectNoSidewaysScroll(page);

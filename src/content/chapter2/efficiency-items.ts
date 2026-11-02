@@ -1,7 +1,8 @@
-// Chapter 2 efficiency items: three tickets where the answer is right but a slow method fails the
-// time rule. Each has a correctness case, timed cases on a visible and a hidden input, and wrong
-// variants that break one rule each. A timed case uses the same inputs for the reference and for
-// the learner, built by make_args(size), and fails when the learner is more than 50 times slower.
+// Chapter 2 efficiency items. The two stock and repeat tickets are timed: the answer is right but a
+// slow method fails the time rule. A timed case uses the same inputs for the reference and for the
+// learner, built by make_args(size), and fails when the learner is more than 50 times slower. The
+// job queue is not timed, because its slow method was not reliably over the budget in both
+// browsers. A structure check holds it to the fast method instead. Each wrong variant breaks one rule.
 import type { ChallengeSpec } from '../../challenges/types';
 import { type GradedItem, fn, functionSpec, timed } from '../graded';
 
@@ -12,14 +13,6 @@ const TICKET_SETUP = `import random
 def make_args(size):
     rng = random.Random(20251030)
     return [[f"T{rng.randrange(size // 2)}" for _ in range(size)]]
-`;
-
-const JOB_SETUP = `import random
-
-
-def make_args(size):
-    rng = random.Random(20251030)
-    return [[rng.randrange(1, 100) for _ in range(size)]]
 `;
 
 const STOCK_SETUP = `import random
@@ -50,7 +43,7 @@ const EFFICIENCY: GradedItem[] = [
       fn('h-triple', 'One ID three times', 'hidden', [['Z', 'Z', 'Z']], [0]),
       fn('h-order', 'The order follows the second appearance, not the first', 'hidden', [['B', 'A', 'A', 'B']], [1]),
       fn('h-empty', 'No tickets', 'hidden', [[]], [0]),
-      timed('t-visible', 'A long list of tickets, timed', 'visible', 2000, [0, 1, 2]),
+      timed('t-visible', 'A list of 4000 tickets, timed', 'visible', 4000, [0, 1, 2]),
       timed('t-hidden', 'A much longer list of tickets, timed', 'hidden', 8000, [0, 1, 2]),
     ],
     variants: [
@@ -70,18 +63,20 @@ const EFFICIENCY: GradedItem[] = [
     lessonId: 'c02-informatics/deque-heapq',
     competencies: ['deque-heapq'],
     ticket: { from: 'Tomas, Print Room', subject: 'Job queue', body: 'jobs is the list of job weights, in the order the jobs arrived. It can have hundreds of thousands of entries. Work through them first in, first out. Return the running total after each job, in the same order. The total after a job includes that job. Write running_totals(jobs). jobs is a list of whole-number job weights, in the order they arrived.' },
-    rules: ['Return one running total per job, in the order the jobs were worked.', 'Each total includes its own job.', 'Taking the next job from the front takes about the same time however many jobs are waiting.'],
+    rules: ['Return one running total per job, in the order the jobs were worked.', 'Each total includes its own job.', 'Keep the waiting jobs in a collections.deque, and take each job off its front with popleft.'],
     entry: 'running_totals',
     starter: 'def running_totals(jobs):\n    pass\n',
     reference: 'from collections import deque\n\n\ndef running_totals(jobs):\n    queue = deque(jobs)\n    total = 0\n    totals = []\n    while queue:\n        total += queue.popleft()\n        totals.append(total)\n    return totals\n',
-    timing: { setup: JOB_SETUP },
     cases: [
       fn('v-small', 'Three jobs', 'visible', [[3, 1, 2]], [0, 1]),
       fn('v-empty', 'No jobs', 'visible', [[]], [0]),
       fn('h-single', 'One job', 'hidden', [[7]], [0, 1]),
       fn('h-zero', 'A zero-weight job', 'hidden', [[0, 0, 5]], [0, 1]),
-      timed('t-visible', 'A long queue, timed', 'visible', 400000, [0, 1, 2]),
-      timed('t-hidden', 'A longer queue, timed', 'hidden', 400000, [0, 1, 2]),
+      fn('h-ten', 'Ten jobs in an uneven order', 'hidden', [[5, 1, 4, 2, 8, 3, 6, 7, 9, 10]], [0, 1, 2]),
+    ],
+    checks: [
+      { type: 'calls_method', label: 'take each job off the front with popleft', name: 'popleft', within: 'running_totals', rules: [2] },
+      { type: 'forbids_method', label: 'do not take a job off the front with pop(0)', name: 'pop', arg: 0, within: 'running_totals', rules: [2] },
     ],
     variants: [
       ['list-front-pop', 'def running_totals(jobs):\n    queue = list(jobs)\n    total = 0\n    totals = []\n    while queue:\n        total += queue.pop(0)\n        totals.append(total)\n    return totals\n', 'LIST_FRONT_POP', 2],
@@ -89,7 +84,7 @@ const EFFICIENCY: GradedItem[] = [
       ['one-total', 'from collections import deque\n\n\ndef running_totals(jobs):\n    queue = deque(jobs)\n    total = 0\n    while queue:\n        total += queue.popleft()\n    return [total]\n', 'WRONG_RETURN_SHAPE', 0],
     ],
     hints: [
-      'Think about which end of a list is slow to remove from, and why.',
+      'Think about what a list has to do to its other items when you remove the first one.',
       'collections.deque removes from its left end without moving the items that stay.',
       'queue = deque(jobs)\nwhile queue:\n    total += queue.popleft()',
     ],
